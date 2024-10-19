@@ -19,8 +19,8 @@ import { auth, db } from "./config";
 export const getUserByUserId = async (userId: string) => {
   // eslint-disable-next-line no-useless-catch
   try {
-    const userCollectionRef = collection(db, "users");
-    const userQuery = query(userCollectionRef, where("id", "==", userId));
+    const userCollectionRef = collection(db, "profiles");
+    const userQuery = query(userCollectionRef, where("userId", "==", userId));
     const querySnapshot = await getDocs(userQuery);
 
     if (querySnapshot.size === 0) {

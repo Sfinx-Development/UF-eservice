@@ -53,24 +53,53 @@ const IndexPage = () => {
         annonser och börja nätverka!
       </Typography>
 
-      {/* Registreringsknapp */}
-      <Button
-        variant="contained"
+      {/* Registrerings- och inloggningsknappar */}
+      <Box
         sx={{
-          backgroundColor: "#FFA500", // Gul/orange
-          color: "#FFF",
-          padding: isMobile ? "0.5rem 1rem" : "0.75rem 1.5rem", // Anpassad knappstorlek för mobil
-          fontSize: isMobile ? "1rem" : "1.2rem", // Mindre textstorlek på knappen för mobil
-          "&:hover": {
-            backgroundColor: "#cc8500", // Mörkare version av gul/orange
-          },
-        }}
-        onClick={() => {
-          navigate("/register");
+          display: "flex",
+          flexDirection: isMobile ? "column" : "row", // Vertikalt för mobil, horisontellt för desktop
+          gap: "1rem",
         }}
       >
-        Registrera dig nu
-      </Button>
+        {/* Registreringsknapp */}
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "#FFA500", // Gul/orange
+            color: "#FFF",
+            padding: isMobile ? "0.5rem 1rem" : "0.75rem 1.5rem", // Anpassad knappstorlek för mobil
+            fontSize: isMobile ? "1rem" : "1.2rem", // Mindre textstorlek på knappen för mobil
+            "&:hover": {
+              backgroundColor: "#cc8500", // Mörkare version av gul/orange
+            },
+          }}
+          onClick={() => {
+            navigate("/register");
+          }}
+        >
+          Registrera dig nu
+        </Button>
+
+        {/* Logga in-knapp */}
+        <Button
+          variant="outlined"
+          sx={{
+            borderColor: "#FFA500", // Gul/orange ram
+            color: "#FFA500", // Textfärg
+            padding: isMobile ? "0.5rem 1rem" : "0.75rem 1.5rem",
+            fontSize: isMobile ? "1rem" : "1.2rem",
+            "&:hover": {
+              borderColor: "#cc8500", // Mörkare gul/orange vid hover
+              color: "#cc8500",
+            },
+          }}
+          onClick={() => {
+            navigate("/login");
+          }}
+        >
+          Logga in
+        </Button>
+      </Box>
     </Box>
   );
 };
