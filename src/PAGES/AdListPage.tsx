@@ -1,6 +1,7 @@
 import {
   Box,
   Card,
+  CardActionArea,
   CardContent,
   FormControl,
   Grid,
@@ -11,12 +12,14 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { getAllAdsAsync } from "../SLICES/adSlice"; // Byt till rätt sökväg för slice
-import { useAppDispatch, useAppSelector } from "../SLICES/store"; // Byt till rätt sökväg
-import { Ad } from "../types"; // Byt till rätt sökväg för Ad-typ
+import { useNavigate } from "react-router-dom";
+import { getAllAdsAsync, setSelectedAd } from "../SLICES/adSlice";
+import { useAppDispatch, useAppSelector } from "../SLICES/store";
+import { Ad } from "../types";
 
 const AdListPage: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const ads = useAppSelector((state) => state.adSlice.ads);
   const error = useAppSelector((state) => state.adSlice.error);
   const loading = useAppSelector((state) => state.adSlice.loading);
@@ -31,7 +34,6 @@ const AdListPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Filtrera annonser baserat på sökterm, plats och typ av annons (bikupor/mark)
     let filtered: Ad[] = ads;
 
     if (searchTerm) {
@@ -56,6 +58,11 @@ const AdListPage: React.FC = () => {
 
     setFilteredAds(filtered);
   }, [searchTerm, locationFilter, adTypeFilter, ads]);
+
+  const handleNavigateToAd = (ad: Ad) => {
+    dispatch(setSelectedAd(ad));
+    navigate("/addetail");
+  };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -150,6 +157,11 @@ const AdListPage: React.FC = () => {
                     {ad.description}
                   </Typography>
                 </CardContent>
+                <CardActionArea onClick={() => handleNavigateToAd(ad)}>
+                  <Typography sx={{ padding: "1rem", color: "#FFA500" }}>
+                    Till annonsen
+                  </Typography>
+                </CardActionArea>
               </Card>
             </Grid>
           ))}
