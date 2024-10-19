@@ -48,3 +48,12 @@ export interface Ad {
   fertilization?: string;
   profileId: string;
 }
+
+export interface Message {
+  id?: string;             
+  text: string;            
+  timestamp: Date;         
+  userId: string;           
+  username: string;         
+}
+
