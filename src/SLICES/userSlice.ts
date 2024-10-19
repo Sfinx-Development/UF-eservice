@@ -13,9 +13,21 @@ export interface UserState {
   createAccountError: string | null;
 }
 
-// Initial state
+const loadUserFromLocalStorage = (): Profile | null => {
+  try {
+    const serializedUser = localStorage.getItem("user");
+    if (serializedUser === null) {
+      return null;
+    }
+    return JSON.parse(serializedUser);
+  } catch (error) {
+    console.error("Fel vid laddning av användardata från localStorage:", error);
+    return null;
+  }
+};
+
 export const initialState: UserState = {
-  user: null,
+  user: loadUserFromLocalStorage(),
   error: null,
   logInError: null,
   createAccountError: null,
@@ -78,6 +90,7 @@ export const logInUserAsync = createAsyncThunk<
 >("user/logInUser", async (login, thunkAPI) => {
   try {
     const userCredential = await signInWithAPI(login);
+    localStorage.setItem("user", JSON.stringify(userCredential));
     return userCredential;
   } catch (error) {
     return thunkAPI.rejectWithValue(
@@ -94,6 +107,7 @@ export const logOutUserAsync = createAsyncThunk<
 >("user/logOutUser", async (_, thunkAPI) => {
   try {
     await signOutWithAuth();
+    localStorage.removeItem("user");
     return true;
   } catch (error) {
     return thunkAPI.rejectWithValue("Något gick fel vid utloggningen.");
