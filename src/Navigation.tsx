@@ -1,9 +1,10 @@
 import { Route, Routes } from "react-router-dom";
-import IndexPage from "./PAGES/Index";
-import RootLayout from "./PAGES/Rootlayout";
-import RegisterPage from "./PAGES/Register";
 import DashboardPage from "./PAGES/Dashboard";
+import IndexPage from "./PAGES/Index";
 import Login from "./PAGES/Login";
+import RegisterPage from "./PAGES/Register";
+import RootLayout from "./PAGES/Rootlayout";
+import ProtectedRoute from "./ProtectedRoute";
 
 const Navigation = () => {
   // const [userLoaded, setUserLoaded] = useState(false);
@@ -42,7 +43,11 @@ const Navigation = () => {
       <Route element={<RootLayout />}>
         <Route index element={<IndexPage />} />
         <Route path="register" element={<RegisterPage />} />
-        <Route path="dashboard" element={<DashboardPage />} />
+        <Route
+          path="dashboard"
+          element={<ProtectedRoute element={DashboardPage} />}
+        />
+
         <Route path="login" element={<Login />} />
       </Route>
     </Routes>

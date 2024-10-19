@@ -1,7 +1,19 @@
-import { AppBar, Box, Toolbar, Typography } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../SLICES/store";
+import { logOutUserAsync } from "../SLICES/userSlice";
 
 const RootLayout = () => {
+  const user = useAppSelector((state) => state.userSlice.user);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const handleSignOut = async () => {
+    await dispatch(logOutUserAsync()).then(() => {
+      navigate("/");
+    });
+  };
+
   return (
     <div
       style={{
@@ -15,37 +27,62 @@ const RootLayout = () => {
         boxSizing: "border-box",
       }}
     >
+      {/* Header / Navbar */}
       <AppBar
         position="static"
         sx={{
-          backgroundColor: "white",
+          backgroundColor: "#FFF",
           height: "4rem",
           boxShadow: "none",
-          padding: 0,
+          borderBottom: "1px solid #ddd", // Tunn linje för att separera header från innehållet
         }}
       >
         <Toolbar
           sx={{
             display: "flex",
             justifyContent: "space-between",
-            width: "100%",
             alignItems: "center",
-
-            padding: 0,
+            paddingX: 3, // Mer utrymme för att ge andrum
           }}
         >
+          {/* Logotyp / Företagsnamn */}
           <Typography
             variant="h6"
+            onClick={() => navigate("/")} // Klickbar logotyp som navigerar hem
             sx={{
-              color: "#FFA500",
-              paddingX: 2,
+              color: "#FFA500", // Gul/orange färg
+              fontWeight: "bold",
+              cursor: "pointer", // Gör logotypen klickbar
             }}
           >
             LOGGA
           </Typography>
+
+          {/* Användarens navigeringsalternativ */}
+          {user && (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              {/* Logga ut knapp */}
+              <Button
+                variant="outlined"
+                onClick={handleSignOut}
+                sx={{
+                  borderColor: "#FFA500",
+                  color: "#FFA500",
+                  paddingX: 2,
+                  "&:hover": {
+                    borderColor: "#cc8500",
+                    color: "#cc8500",
+                  },
+                }}
+              >
+                Logga ut
+              </Button>
+            </Box>
+          )}
         </Toolbar>
       </AppBar>
 
+      {/* Main content area */}
       <Box
         component="main"
         sx={{
@@ -64,6 +101,7 @@ const RootLayout = () => {
         <Outlet />
       </Box>
 
+      {/* Footer */}
       <footer
         style={{
           backgroundColor: "#333333", // Dark gray
