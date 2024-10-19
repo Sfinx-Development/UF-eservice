@@ -6,9 +6,10 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getAdAsync } from "../SLICES/adSlice"; // Förutsätter att du har en thunk för att hämta en annons
+import { getAdAsync } from "../SLICES/adSlice";
+import { addChatAsync, getAllChatsByProfileAsync } from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 
 const AdDetailPage: React.FC = () => {
@@ -16,14 +17,59 @@ const AdDetailPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const selectedAd = useAppSelector((state) => state.adSlice.selectedAd);
+  const userProfile = useAppSelector((state) => state.userSlice.user); // Hämta inloggad användares profil
+  const chatSessions = useAppSelector((state) => state.chatSlice.chatSessions);
+  const [chatExists, setChatExists] = useState(false);
   const error = useAppSelector((state) => state.adSlice.error);
   const loading = useAppSelector((state) => state.adSlice.loading);
 
   useEffect(() => {
     if (id) {
       dispatch(getAdAsync(id)); // Hämta annonsen baserat på ID
+      if (userProfile) {
+        dispatch(getAllChatsByProfileAsync(userProfile.id)); // Hämta alla chatt-sessioner för användaren
+      }
     }
-  }, [dispatch, id]);
+  }, [dispatch, id, userProfile]);
+
+  useEffect(() => {
+    if (chatSessions && selectedAd) {
+      // Kolla om en chatt-session redan finns mellan användaren och annonsören
+      const existingChat = chatSessions.find(
+        (chat) =>
+          chat.adId === selectedAd.id &&
+          (chat.senderId === userProfile?.id ||
+            chat.receiverId === userProfile?.id)
+      );
+      if (existingChat) {
+        setChatExists(true);
+      }
+    }
+  }, [chatSessions, selectedAd, userProfile]);
+
+  const handleNavigateToChat = async () => {
+    if (!chatExists && selectedAd && userProfile) {
+      // Skapa en ny chatt-session om det inte finns en redan
+      const newChat = {
+        id: "", // Fylls i av Firebase
+        adId: selectedAd.id,
+        adTitle: selectedAd.title,
+        senderId: userProfile.id, // Inloggad användare
+        senderName: userProfile.username,
+        receiverId: selectedAd.profileId, // Annonsörens profil-ID
+        receiverName: selectedAd.profileName, // Annonsörens namn
+        messages: [],
+        lastMessage: "",
+        lastUpdated: new Date(),
+      };
+      const result = await dispatch(addChatAsync(newChat));
+      if (result.meta.requestStatus === "fulfilled") {
+        navigate(`/chat/${result.payload.id}`); // Navigera till den nyskapade chatten
+      }
+    } else if (selectedAd) {
+      navigate(`/chat/${selectedAd.profileId}`); // Navigera till befintlig chatt
+    }
+  };
 
   return (
     <Box
@@ -132,9 +178,7 @@ const AdDetailPage: React.FC = () => {
                     backgroundColor: "#cc8500",
                   },
                 }}
-                onClick={() => {
-                  navigate(`/chat/${selectedAd.profileId}`); // Navigera till chatten
-                }}
+                onClick={handleNavigateToChat} // Skapa eller navigera till chatt
               >
                 Starta chatt
               </Button>

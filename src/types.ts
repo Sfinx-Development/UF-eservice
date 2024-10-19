@@ -48,3 +48,25 @@ export interface Ad {
   fertilization?: string;
   profileId: string;
 }
+
+export interface ChatMessage {
+  messageId: string;
+  senderId: string;
+  senderName: string;
+  message: string;
+  timestamp: string;
+  read: boolean;
+}
+
+export interface AdChatSession {
+  id: string;
+  adId: string;
+  adTitle: string;
+  senderId: string;
+  senderName: string;
+  receiverId: string;
+  receiverName: string;
+  messages: ChatMessage[];
+  lastMessage: string;
+  lastUpdated: string;
+}
