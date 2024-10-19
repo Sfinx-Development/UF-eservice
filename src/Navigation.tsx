@@ -6,6 +6,7 @@ import RegisterPage from "./PAGES/Register";
 import RootLayout from "./PAGES/Rootlayout";
 import ProtectedRoute from "./ProtectedRoute";
 import NewAdPage from "./PAGES/NewAdd";
+import AdListPage from "./PAGES/AdListPage";
 
 const Navigation = () => {
   // const [userLoaded, setUserLoaded] = useState(false);
@@ -49,6 +50,7 @@ const Navigation = () => {
           element={<ProtectedRoute element={DashboardPage} />}
         />
         <Route path="newad" element={<ProtectedRoute element={NewAdPage} />} />
+        <Route path="adlist" element={<ProtectedRoute element={AdListPage} />} />
 
         <Route path="login" element={<Login />} />
       </Route>
