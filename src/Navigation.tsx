@@ -1,11 +1,13 @@
 import { Route, Routes } from "react-router-dom";
+import AdListPage from "./PAGES/AdListPage";
 import DashboardPage from "./PAGES/Dashboard";
 import IndexPage from "./PAGES/Index";
 import Login from "./PAGES/Login";
+import NewAdPage from "./PAGES/NewAdd";
 import RegisterPage from "./PAGES/Register";
 import RootLayout from "./PAGES/Rootlayout";
 import ProtectedRoute from "./ProtectedRoute";
-import NewAdPage from "./PAGES/NewAdd";
+import AdDetailPage from "./PAGES/AdDetailPage";
 
 const Navigation = () => {
   // const [userLoaded, setUserLoaded] = useState(false);
@@ -49,6 +51,14 @@ const Navigation = () => {
           element={<ProtectedRoute element={DashboardPage} />}
         />
         <Route path="newad" element={<ProtectedRoute element={NewAdPage} />} />
+        <Route
+          path="adlist"
+          element={<ProtectedRoute element={AdListPage} />}
+        />
+        <Route
+          path="addetail"
+          element={<ProtectedRoute element={AdDetailPage} />}
+        />
 
         <Route path="login" element={<Login />} />
       </Route>
