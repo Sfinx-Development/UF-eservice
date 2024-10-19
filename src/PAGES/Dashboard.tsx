@@ -49,7 +49,7 @@ const DashboardPage: React.FC = () => {
           },
         }}
         onClick={() => {
-          navigate("/add-ad"); // Navigera till sidan för att lägga till annons
+          navigate("/newad"); // Navigera till sidan för att lägga till annons
         }}
       >
         Lägg till ny annons

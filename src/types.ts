@@ -35,3 +35,16 @@ export interface Profile {
   profileDescription: string;
   role: string;
 }
+
+export interface Ad {
+  id?: string;
+  title: string;
+  description: string;
+  location: string;
+  numberOfHives?: string;
+  crops?: string;
+  areaSize?: string;
+  spraying?: string;
+  fertilization?: string;
+  profileId: string;
+}
