@@ -12,12 +12,14 @@ import {
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../SLICES/store";
+import ChatComponent from "../Components/chatComponent";
 
 const DashboardPage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.userSlice.user);
+  
 
   return (
     <Box
@@ -130,8 +132,59 @@ const DashboardPage: React.FC = () => {
               </Button>
             </CardActions>
           </Card>
+         
         </Grid>
+        <Grid item xs={12} sm={6} md={4}><ChatComponent /></Grid>
+        
       </Grid>
+
+    
+
+
+      {/* Sektion för tips och råd
+      <Typography variant="h5" sx={{ marginTop: "2rem", marginBottom: "1rem" }}>
+        Nyheter & Tips för biodlare
+      </Typography>
+
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6} md={4}>
+          <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
+            <CardContent>
+              <Typography variant="h6" component="div">
+                Hur du startar med biodling
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                En guide för nybörjare
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button size="small" sx={{ color: "#FFA500" }}>
+                Läs mer
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+
+        {/* Fler artiklar eller tips */}
+      {/* <Grid item xs={12} sm={6} md={4}>
+          <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
+            <CardContent>
+              <Typography variant="h6" component="div">
+                Viktiga faktorer för biodlare
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Vad du bör tänka på för att lyckas med biodlingen
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button size="small" sx={{ color: "#FFA500" }}>
+                Läs mer
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+      </Grid> */}
+
     </Box>
   );
 };
