@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import IndexPage from "./PAGES/Index";
 import RootLayout from "./PAGES/Rootlayout";
+import RegisterPage from "./PAGES/Register";
 
 const Navigation = () => {
   // const [userLoaded, setUserLoaded] = useState(false);
@@ -38,6 +39,7 @@ const Navigation = () => {
     <Routes>
       <Route element={<RootLayout />}>
         <Route index element={<IndexPage />} />
+        <Route path="register" element={<RegisterPage />} />
       </Route>
     </Routes>
   );

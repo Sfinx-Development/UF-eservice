@@ -1,69 +1,52 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { User } from "firebase/auth";
-import { auth } from "../API/config";
-
 import { signInWithAPI, signOutWithAuth } from "../API/signin";
-import {
-  deleteUserWithAPI,
-  registerUserWithAPI,
-  updateUserWithAPI,
-} from "../API/user";
-import { UserCreate } from "../types";
+import { registerUserWithAPI, updateUserWithAPI } from "../API/user";
+import { LogIn, Profile, UserCreate } from "../types";
 
+// User state definition
 export interface UserState {
-  user: User | undefined;
+  user: Profile | null;
   error: string | null;
   logInError: string | null;
   createAccountError: string | null;
 }
 
+// Initial state
 export const initialState: UserState = {
-  user: undefined,
+  user: null,
   error: null,
   logInError: null,
   createAccountError: null,
 };
 
-// Registrera användare
-export const createUserAsync = createAsyncThunk<
-  User,
+export const addUserAsync = createAsyncThunk<
+  Profile,
   UserCreate,
   { rejectValue: string }
 >("user/addUser", async (user, thunkAPI) => {
   try {
-    const createdUser = await registerUserWithAPI(user);
-    if (createdUser) {
-      return createdUser;
+    const addedUser = await registerUserWithAPI(user);
+    if (addedUser) {
+      return addedUser;
     } else {
-      return thunkAPI.rejectWithValue(
-        "Något gick fel vid skapandet av användare."
-      );
+      return thunkAPI.rejectWithValue("failed to add user");
     }
-  } catch (error) {
-    return thunkAPI.rejectWithValue(
-      "Det verkar som att denna email redan finns registrerad."
-    );
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
   }
 });
 
-// Uppdatera användare
+// Update user
 export const updateUserAsync = createAsyncThunk<
-  User,
-  Partial<UserCreate>,
-  { rejectValue: string }
+  Profile, // Returnerar en användare vid lyckad uppdatering
+  Partial<Profile>, // Input-typ för uppdateringar (delar av User)
+  { rejectValue: string } // Typ för felhantering (rejectValue)
 >("user/updateUser", async (updates, thunkAPI) => {
   try {
-    const updatedUser = await updateUserWithAPI(
-      updates,
-      auth.currentUser?.uid!
-    );
-    if (updatedUser) {
-      return updatedUser;
-    } else {
-      return thunkAPI.rejectWithValue(
-        "Något gick fel vid uppdateringen av användare."
-      );
-    }
+    const updatedUser = await updateUserWithAPI(updates);
+    return updatedUser;
   } catch (error) {
     return thunkAPI.rejectWithValue(
       "Något gick fel vid uppdateringen av användare."
@@ -71,41 +54,31 @@ export const updateUserAsync = createAsyncThunk<
   }
 });
 
-// Radera användare
-export const deleteUserAsync = createAsyncThunk<
-  boolean,
-  void,
-  { rejectValue: string }
->("user/deleteUser", async (_, thunkAPI) => {
-  try {
-    const isDeleted = await deleteUserWithAPI();
-    if (isDeleted) {
-      return isDeleted;
-    } else {
-      return thunkAPI.rejectWithValue("Användare kunde inte tas bort.");
-    }
-  } catch (error) {
-    return thunkAPI.rejectWithValue(
-      "Något gick fel vid borttagning av användare."
-    );
-  }
-});
+// // Delete user
+// export const deleteUserAsync = createAsyncThunk<
+//   boolean, // Returnerar ett boolean-värde vid lyckad borttagning
+//   void, // Ingen input för borttagning
+//   { rejectValue: string } // Typ för felhantering (rejectValue)
+// >("user/deleteUser", async (_, thunkAPI) => {
+//   try {
+//     const isDeleted = await deleteUserWithAPI();
+//     return isDeleted;
+//   } catch (error) {
+//     return thunkAPI.rejectWithValue(
+//       "Något gick fel vid borttagning av användare."
+//     );
+//   }
+// });
 
-// Logga in användare
+// Log in user
 export const logInUserAsync = createAsyncThunk<
-  User,
-  { email: string; password: string },
-  { rejectValue: string }
->("user/logInUser", async ({ email, password }, thunkAPI) => {
+  Profile, // Returnerar en användare vid lyckad inloggning
+  LogIn, // Input-typ för inloggningsuppgifter (LogIn)
+  { rejectValue: string } // Typ för felhantering (rejectValue)
+>("user/logInUser", async (login, thunkAPI) => {
   try {
-    const userCredential = await signInWithAPI({ email, password });
-    if (userCredential) {
-      return userCredential;
-    } else {
-      return thunkAPI.rejectWithValue(
-        "Inloggningen misslyckades. Felaktiga uppgifter."
-      );
-    }
+    const userCredential = await signInWithAPI(login);
+    return userCredential;
   } catch (error) {
     return thunkAPI.rejectWithValue(
       "Inloggningen misslyckades. Felaktiga uppgifter."
@@ -113,28 +86,21 @@ export const logInUserAsync = createAsyncThunk<
   }
 });
 
-// Logga ut användare
-export const logOutUserAsync = createAsyncThunk("user/logOutUser", async () => {
+// Log out user
+export const logOutUserAsync = createAsyncThunk<
+  boolean, // Returnerar ett boolean-värde vid lyckad utloggning
+  void, // Ingen input krävs för utloggning
+  { rejectValue: string } // Typ för felhantering (rejectValue)
+>("user/logOutUser", async (_, thunkAPI) => {
   try {
     await signOutWithAuth();
     return true;
   } catch (error) {
-    console.error(error);
-    return false;
+    return thunkAPI.rejectWithValue("Något gick fel vid utloggningen.");
   }
 });
 
-// Hämta nuvarande användare
-export const getUserAsync = createAsyncThunk<User>("user/getUser", async () => {
-  try {
-    const user = await getUserWithAPI();
-    return user;
-  } catch (error) {
-    console.error(error);
-    throw new Error("Ett fel uppstod vid hämtning av användare.");
-  }
-});
-
+// Reducers and extra reducers
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -146,62 +112,42 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(logInUserAsync.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.user = action.payload;
-          state.logInError = null;
-        }
+        state.user = action.payload;
+        state.logInError = null;
       })
-      .addCase(logInUserAsync.rejected, (state) => {
-        state.user = undefined;
-        state.logInError = "Användarnamn eller lösenord är felaktigt.";
+      .addCase(logInUserAsync.rejected, (state, action) => {
+        state.user = null;
+        state.logInError =
+          action.payload || "Användarnamn eller lösenord är felaktigt.";
       })
-      .addCase(logOutUserAsync.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.user = undefined;
-          state.error = null;
-        }
+      .addCase(logOutUserAsync.fulfilled, (state) => {
+        state.user = null;
+        state.error = null;
       })
-      .addCase(logOutUserAsync.rejected, (state) => {
-        state.user = undefined;
-        state.error = "Något gick fel vid utloggningen.";
+      .addCase(logOutUserAsync.rejected, (state, action) => {
+        state.error = action.payload || "Något gick fel vid utloggningen.";
       })
-      .addCase(getUserAsync.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.user = action.payload;
-          state.error = null;
-        }
+      .addCase(addUserAsync.fulfilled, (state, action) => {
+        state.createAccountError = null;
       })
-      .addCase(getUserAsync.rejected, (state) => {
-        state.user = undefined;
-        state.error = "Det gick inte att hämta användaren.";
-      })
-      .addCase(createUserAsync.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.createAccountError = null;
-        }
-      })
-      .addCase(createUserAsync.rejected, (state, action) => {
+      .addCase(addUserAsync.rejected, (state, action) => {
         state.createAccountError =
-          action.payload ?? "Ett oväntat fel inträffade.";
+          action.payload || "Ett oväntat fel inträffade.";
       })
       .addCase(updateUserAsync.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.user = action.payload;
-          state.error = null;
-        }
+        state.user = action.payload;
+        state.error = null;
       })
       .addCase(updateUserAsync.rejected, (state, action) => {
-        state.error = action.payload ?? "Ett oväntat fel inträffade.";
-      })
-      .addCase(deleteUserAsync.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.user = undefined;
-          state.error = null;
-        }
-      })
-      .addCase(deleteUserAsync.rejected, (state) => {
-        state.error = "Ett oväntat fel inträffade.";
+        state.error = action.payload || "Ett oväntat fel inträffade.";
       });
+    //   .addCase(deleteUserAsync.fulfilled, (state) => {
+    //     state.user = null;
+    //     state.error = null;
+    //   })
+    //   .addCase(deleteUserAsync.rejected, (state, action) => {
+    //     state.error = action.payload || "Ett oväntat fel inträffade.";
+    //   });
   },
 });
 

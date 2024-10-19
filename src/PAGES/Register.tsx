@@ -13,10 +13,13 @@ import {
   useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
+import { useAppDispatch } from "../SLICES/store";
+import { addUserAsync } from "../SLICES/userSlice";
 import { UserCreate } from "../types";
 
 const RegisterPage: React.FC = () => {
   const theme = useTheme();
+  const dispatch = useAppDispatch();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [formValues, setFormValues] = useState<UserCreate>({
@@ -40,8 +43,8 @@ const RegisterPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Här kan du hantera registreringslogik (t.ex. skicka till backend)
-    console.log("Formulär skickat:", formValues);
+    console.log("KÖR");
+    dispatch(addUserAsync(formValues));
   };
 
   return (

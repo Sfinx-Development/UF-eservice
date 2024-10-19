@@ -5,10 +5,12 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const IndexPage = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // För att fånga mobilvyn (små skärmar)
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Box
@@ -64,7 +66,7 @@ const IndexPage = () => {
           },
         }}
         onClick={() => {
-          // Lägg till navigation här t.ex. navigate('/register')
+          navigate("/register");
         }}
       >
         Registrera dig nu
