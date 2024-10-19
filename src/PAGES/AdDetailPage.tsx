@@ -9,7 +9,11 @@ import {
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAdAsync } from "../SLICES/adSlice";
-import { addChatAsync, getAllChatsByProfileAsync } from "../SLICES/chatSlice";
+import {
+  addChatAsync,
+  getAllChatsByProfileAsync,
+  getChatByAdAndUserAsync,
+} from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 
 const AdDetailPage: React.FC = () => {
@@ -57,17 +61,22 @@ const AdDetailPage: React.FC = () => {
         senderId: userProfile.id, // Inloggad användare
         senderName: userProfile.username,
         receiverId: selectedAd.profileId, // Annonsörens profil-ID
-        receiverName: selectedAd.profileName, // Annonsörens namn
+        receiverName: selectedAd.profileId, // Annonsörens namn
         messages: [],
         lastMessage: "",
-        lastUpdated: new Date(),
+        lastUpdated: new Date().toISOString(),
       };
       const result = await dispatch(addChatAsync(newChat));
       if (result.meta.requestStatus === "fulfilled") {
-        navigate(`/chat/${result.payload.id}`); // Navigera till den nyskapade chatten
+        navigate(`/chat/${result.payload.id}`);
       }
-    } else if (selectedAd) {
-      navigate(`/chat/${selectedAd.profileId}`); // Navigera till befintlig chatt
+    } else if (selectedAd && userProfile) {
+      const result = await dispatch(
+        getChatByAdAndUserAsync({ adId: selectedAd.id, userId: userProfile.id })
+      );
+      if (result.meta.requestStatus === "fulfilled") {
+        navigate(`/chat/${result.payload.id}`);
+      }
     }
   };
 

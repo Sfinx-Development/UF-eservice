@@ -7,6 +7,7 @@ import {
   deleteChatMessage,
   getAllChatSessionsByProfile,
   getChatById,
+  getChatSessionByAdAndUser,
   updateChatMessage,
 } from "../API/chat";
 import { AdChatSession, ChatMessage } from "../types";
@@ -79,6 +80,19 @@ export const getChatByIdAsync = createAsyncThunk<
 >("chat/getChatById", async (chatId, thunkAPI) => {
   try {
     const chat = await getChatById(chatId);
+    return chat;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const getChatByAdAndUserAsync = createAsyncThunk<
+  AdChatSession | null,
+  {adId:string; userId:string;},
+  { rejectValue: string }
+>("chat/getChatByIdAndUser", async ({adId, userId}, thunkAPI) => {
+  try {
+    const chat = await getChatSessionByAdAndUser(adId,userId);
     return chat;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);

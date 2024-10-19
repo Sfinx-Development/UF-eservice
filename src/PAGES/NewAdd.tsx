@@ -39,6 +39,7 @@ const NewAdPage: React.FC = () => {
     if (user) {
       const ad: Ad = {
         ...formValues,
+        id:"undefined",
         profileId: user.id,
       };
       dispatch(addAdAsync(ad));

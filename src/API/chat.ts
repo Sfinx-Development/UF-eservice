@@ -34,16 +34,7 @@ export const addChatToDb = async (
       senderName,
       receiverId,
       receiverName,
-      messages: [
-        {
-          messageId: "first_message_id",
-          senderId,
-          senderName,
-          message: firstMessage,
-          timestamp: Timestamp.now().toString(),
-          read: false,
-        },
-      ],
+      messages: [],
       lastMessage: firstMessage,
       lastUpdated: Timestamp.now().toString(),
     };
@@ -76,6 +67,33 @@ export const getChatById = async (
     }
   } catch (error) {
     console.error("Error fetching chat:", error);
+    throw error;
+  }
+};
+
+export const getChatSessionByAdAndUser = async (
+  adId: string,
+  userId: string
+): Promise<AdChatSession | null> => {
+  try {
+    const chatCollectionRef = collection(db, "chat");
+    const chatQuery = query(
+      chatCollectionRef,
+      where("adId", "==", adId),
+      where("senderId", "==", userId),
+      where("receiverId", "==", userId)
+    );
+
+    const chatSnapshot = await getDocs(chatQuery);
+
+    if (!chatSnapshot.empty) {
+      const chatSession = chatSnapshot.docs[0].data() as AdChatSession;
+      return chatSession;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching chat session:", error);
     throw error;
   }
 };
