@@ -18,9 +18,22 @@ export interface AdState {
   loading: boolean;
 }
 
+const loadSelectedAdFromLocalStorage = (): Ad | null => {
+  try {
+    const serializedAd = localStorage.getItem("selectedAd");
+    if (serializedAd === null) {
+      return null;
+    }
+    return JSON.parse(serializedAd);
+  } catch (error) {
+    console.error("Fel vid laddning av ad från localStorage:", error);
+    return null;
+  }
+};
+
 const initialState: AdState = {
   ads: [],
-  selectedAd: null,
+  selectedAd: loadSelectedAdFromLocalStorage(),
   error: null,
   loading: false,
 };
@@ -92,7 +105,17 @@ export const deleteAdAsync = createAsyncThunk<
 const adSlice = createSlice({
   name: "ads",
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedAd: (state, action) => {
+      const ad = state.ads?.find((a: Ad) => a.id == action.payload.id);
+      if (ad) {
+        state.selectedAd = ad;
+        localStorage.setItem("selectedAd", JSON.stringify(ad));
+      } else {
+        localStorage.setItem("selectedAd", JSON.stringify(undefined));
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(addAdAsync.pending, (state) => {
@@ -175,4 +198,5 @@ const adSlice = createSlice({
   },
 });
 
+export const { setSelectedAd } = adSlice.actions;
 export const adReducer = adSlice.reducer;

@@ -10,13 +10,13 @@ import {
   useTheme,
 } from "@mui/material";
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Använd useNavigate för navigation
+import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../SLICES/store";
 
 const DashboardPage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const navigate = useNavigate(); // Lägg till navigate för att hantera routing
+  const navigate = useNavigate();
   const user = useAppSelector((state) => state.userSlice.user);
 
   return (
@@ -29,7 +29,7 @@ const DashboardPage: React.FC = () => {
         minHeight: "100vh",
         width: "100%",
         padding: isMobile ? "1rem" : "2rem",
-        backgroundColor: "#f7f7f7", // Ljus bakgrundsfärg
+        backgroundColor: "#f7f7f7",
       }}
     >
       <Typography variant={isMobile ? "h4" : "h3"} gutterBottom>
@@ -40,49 +40,49 @@ const DashboardPage: React.FC = () => {
       <Button
         variant="contained"
         sx={{
-          backgroundColor: "#FFA500", // Gul/orange från ditt färgschema
+          backgroundColor: "#FFA500",
           color: "#FFF",
           padding: "0.75rem 1.5rem",
           fontSize: isMobile ? "1rem" : "1.2rem",
           "&:hover": {
-            backgroundColor: "#cc8500", // Mörkare gul/orange
+            backgroundColor: "#cc8500",
           },
         }}
         onClick={() => {
-          navigate("/newad"); // Navigera till sidan för att lägga till annons
+          navigate("/newad");
         }}
       >
         Lägg till ny annons
       </Button>
 
-      {/* Ny knapp för allmän chatt */}
+      {/* Ny knapp för att visa alla annonser */}
       <Button
         variant="outlined"
         sx={{
           marginTop: "1rem",
-          borderColor: "#FFA500", // Gul/orange ram
-          color: "#FFA500", // Textfärg
+          borderColor: "#FFA500",
+          color: "#FFA500",
           padding: "0.75rem 1.5rem",
           fontSize: isMobile ? "1rem" : "1.2rem",
           "&:hover": {
-            borderColor: "#cc8500", // Mörkare gul/orange vid hover
+            borderColor: "#cc8500",
             color: "#cc8500",
           },
         }}
         onClick={() => {
-          navigate("/chat"); // Navigera till chattsidan
+          navigate("/adlist");
         }}
       >
-        Gå till allmän chatt
+        Visa alla annonser
       </Button>
 
-      {/* Annons-sektion */}
+      {/* Exempel på några annonser som visas i dashboarden */}
       <Typography variant="h5" sx={{ marginTop: "2rem", marginBottom: "1rem" }}>
         Annonser i ditt område
       </Typography>
 
       <Grid container spacing={2}>
-        {/* Exempel på en annons (kan vara flera kort i en grid layout) */}
+        {/* Exempel på en annons */}
         <Grid item xs={12} sm={6} md={4}>
           <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
             <CardContent>
@@ -107,7 +107,7 @@ const DashboardPage: React.FC = () => {
           </Card>
         </Grid>
 
-        {/* Flera annonser kan läggas till i samma grid */}
+        {/* En annan annons */}
         <Grid item xs={12} sm={6} md={4}>
           <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
             <CardContent>
@@ -132,50 +132,6 @@ const DashboardPage: React.FC = () => {
           </Card>
         </Grid>
       </Grid>
-
-      {/* Sektion för tips och råd
-      <Typography variant="h5" sx={{ marginTop: "2rem", marginBottom: "1rem" }}>
-        Nyheter & Tips för biodlare
-      </Typography>
-
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={4}>
-          <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
-            <CardContent>
-              <Typography variant="h6" component="div">
-                Hur du startar med biodling
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                En guide för nybörjare
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" sx={{ color: "#FFA500" }}>
-                Läs mer
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-
-        {/* Fler artiklar eller tips */}
-      {/* <Grid item xs={12} sm={6} md={4}>
-          <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
-            <CardContent>
-              <Typography variant="h6" component="div">
-                Viktiga faktorer för biodlare
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Vad du bör tänka på för att lyckas med biodlingen
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" sx={{ color: "#FFA500" }}>
-                Läs mer
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-      </Grid> */}
     </Box>
   );
 };
