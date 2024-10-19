@@ -50,10 +50,10 @@ export interface Ad {
 }
 
 export interface Message {
-  id?: string;             
+  id: string;             
   text: string;            
   timestamp: Date;         
-  userId: string;           
+  userId?: string;           
   username: string;         
 }
 
