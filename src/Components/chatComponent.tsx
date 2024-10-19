@@ -5,12 +5,11 @@ import { addMessageAsync, getAllMessagesAsync, updateMessageAsync, deleteMessage
 
 const ChatComponent: React.FC = () => {
   const dispatch = useAppDispatch();
-  const messages = useAppSelector((state) => state.messageSlice.messages); // Hämta meddelanden från Redux
+  const messages = useAppSelector((state) => state.messageSlice.messages); 
   const user = useAppSelector((state) => state.userSlice.user);
   const [messageText, setMessageText] = React.useState("");
 
   useEffect(() => {
-    // Hämta alla meddelanden vid komponentens montering
     dispatch(getAllMessagesAsync());
   }, [dispatch]);
 
@@ -32,7 +31,17 @@ const ChatComponent: React.FC = () => {
   };
 
   return (
-    <Box sx={{ height: "400px", overflowY: "scroll", border: "1px solid #ccc", padding: "1rem" }}>
+    <Box
+      sx={{
+        height: "400px",
+        overflowY: "scroll",
+        border: "1px solid #FFA500", 
+        borderRadius: "8px",
+        padding: "1rem",
+        backgroundColor: "#fff", 
+        
+      }}
+    >
       {messages.map((message) => (
         <Box key={message.id} sx={{ padding: "0.5rem", borderBottom: "1px solid #eee" }}>
           <Typography variant="body1">
@@ -43,8 +52,9 @@ const ChatComponent: React.FC = () => {
           </Typography>
           {message.userId === user?.id && (
             <Box>
-              {/* <Button onClick={() => editMessage(message.id)}>Redigera</Button>
-              <Button onClick={() => deleteMessage(message.id)}>Ta bort</Button> */}
+            
+              <Button onClick={() => editMessage(message.id)}>Redigera</Button>
+              {/* <Button onClick={() => deleteMessage(message.id)}>Ta bort</Button>  */}
             </Box>
           )}
         </Box>
@@ -56,8 +66,19 @@ const ChatComponent: React.FC = () => {
         placeholder="Skriv ett meddelande"
         value={messageText}
         onChange={(e) => setMessageText(e.target.value)}
+        sx={{ marginTop: "1rem" }} // Avstånd ovanför TextField
       />
-      <Button onClick={handleSendMessage} sx={{ marginTop: "1rem" }}>
+      <Button
+        onClick={handleSendMessage}
+        sx={{
+          marginTop: "1rem",
+          backgroundColor: "#FFA500", // Gul/orange från dashboard
+          color: "#FFF",
+          "&:hover": {
+            backgroundColor: "#cc8500", // Mörkare gul/orange vid hover
+          },
+        }}
+      >
         Skicka
       </Button>
     </Box>

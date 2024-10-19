@@ -132,20 +132,13 @@ const DashboardPage: React.FC = () => {
               </Button>
             </CardActions>
           </Card>
-          <ChatComponent />
+         
         </Grid>
+        <Grid item xs={12} sm={6} md={4}><ChatComponent /></Grid>
+        
       </Grid>
+    
 
-      {/* <Grid item xs={12} sm={8}>
-  <Box sx={{ height: "400px", overflowY: "scroll", border: "1px solid #ccc" }}>
-    {onmessage.map((message: { id: React.Key | null | undefined; username: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; text: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; timestamp: { seconds: number; }; userId: string; }) => (
-      <Box key={message.id} sx={{ padding: "0.5rem", borderBottom: "1px solid #eee" }}>
-        <Typography variant="body1">
-          <strong>{message.username}</strong>: {message.text}
-        </Typography>
-        <Typography variant="caption">{new Date(message.timestamp?.seconds * 1000).toLocaleString()}</Typography>
-        {/* Lägg till knappar för redigera och ta bort om användaren äger meddelandet */}
-  
 
       {/* Sektion för tips och råd
       <Typography variant="h5" sx={{ marginTop: "2rem", marginBottom: "1rem" }}>
