@@ -9,7 +9,7 @@ import {
   deleteMessageAsync,
   getAllMessagesAsync,
   updateMessageAsync,
-//   deleteMessageAsync,
+  //   deleteMessageAsync,
 } from "../SLICES/messageSlice";
 
 const ChatComponent: React.FC = () => {
@@ -19,8 +19,6 @@ const ChatComponent: React.FC = () => {
   const [messageText, setMessageText] = React.useState("");
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
 
-
-
   useEffect(() => {
     dispatch(getAllMessagesAsync());
   }, [dispatch]);
@@ -28,7 +26,7 @@ const ChatComponent: React.FC = () => {
   const handleSendMessage = () => {
     if (messageText.trim()) {
       const newMessage = {
-        id: uuidv4(), 
+        id: uuidv4(),
         text: messageText,
         userId: user?.id,
         // userId: user?.id || "", // Använd en tom sträng om userId är undefined
@@ -44,7 +42,6 @@ const ChatComponent: React.FC = () => {
     }
   };
 
-
   const handleEditMessage = (messageId: string) => {
     const messageToEdit = messages.find((msg) => msg.id === messageId);
     if (messageToEdit) {
@@ -56,15 +53,15 @@ const ChatComponent: React.FC = () => {
   const handleUpdateMessage = () => {
     if (editingMessageId && messageText.trim()) {
       const updatedMessage = {
-        messageId: editingMessageId, 
+        messageId: editingMessageId,
         updates: {
           text: messageText,
-          timestamp: new Date(), 
+          timestamp: new Date(),
         },
       };
       dispatch(updateMessageAsync(updatedMessage));
       setMessageText("");
-      setEditingMessageId(null); 
+      setEditingMessageId(null);
     }
   };
 
@@ -84,14 +81,17 @@ const ChatComponent: React.FC = () => {
       }}
     >
       {messages.map((message) => (
-        <Box key={message.id} sx={{ padding: "0.5rem", borderBottom: "1px solid #eee" }}>
+        <Box
+          key={message.id}
+          sx={{ padding: "0.5rem", borderBottom: "1px solid #eee" }}
+        >
           {editingMessageId === message.id ? (
             <TextField
               fullWidth
               variant="outlined"
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
-              sx={{ marginTop: "0.5rem" }} 
+              sx={{ marginTop: "0.5rem" }}
             />
           ) : (
             <>
@@ -107,13 +107,33 @@ const ChatComponent: React.FC = () => {
             <Box>
               {editingMessageId === message.id ? (
                 <>
-                  <Button onClick={handleUpdateMessage}>Uppdatera</Button>
-                  <Button onClick={() => setEditingMessageId(null)}>Avbryt</Button>
+                  <Button
+                    onClick={handleUpdateMessage}
+                    sx={{ color: "#FFA500" }}
+                  >
+                    Uppdatera
+                  </Button>
+                  <Button
+                    onClick={() => setEditingMessageId(null)}
+                    sx={{ color: "#FFA500" }}
+                  >
+                    Avbryt
+                  </Button>
                 </>
               ) : (
                 <>
-                  <Button onClick={() => handleEditMessage(message.id)}>Redigera</Button>
-                  <Button onClick={() => handleDeleteMessage(message.id)}>Ta bort</Button>
+                  <Button
+                    onClick={() => handleEditMessage(message.id)}
+                    sx={{ color: "#FFA500" }}
+                  >
+                    Redigera
+                  </Button>
+                  <Button
+                    onClick={() => handleDeleteMessage(message.id)}
+                    sx={{ color: "#FFA500" }}
+                  >
+                    Ta bort
+                  </Button>
                 </>
               )}
             </Box>
@@ -127,16 +147,16 @@ const ChatComponent: React.FC = () => {
         placeholder="Skriv ett meddelande"
         value={messageText}
         onChange={(e) => setMessageText(e.target.value)}
-        sx={{ marginTop: "1rem" }} 
+        sx={{ marginTop: "1rem" }}
       />
       <Button
         onClick={handleSendMessage}
         sx={{
           marginTop: "1rem",
-          backgroundColor: "#FFA500", 
+          backgroundColor: "#FFA500",
           color: "#FFF",
           "&:hover": {
-            backgroundColor: "#cc8500", 
+            backgroundColor: "#cc8500",
           },
         }}
       >
