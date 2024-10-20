@@ -9,6 +9,7 @@ import NewAdPage from "./PAGES/NewAdd";
 import RegisterPage from "./PAGES/Register";
 import RootLayout from "./PAGES/Rootlayout";
 import ProtectedRoute from "./ProtectedRoute";
+import ChatList from "./PAGES/ChatList";
 
 const Navigation = () => {
   // const [userLoaded, setUserLoaded] = useState(false);
@@ -59,6 +60,10 @@ const Navigation = () => {
         <Route
           path="addetail"
           element={<ProtectedRoute element={AdDetailPage} />}
+        />
+        <Route
+          path="chatlist"
+          element={<ProtectedRoute element={ChatList} />}
         />
         <Route
           path="chat/:chatId"
