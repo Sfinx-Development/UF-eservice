@@ -80,8 +80,7 @@ export const getChatSessionByAdAndUser = async (
     const chatQuery = query(
       chatCollectionRef,
       where("adId", "==", adId),
-      where("senderId", "==", userId),
-      where("receiverId", "==", userId)
+      where("senderId", "==", userId)
     );
 
     const chatSnapshot = await getDocs(chatQuery);
