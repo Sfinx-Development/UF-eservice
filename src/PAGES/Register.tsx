@@ -11,6 +11,7 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  FormHelperText,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useAppDispatch } from "../SLICES/store";
@@ -29,8 +30,15 @@ const RegisterPage: React.FC = () => {
     password: "",
     address: "",
     profileDescription: "",
-    role: "biodlare",
+    role: "",
     termsAccepted: false,
+  });
+
+  const [errors, setErrors] = useState({
+    role: false,
+    termsAccepted: false,
+    phone: false,
+    address: false
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,10 +49,50 @@ const RegisterPage: React.FC = () => {
     }));
   };
 
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   console.log("KÖR");
+  //   dispatch(addUserAsync(formValues));
+  // };
+
+  const validatePhone = (phone: string) => {
+    const phoneRegex = /^[0-9]{10}$/; // Adjust regex based on your phone format
+    return phoneRegex.test(phone);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("KÖR");
-    dispatch(addUserAsync(formValues));
+
+    let hasErrors = false;
+    const newErrors = {
+      role: false,
+      termsAccepted: false,
+      phone: false,
+      address: false,
+    };
+
+    if (!formValues.role) {
+      newErrors.role = true;
+      hasErrors = true;
+    }
+    if (!formValues.termsAccepted) {
+      newErrors.termsAccepted = true;
+      hasErrors = true;
+    }
+    if (!validatePhone(formValues.phone)) {
+      newErrors.phone = true;
+      hasErrors = true;
+    }
+    if (!formValues.address.trim()) {
+      newErrors.address = true;
+      hasErrors = true;
+    }
+
+    setErrors(newErrors);
+
+    if (!hasErrors) {
+      dispatch(addUserAsync(formValues));
+    }
   };
 
   return (
@@ -95,6 +143,8 @@ const RegisterPage: React.FC = () => {
           onChange={handleChange}
           required
           fullWidth
+          error={errors.phone}
+          helperText={errors.phone ? "Ogiltigt telefonnummer" : ""}
         />
         <TextField
           label="Användarnamn"
@@ -120,6 +170,8 @@ const RegisterPage: React.FC = () => {
           onChange={handleChange}
           required
           fullWidth
+          error={errors.address}
+          helperText={errors.address ? "Adress kan inte vara tom" : ""}
         />
         <TextField
           label="Profilbeskrivning (valfritt)"
@@ -131,7 +183,7 @@ const RegisterPage: React.FC = () => {
           fullWidth
         />
 
-        <FormControl component="fieldset">
+        <FormControl component="fieldset" error={errors.role}>
           <FormLabel component="legend">Roll</FormLabel>
           <RadioGroup
             name="role"
@@ -150,6 +202,7 @@ const RegisterPage: React.FC = () => {
             />
             <FormControlLabel value="båda" control={<Radio />} label="Båda" />
           </RadioGroup>
+          {errors.role && <FormHelperText>Välj en roll</FormHelperText>}
         </FormControl>
 
         <FormControlLabel
@@ -163,6 +216,7 @@ const RegisterPage: React.FC = () => {
           }
           label="Jag godkänner användarvillkoren"
         />
+        {errors.termsAccepted && <FormHelperText error></FormHelperText>}
 
         <Button
           type="submit"
