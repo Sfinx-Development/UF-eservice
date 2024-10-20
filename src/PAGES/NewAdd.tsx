@@ -7,6 +7,7 @@ import {
   Snackbar,
   TextField,
   Typography,
+  
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +31,14 @@ const NewAdPage: React.FC = () => {
     fertilization: "none",
   });
 
+  const [errors, setErrors] = useState({
+    title: false,
+    location: false,
+    numberOfHives: false,
+    areaSize: false,
+    crops: false,
+  });
+
   const [snackbarOpen, setSnackbarOpen] = useState(false); // För att hantera Snackbar
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,23 +51,86 @@ const NewAdPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (user) {
+  
+    // Reset errors
+    const newErrors = {
+      title: false,
+      location: false,
+      numberOfHives: false,
+      areaSize: false,
+      crops: false,
+    };
+  
+    let hasErrors = false;
+  
+    // Check required fields
+    if (!formValues.title) {
+      newErrors.title = true;
+      hasErrors = true;
+    }
+    if (!formValues.location) {
+      newErrors.location = true;
+      hasErrors = true;
+    }
+    
+    // Error handling for biodlare
+    if (user?.role === "biodlare" && !formValues.numberOfHives) {
+      newErrors.numberOfHives = true;
+      hasErrors = true;
+    }
+    
+    // Error handling for markägare
+    if (user?.role === "markägare") {
+      if (!formValues.areaSize) {
+        newErrors.areaSize = true;
+        hasErrors = true;
+      }
+      if (!formValues.crops) {
+        newErrors.crops = true;
+        hasErrors = true;
+      }
+    }
+  
+    setErrors(newErrors);
+  
+    if (!hasErrors && user) {
       const ad: Ad = {
         ...formValues,
         id: "undefined",
         profileId: user.id,
       };
       dispatch(addAdAsync(ad));
-
-      // Visa meddelande att annonsen skapades
+  
+      // Show success message
       setSnackbarOpen(true);
-
-      // Navigera till dashboard efter en kort tidsfördröjning
+  
+      // Redirect to dashboard after a short delay
       setTimeout(() => {
         navigate("/dashboard");
-      }, 1500); // Vänta 1,5 sekunder
+      }, 1500); // Wait 1.5 seconds
     }
   };
+  
+
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (user) {
+  //     const ad: Ad = {
+  //       ...formValues,
+  //       id: "undefined",
+  //       profileId: user.id,
+  //     };
+  //     dispatch(addAdAsync(ad));
+
+  //     // Visa meddelande att annonsen skapades
+  //     setSnackbarOpen(true);
+
+  //     // Navigera till dashboard efter en kort tidsfördröjning
+  //     setTimeout(() => {
+  //       navigate("/dashboard");
+  //     }, 1500); // Vänta 1,5 sekunder
+  //   }
+  // };
 
   return (
     <Box
@@ -100,6 +172,8 @@ const NewAdPage: React.FC = () => {
           value={formValues.title}
           onChange={handleChange}
           required
+          error={errors.title}
+          helperText={errors.title ? "Titel är obligatorisk" : ""}
           fullWidth
         />
         <TextField
@@ -117,6 +191,8 @@ const NewAdPage: React.FC = () => {
           value={formValues.location}
           onChange={handleChange}
           required
+          error={errors.location}
+          helperText={errors.location ? "Plats är obligatorisk" : ""}
           fullWidth
         />
 
@@ -128,6 +204,8 @@ const NewAdPage: React.FC = () => {
             value={formValues.numberOfHives}
             onChange={handleChange}
             required
+            error={errors.numberOfHives}
+            helperText={errors.numberOfHives ? "Ange antal bikupor" : ""}
             fullWidth
           />
         )}
@@ -141,6 +219,8 @@ const NewAdPage: React.FC = () => {
               value={formValues.areaSize}
               onChange={handleChange}
               required
+              error={errors.areaSize}
+              helperText={errors.areaSize ? "Ange storlek på mark" : ""}
               fullWidth
             />
             <TextField
@@ -149,6 +229,8 @@ const NewAdPage: React.FC = () => {
               value={formValues.crops}
               onChange={handleChange}
               required
+              error={errors.crops}
+              helperText={errors.crops ? "Ange grödor" : ""}
               fullWidth
             />
             <Typography variant="h6">Användning av kemikalier:</Typography>
