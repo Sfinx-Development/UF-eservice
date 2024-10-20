@@ -102,16 +102,37 @@ export const getAllChatSessionsByProfile = async (
 ): Promise<AdChatSession[]> => {
   try {
     const chatCollectionRef = collection(db, "chat");
-    const chatQuery = query(
+
+    // Query för att hitta chattar där profileId är senderId
+    const senderQuery = query(
       chatCollectionRef,
-      where("senderId", "==", profileId),
+      where("senderId", "==", profileId)
+    );
+
+    // Query för att hitta chattar där profileId är receiverId
+    const receiverQuery = query(
+      chatCollectionRef,
       where("receiverId", "==", profileId)
     );
-    const chatSnapshot = await getDocs(chatQuery);
-    const chats: AdChatSession[] = chatSnapshot.docs.map(
+
+    // Utför båda queries
+    const [senderSnapshot, receiverSnapshot] = await Promise.all([
+      getDocs(senderQuery),
+      getDocs(receiverQuery),
+    ]);
+
+    // Kombinera resultaten från båda queries
+    const senderChats = senderSnapshot.docs.map(
       (doc) => doc.data() as AdChatSession
     );
-    return chats;
+    const receiverChats = receiverSnapshot.docs.map(
+      (doc) => doc.data() as AdChatSession
+    );
+
+    // Slå ihop chatt-sessionerna och returnera dem
+    const allChats = [...senderChats, ...receiverChats];
+
+    return allChats;
   } catch (error) {
     console.error("Error fetching chats for profile:", error);
     throw error;
@@ -129,7 +150,7 @@ export const addMessageToChat = async (
     await updateDoc(sessionRef, {
       messages: arrayUnion(message), // Lägg till meddelandet till listan
       lastMessage: message.message, // Uppdatera senaste meddelandet
-      lastUpdated: Timestamp.now(), // Sätt senaste uppdateringen till nuvarande tid
+      lastUpdated: Timestamp.now().toString(), // Sätt senaste uppdateringen till nuvarande tid
     });
 
     console.log("Meddelandet lades till framgångsrikt.");

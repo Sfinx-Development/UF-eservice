@@ -4,17 +4,21 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { addAdAsync } from "../SLICES/adSlice";
-import { useAppDispatch, useAppSelector } from "../SLICES/store"; // För att hämta användarroll från Redux store
+import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { Ad } from "../types";
 
 const NewAdPage: React.FC = () => {
   const user = useAppSelector((state) => state.userSlice.user);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [formValues, setFormValues] = useState({
     title: "",
     description: "",
@@ -25,6 +29,8 @@ const NewAdPage: React.FC = () => {
     spraying: "no",
     fertilization: "none",
   });
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // För att hantera Snackbar
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -39,10 +45,18 @@ const NewAdPage: React.FC = () => {
     if (user) {
       const ad: Ad = {
         ...formValues,
-        id:"undefined",
+        id: "undefined",
         profileId: user.id,
       };
       dispatch(addAdAsync(ad));
+
+      // Visa meddelande att annonsen skapades
+      setSnackbarOpen(true);
+
+      // Navigera till dashboard efter en kort tidsfördröjning
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1500); // Vänta 1,5 sekunder
     }
   };
 
@@ -108,16 +122,14 @@ const NewAdPage: React.FC = () => {
 
         {/* Biodlare-formulär */}
         {user?.role === "biodlare" && (
-          <>
-            <TextField
-              label="Hur många bikupor vill du ställa ut?"
-              name="numberOfHives"
-              value={formValues.numberOfHives}
-              onChange={handleChange}
-              required
-              fullWidth
-            />
-          </>
+          <TextField
+            label="Hur många bikupor vill du ställa ut?"
+            name="numberOfHives"
+            value={formValues.numberOfHives}
+            onChange={handleChange}
+            required
+            fullWidth
+          />
         )}
 
         {/* Markägare-formulär */}
@@ -196,6 +208,14 @@ const NewAdPage: React.FC = () => {
           Skicka annons
         </Button>
       </Box>
+
+      {/* Snackbar för bekräftelse */}
+      <Snackbar
+        open={snackbarOpen}
+        message="Annonsen skapades framgångsrikt!"
+        autoHideDuration={1500}
+        onClose={() => setSnackbarOpen(false)}
+      />
     </Box>
   );
 };

@@ -28,11 +28,18 @@ export default function ChatList() {
     if (user) {
       dispatch(getAllChatsByProfileAsync(user.id));
     }
-  }, [user]);
+  }, [user, dispatch]);
 
   const handleNavigateToChat = (chatId: string) => {
     navigate(`/chat/${chatId}`);
   };
+
+  // Sortera chatSessions baserat på det senaste "lastUpdated", nyaste först
+  const sortedChatSessions = [...chatSessions].sort((a, b) => {
+    return (
+      new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
+    );
+  });
 
   return (
     <Box
@@ -48,7 +55,7 @@ export default function ChatList() {
     >
       {loading ? (
         <CircularProgress />
-      ) : chatSessions.length > 0 ? (
+      ) : sortedChatSessions.length > 0 ? (
         <Box
           sx={{
             display: "flex",
@@ -67,7 +74,7 @@ export default function ChatList() {
             gutterBottom
             sx={{ fontWeight: "bold" }}
           >
-            Ditt chattlista
+            Dina chattar
           </Typography>
 
           {/* Lista över alla chatt-sessioner */}
@@ -81,7 +88,7 @@ export default function ChatList() {
             }}
           >
             <List>
-              {chatSessions.map((chat) => (
+              {sortedChatSessions.map((chat) => (
                 <ListItem
                   key={chat.id}
                   onClick={() => handleNavigateToChat(chat.id)}
@@ -91,6 +98,10 @@ export default function ChatList() {
                     backgroundColor: "#fff",
                     borderRadius: "8px",
                     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+                    cursor: "pointer",
+                    "&:hover": {
+                      backgroundColor: "#f0f0f0",
+                    },
                   }}
                 >
                   <ListItemText

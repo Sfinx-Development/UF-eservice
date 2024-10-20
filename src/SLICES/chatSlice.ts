@@ -66,7 +66,9 @@ export const getAllChatsByProfileAsync = createAsyncThunk<
   { rejectValue: string }
 >("chat/getAllChatsByProfile", async (profileId, thunkAPI) => {
   try {
+    console.log("PROFILEID: ", profileId);
     const chatSessions = await getAllChatSessionsByProfile(profileId);
+    localStorage.setItem("chatSessions", JSON.stringify(chatSessions));
     return chatSessions;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
@@ -88,11 +90,11 @@ export const getChatByIdAsync = createAsyncThunk<
 
 export const getChatByAdAndUserAsync = createAsyncThunk<
   AdChatSession | null,
-  {adId:string; userId:string;},
+  { adId: string; userId: string },
   { rejectValue: string }
->("chat/getChatByIdAndUser", async ({adId, userId}, thunkAPI) => {
+>("chat/getChatByIdAndUser", async ({ adId, userId }, thunkAPI) => {
   try {
-    const chat = await getChatSessionByAdAndUser(adId,userId);
+    const chat = await getChatSessionByAdAndUser(adId, userId);
     return chat;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
