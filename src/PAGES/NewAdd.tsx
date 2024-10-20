@@ -7,7 +7,7 @@ import {
   Snackbar,
   TextField,
   Typography,
-  FormHelperText
+  
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -51,7 +51,7 @@ const NewAdPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     // Reset errors
     const newErrors = {
       title: false,
@@ -60,9 +60,9 @@ const NewAdPage: React.FC = () => {
       areaSize: false,
       crops: false,
     };
-
+  
     let hasErrors = false;
-
+  
     // Check required fields
     if (!formValues.title) {
       newErrors.title = true;
@@ -72,10 +72,14 @@ const NewAdPage: React.FC = () => {
       newErrors.location = true;
       hasErrors = true;
     }
+    
+    // Error handling for biodlare
     if (user?.role === "biodlare" && !formValues.numberOfHives) {
       newErrors.numberOfHives = true;
       hasErrors = true;
     }
+    
+    // Error handling for markägare
     if (user?.role === "markägare") {
       if (!formValues.areaSize) {
         newErrors.areaSize = true;
@@ -86,9 +90,9 @@ const NewAdPage: React.FC = () => {
         hasErrors = true;
       }
     }
-
+  
     setErrors(newErrors);
-
+  
     if (!hasErrors && user) {
       const ad: Ad = {
         ...formValues,
@@ -96,16 +100,17 @@ const NewAdPage: React.FC = () => {
         profileId: user.id,
       };
       dispatch(addAdAsync(ad));
-
+  
       // Show success message
       setSnackbarOpen(true);
-
+  
       // Redirect to dashboard after a short delay
       setTimeout(() => {
         navigate("/dashboard");
       }, 1500); // Wait 1.5 seconds
     }
   };
+  
 
   // const handleSubmit = (e: React.FormEvent) => {
   //   e.preventDefault();
