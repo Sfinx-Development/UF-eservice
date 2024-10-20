@@ -1,3 +1,4 @@
+import ChatIcon from "@mui/icons-material/Chat";
 import {
   Box,
   Button,
@@ -76,6 +77,29 @@ const DashboardPage: React.FC = () => {
         }}
       >
         Visa alla annonser
+      </Button>
+
+      {/* Ny knapp för att visa alla chattar */}
+      <Button
+        variant="outlined"
+        sx={{
+          marginTop: "1rem",
+          borderColor: "#FFA500",
+          color: "#FFA500",
+          padding: "0.75rem 1.5rem",
+          gap: 1,
+          fontSize: isMobile ? "1rem" : "1.2rem",
+          "&:hover": {
+            borderColor: "#cc8500",
+            color: "#cc8500",
+          },
+        }}
+        onClick={() => {
+          navigate("/chatlist");
+        }}
+      >
+        Visa alla chattar
+        <ChatIcon />
       </Button>
 
       {/* Exempel på några annonser som visas i dashboarden */}

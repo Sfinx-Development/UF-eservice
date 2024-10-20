@@ -37,7 +37,7 @@ export interface Profile {
 }
 
 export interface Ad {
-  id?: string;
+  id: string;
   title: string;
   description: string;
   location: string;
@@ -49,6 +49,27 @@ export interface Ad {
   profileId: string;
 }
 
+export interface ChatMessage {
+  messageId: string;
+  senderId: string;
+  senderName: string;
+  message: string;
+  timestamp: string;
+  read: boolean;
+}
+
+export interface AdChatSession {
+  id: string;
+  adId: string;
+  adTitle: string;
+  senderId: string;
+  senderName: string;
+  receiverId: string;
+  receiverName: string;
+  messages: ChatMessage[];
+  lastMessage: string;
+  lastUpdated: string;
+}
 export interface Message {
   id: string;             
   text: string;            
@@ -56,4 +77,3 @@ export interface Message {
   userId?: string;           
   username: string;         
 }
-

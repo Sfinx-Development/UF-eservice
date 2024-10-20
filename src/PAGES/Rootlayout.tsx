@@ -1,3 +1,4 @@
+import HomeIcon from "@mui/icons-material/Home";
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
@@ -60,7 +61,24 @@ const RootLayout = () => {
 
           {/* Användarens navigeringsalternativ */}
           {user && (
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  navigate("/dashboard");
+                }}
+                sx={{
+                  borderColor: "#FFA500",
+                  color: "#FFA500",
+                  paddingX: 2,
+                  "&:hover": {
+                    borderColor: "#cc8500",
+                    color: "#cc8500",
+                  },
+                }}
+              >
+                <HomeIcon />
+              </Button>
               {/* Logga ut knapp */}
               <Button
                 variant="outlined"
