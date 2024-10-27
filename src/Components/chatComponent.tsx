@@ -1,22 +1,36 @@
+import {
+  ChatBubbleOutline,
+  Close,
+  Delete,
+  Edit,
+  Send,
+} from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Paper,
+  Slide,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
-
 import { v4 as uuidv4 } from "uuid";
-
-import { Box, Button, TextField, Typography } from "@mui/material";
 import {
   addMessageAsync,
   deleteMessageAsync,
   getAllMessagesAsync,
   updateMessageAsync,
 } from "../SLICES/messageSlice";
-import { useAppDispatch, useAppSelector } from "../SLICES/store"; // Se till att inkludera useAppDispatch
+import { useAppDispatch, useAppSelector } from "../SLICES/store";
 
 const ChatComponent: React.FC = () => {
   const dispatch = useAppDispatch();
   const messages = useAppSelector((state) => state.messageSlice.messages);
   const user = useAppSelector((state) => state.userSlice.user);
-  const [messageText, setMessageText] = React.useState("");
+  const [messageText, setMessageText] = useState("");
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false); // För att kontrollera om chatten är öppen eller stängd
 
   useEffect(() => {
     dispatch(getAllMessagesAsync());
@@ -28,12 +42,9 @@ const ChatComponent: React.FC = () => {
         id: uuidv4(),
         text: messageText,
         userId: user?.id,
-        // userId: user?.id || "", // Använd en tom sträng om userId är undefined
-        username: user?.username || "Anonym", // Använd "Anonym" om username är undefined
+        username: user?.username || "Anonym",
         timestamp: new Date().toISOString(),
       };
-
-      // Kontrollera om userId är en tom sträng (du kanske vill hantera detta)
       if (newMessage.userId) {
         dispatch(addMessageAsync(newMessage));
         setMessageText("");
@@ -70,97 +81,177 @@ const ChatComponent: React.FC = () => {
 
   return (
     <Box
-      sx={{
-        height: "400px",
-        overflowY: "scroll",
-        border: "1px solid #FFA500",
-        borderRadius: "8px",
-        padding: "1rem",
-        backgroundColor: "#fff",
-      }}
+      sx={{ position: "fixed", bottom: "2rem", right: "2rem", zIndex: 1000 }}
     >
-      {messages.map((message) => (
-        <Box
-          key={message.id}
-          sx={{ padding: "0.5rem", borderBottom: "1px solid #eee" }}
+      {!isOpen && (
+        <IconButton
+          onClick={() => setIsOpen(true)}
+          sx={{
+            backgroundColor: "#FFA500",
+            color: "#FFF",
+            "&:hover": { backgroundColor: "#cc8500" },
+            position: "absolute",
+            bottom: 0,
+            right: 0,
+          }}
         >
-          {editingMessageId === message.id ? (
+          <ChatBubbleOutline />
+        </IconButton>
+      )}
+
+      <Slide direction="up" in={isOpen} mountOnEnter unmountOnExit>
+        <Paper
+          elevation={3}
+          sx={{
+            width: "300px",
+            maxHeight: "400px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            borderRadius: "8px",
+            overflow: "hidden",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "1rem",
+              backgroundColor: "#FFA500",
+              color: "#fff",
+            }}
+          >
+            <Typography variant="h6">Chatt</Typography>
+            <IconButton
+              onClick={() => setIsOpen(false)}
+              sx={{
+                color: "#FFF",
+                "&:hover": { color: "#cc8500" },
+              }}
+            >
+              <Close />
+            </IconButton>
+          </Box>
+          <Box
+            sx={{
+              flex: 1,
+              overflowY: "scroll",
+              padding: "1rem",
+              backgroundColor: "#fff",
+            }}
+          >
+            {messages.map((message) => (
+              <Box
+                key={message.id}
+                sx={{
+                  padding: "0.5rem",
+                  borderBottom: "1px solid #eee",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+              >
+                <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                  {message.username}
+                </Typography>
+                <Typography variant="body1" sx={{ wordBreak: "break-word" }}>
+                  {editingMessageId === message.id ? (
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      value={messageText}
+                      onChange={(e) => setMessageText(e.target.value)}
+                      size="small"
+                    />
+                  ) : (
+                    message.text
+                  )}
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <Typography variant="caption" color="text.secondary">
+                    {new Date(message.timestamp).toLocaleDateString()}
+                  </Typography>
+                  {message.userId === user?.id && (
+                    <Box>
+                      {editingMessageId === message.id ? (
+                        <>
+                          <IconButton
+                            onClick={handleUpdateMessage}
+                            size="small"
+                            color="primary"
+                          >
+                            <Send fontSize="small" />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => setEditingMessageId(null)}
+                            size="small"
+                            color="secondary"
+                          >
+                            <Delete fontSize="small" />
+                          </IconButton>
+                        </>
+                      ) : (
+                        <>
+                          <IconButton
+                            onClick={() => handleEditMessage(message.id)}
+                            size="small"
+                            color="primary"
+                          >
+                            <Edit fontSize="small" />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => handleDeleteMessage(message.id)}
+                            size="small"
+                            color="secondary"
+                          >
+                            <Delete fontSize="small" />
+                          </IconButton>
+                        </>
+                      )}
+                    </Box>
+                  )}
+                </Box>
+              </Box>
+            ))}
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              padding: "1rem",
+              backgroundColor: "#f5f5f5",
+            }}
+          >
             <TextField
               fullWidth
               variant="outlined"
+              placeholder="Skriv ett meddelande"
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
-              sx={{ marginTop: "0.5rem" }}
+              size="small"
+              sx={{ marginRight: "0.5rem" }}
             />
-          ) : (
-            <>
-              <Typography variant="body1">
-                <strong>{message.username}</strong>: {message.text}
-              </Typography>
-              <Typography variant="caption">
-                {new Date(message.timestamp).toLocaleDateString()}
-              </Typography>
-            </>
-          )}
-          {message.userId === user?.id && (
-            <Box>
-              {editingMessageId === message.id ? (
-                <>
-                  <Button
-                    onClick={handleUpdateMessage}
-                    sx={{ color: "#FFA500" }}
-                  >
-                    Uppdatera
-                  </Button>
-                  <Button
-                    onClick={() => setEditingMessageId(null)}
-                    sx={{ color: "#FFA500" }}
-                  >
-                    Avbryt
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    onClick={() => handleEditMessage(message.id)}
-                    sx={{ color: "#FFA500" }}
-                  >
-                    Redigera
-                  </Button>
-                  <Button
-                    onClick={() => handleDeleteMessage(message.id)}
-                    sx={{ color: "#FFA500" }}
-                  >
-                    Ta bort
-                  </Button>
-                </>
-              )}
-            </Box>
-          )}
-        </Box>
-      ))}
-
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="Skriv ett meddelande"
-        value={messageText}
-        onChange={(e) => setMessageText(e.target.value)}
-        sx={{ marginTop: "1rem" }}
-      />
-      <Button
-        onClick={handleSendMessage}
-        sx={{
-          marginTop: "1rem",
-          backgroundColor: "#FFA500",
-          color: "#FFF",
-          "&:hover": {
-            backgroundColor: "#cc8500",
-          },
-        }}
-      >
-        Skicka
-      </Button>
+            <Button
+              onClick={handleSendMessage}
+              variant="contained"
+              sx={{
+                backgroundColor: "#FFA500",
+                color: "#FFF",
+                minWidth: "50px",
+                "&:hover": { backgroundColor: "#cc8500" },
+              }}
+            >
+              <Send />
+            </Button>
+          </Box>
+        </Paper>
+      </Slide>
     </Box>
   );
 };

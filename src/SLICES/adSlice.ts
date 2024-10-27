@@ -6,6 +6,7 @@ import {
   addAdToDB,
   deleteAdInDB,
   getAdById,
+  getAdsByPlace,
   getAllAds,
   updateAdInDB,
 } from "../API/adds";
@@ -14,6 +15,7 @@ import { Ad } from "../types";
 export interface AdState {
   ads: Ad[];
   selectedAd: Ad | null;
+  adsByLocation: Ad[] | null;
   error: string | null;
   loading: boolean;
 }
@@ -34,6 +36,7 @@ const loadSelectedAdFromLocalStorage = (): Ad | null => {
 const initialState: AdState = {
   ads: [],
   selectedAd: loadSelectedAdFromLocalStorage(),
+  adsByLocation: null,
   error: null,
   loading: false,
 };
@@ -70,6 +73,19 @@ export const getAllAdsAsync = createAsyncThunk<
 >("ads/getAllAds", async (_, thunkAPI) => {
   try {
     const ads = await getAllAds();
+    return ads;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const getAdsByLocationAsync = createAsyncThunk<
+  Ad[] | null,
+  string,
+  { rejectValue: string }
+>("ads/getAdsByLocation", async (city, thunkAPI) => {
+  try {
+    const ads = await getAdsByPlace(city);
     return ads;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
@@ -155,6 +171,14 @@ const adSlice = createSlice({
       .addCase(getAllAdsAsync.fulfilled, (state, action) => {
         state.loading = false;
         state.ads = action.payload;
+        state.error = null;
+      })
+      .addCase(getAdsByLocationAsync.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAdsByLocationAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.adsByLocation = action.payload;
         state.error = null;
       })
       .addCase(getAllAdsAsync.rejected, (state, action) => {

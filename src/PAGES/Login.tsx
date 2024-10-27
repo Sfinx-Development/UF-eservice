@@ -109,6 +109,23 @@ export default function Login() {
         bikupor och nätverk.
       </Typography>
 
+      {error && (
+        <Typography
+          variant="body2"
+          sx={{
+            color: "red",
+            backgroundColor: "rgba(255, 0, 0, 0.1)",
+            padding: "0.5rem",
+            borderRadius: "5px",
+            marginBottom: "1rem",
+            textAlign: "center",
+            maxWidth: "250px",
+          }}
+        >
+          {error}
+        </Typography>
+      )}
+
       <TextField
         id="email"
         label="Email"

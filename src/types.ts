@@ -7,6 +7,7 @@ export interface UserCreate {
   profileDescription: string;
   role: string;
   termsAccepted: boolean;
+  city: string;
 }
 
 export interface LogIn {
@@ -34,6 +35,7 @@ export interface Profile {
   address: string;
   profileDescription: string;
   role: string;
+  city: string;
 }
 
 export interface Ad {

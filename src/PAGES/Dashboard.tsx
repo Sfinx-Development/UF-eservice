@@ -10,17 +10,31 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../SLICES/store";
 import ChatComponent from "../Components/chatComponent";
+import { getAdsByLocationAsync, setSelectedAd } from "../SLICES/adSlice";
+import { useAppDispatch, useAppSelector } from "../SLICES/store";
+import { Ad } from "../types";
 
 const DashboardPage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.userSlice.user);
-  
+  const adsByLocation = useAppSelector((state) => state.adSlice.adsByLocation);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (user) {
+      dispatch(getAdsByLocationAsync(user.city));
+    }
+  }, [user]);
+
+  const handleNavigateToAd = (ad: Ad) => {
+    dispatch(setSelectedAd(ad));
+    navigate("/addetail");
+  };
 
   return (
     <Box
@@ -36,179 +50,118 @@ const DashboardPage: React.FC = () => {
       }}
     >
       <Typography variant={isMobile ? "h4" : "h3"} gutterBottom>
-        Välkommen tillbaka {user?.username}!
+        Välkommen tillbaka, {user?.username}!
       </Typography>
 
-      {/* Huvudknapp för att lägga till ny annons */}
-      <Button
-        variant="contained"
+      <Box
         sx={{
-          backgroundColor: "#FFA500",
-          color: "#FFF",
-          padding: "0.75rem 1.5rem",
-          fontSize: isMobile ? "1rem" : "1.2rem",
-          "&:hover": {
-            backgroundColor: "#cc8500",
-          },
-        }}
-        onClick={() => {
-          navigate("/newad");
+          display: "flex",
+          gap: 2,
+          flexDirection: isMobile ? "column" : "row",
+          marginBottom: "2rem",
         }}
       >
-        Lägg till ny annons
-      </Button>
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "#FFA500",
+            color: "#FFF",
+            padding: "0.75rem 1.5rem",
+            fontSize: isMobile ? "1rem" : "1.2rem",
+            "&:hover": {
+              backgroundColor: "#cc8500",
+            },
+          }}
+          onClick={() => {
+            navigate("/newad");
+          }}
+        >
+          Lägg till ny annons
+        </Button>
 
-      {/* Ny knapp för att visa alla annonser */}
-      <Button
-        variant="outlined"
-        sx={{
-          marginTop: "1rem",
-          borderColor: "#FFA500",
-          color: "#FFA500",
-          padding: "0.75rem 1.5rem",
-          fontSize: isMobile ? "1rem" : "1.2rem",
-          "&:hover": {
-            borderColor: "#cc8500",
-            color: "#cc8500",
-          },
-        }}
-        onClick={() => {
-          navigate("/adlist");
-        }}
-      >
-        Visa alla annonser
-      </Button>
+        <Button
+          variant="outlined"
+          sx={{
+            borderColor: "#FFA500",
+            color: "#FFA500",
+            padding: "0.75rem 1.5rem",
+            fontSize: isMobile ? "1rem" : "1.2rem",
+            "&:hover": {
+              borderColor: "#cc8500",
+              color: "#cc8500",
+            },
+          }}
+          onClick={() => {
+            navigate("/adlist");
+          }}
+        >
+          Visa alla annonser
+        </Button>
 
-      {/* Ny knapp för att visa alla chattar */}
-      <Button
-        variant="outlined"
-        sx={{
-          marginTop: "1rem",
-          borderColor: "#FFA500",
-          color: "#FFA500",
-          padding: "0.75rem 1.5rem",
-          gap: 1,
-          fontSize: isMobile ? "1rem" : "1.2rem",
-          "&:hover": {
-            borderColor: "#cc8500",
-            color: "#cc8500",
-          },
-        }}
-        onClick={() => {
-          navigate("/chatlist");
-        }}
-      >
-        Visa alla chattar
-        <ChatIcon />
-      </Button>
+        <Button
+          variant="outlined"
+          sx={{
+            borderColor: "#FFA500",
+            color: "#FFA500",
+            padding: "0.75rem 1.5rem",
+            fontSize: isMobile ? "1rem" : "1.2rem",
+            gap: 1,
+            "&:hover": {
+              borderColor: "#cc8500",
+              color: "#cc8500",
+            },
+          }}
+          onClick={() => {
+            navigate("/chatlist");
+          }}
+        >
+          Visa alla chattar
+          <ChatIcon />
+        </Button>
+      </Box>
 
-      {/* Exempel på några annonser som visas i dashboarden */}
-      <Typography variant="h5" sx={{ marginTop: "2rem", marginBottom: "1rem" }}>
+      <Typography variant="h5" sx={{ marginBottom: "1rem" }}>
         Annonser i ditt område
       </Typography>
 
-      <Grid container spacing={2}>
-        {/* Exempel på en annons */}
-        <Grid item xs={12} sm={6} md={4}>
-          <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
-            <CardContent>
-              <Typography variant="h6" component="div">
-                Biodlare söker mark i Skåne
-              </Typography>
-              <Typography sx={{ marginBottom: "1rem", color: "#777" }}>
-                10 bikupor tillgängliga
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Plats: Lund, Skåne
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" sx={{ color: "#FFA500" }}>
-                Läs mer
-              </Button>
-              <Button size="small" sx={{ color: "#FFA500" }}>
-                Kontakta
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-
-        {/* En annan annons */}
-        <Grid item xs={12} sm={6} md={4}>
-          <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
-            <CardContent>
-              <Typography variant="h6" component="div">
-                Markägare söker bikupor för pollinering
-              </Typography>
-              <Typography sx={{ marginBottom: "1rem", color: "#777" }}>
-                Plats: Halmstad
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                20 hektar mark tillgänglig
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" sx={{ color: "#FFA500" }}>
-                Läs mer
-              </Button>
-              <Button size="small" sx={{ color: "#FFA500" }}>
-                Kontakta
-              </Button>
-            </CardActions>
-          </Card>
-         
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}><ChatComponent /></Grid>
-        
+      <Grid container spacing={2} justifyContent="center">
+        {adsByLocation && adsByLocation.length > 0 ? (
+          adsByLocation.map((ad, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
+                <CardContent>
+                  <Typography variant="h6" component="div">
+                    {ad.title}
+                  </Typography>
+                  {ad.numberOfHives && (
+                    <Typography sx={{ marginBottom: "1rem", color: "#777" }}>
+                      {`${ad.numberOfHives} kupor tillgängliga`}
+                    </Typography>
+                  )}
+                  <Typography variant="body2" color="text.secondary">
+                    Plats: {ad.location || "Ingen plats angiven"}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    onClick={() => handleNavigateToAd(ad)}
+                    size="small"
+                    sx={{ color: "#FFA500" }}
+                  >
+                    Läs mer
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))
+        ) : (
+          <Typography sx={{ color: "#777", marginTop: "1rem" }}>
+            Inga annonser tillgängliga i ditt område
+          </Typography>
+        )}
       </Grid>
 
-    
-
-
-      {/* Sektion för tips och råd
-      <Typography variant="h5" sx={{ marginTop: "2rem", marginBottom: "1rem" }}>
-        Nyheter & Tips för biodlare
-      </Typography>
-
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={4}>
-          <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
-            <CardContent>
-              <Typography variant="h6" component="div">
-                Hur du startar med biodling
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                En guide för nybörjare
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" sx={{ color: "#FFA500" }}>
-                Läs mer
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-
-        {/* Fler artiklar eller tips */}
-      {/* <Grid item xs={12} sm={6} md={4}>
-          <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
-            <CardContent>
-              <Typography variant="h6" component="div">
-                Viktiga faktorer för biodlare
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Vad du bör tänka på för att lyckas med biodlingen
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small" sx={{ color: "#FFA500" }}>
-                Läs mer
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-      </Grid> */}
-
+      <ChatComponent />
     </Box>
   );
 };
