@@ -76,6 +76,7 @@ export const registerUserWithAPI = async (newUser: UserCreate) => {
       address: newUser.address,
       profileDescription: newUser.profileDescription,
       role: newUser.role,
+      city: newUser.city,
     };
     const profile = await addProfileToDB(profileToAdd);
     return profile;

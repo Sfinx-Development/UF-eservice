@@ -21,11 +21,6 @@ export interface User {
   email: string | null;
 }
 
-export interface UserCreate {
-  email: string;
-  password: string;
-}
-
 export interface Profile {
   id: string;
   email: string;

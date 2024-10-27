@@ -53,14 +53,8 @@ const RegisterPage: React.FC = () => {
     }));
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   console.log("KÖR");
-  //   dispatch(addUserAsync(formValues));
-  // };
-
   const validatePhone = (phone: string) => {
-    const phoneRegex = /^[0-9]{10}$/; // Adjust regex based on your phone format
+    const phoneRegex = /^[0-9]{10}$/;
     return phoneRegex.test(phone);
   };
 
@@ -100,6 +94,7 @@ const RegisterPage: React.FC = () => {
     setErrors(newErrors);
 
     if (!hasErrors) {
+      console.log("FORM VALUES: ", formValues);
       dispatch(addUserAsync(formValues));
       navigate("/login");
     }
@@ -191,7 +186,7 @@ const RegisterPage: React.FC = () => {
           required
           fullWidth
           error={errors.city}
-          helperText={errors.address ? "Stad kan inte vara tom" : ""}
+          helperText={errors.city ? "Stad kan inte vara tom" : ""}
         />
         <TextField
           label="Profilbeskrivning (valfritt)"
