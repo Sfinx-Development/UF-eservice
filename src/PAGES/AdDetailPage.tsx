@@ -41,9 +41,7 @@ const AdDetailPage: React.FC = () => {
       // Kolla om en chatt-session redan finns mellan användaren och annonsören
       const existingChat = chatSessions.find(
         (chat) =>
-          chat.adId === selectedAd.id &&
-          (chat.senderId === userProfile?.id ||
-            chat.receiverId === userProfile?.id)
+          chat.adId === selectedAd.id && chat.senderId === userProfile?.id
       );
       if (existingChat) {
         setChatExists(true);
@@ -166,36 +164,37 @@ const AdDetailPage: React.FC = () => {
             ) : null}
           </Grid>
 
-          {/* Kontakta sektionen */}
-          <Grid item xs={12} md={4}>
-            <Card
-              sx={{
-                backgroundColor: "#fff",
-                padding: "2rem",
-                borderRadius: "12px",
-                textAlign: "center",
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              <Typography variant="h5" gutterBottom>
-                Kontakta annonsören
-              </Typography>
-              <Button
-                variant="contained"
+          {selectedAd.profileId != userProfile?.id && (
+            <Grid item xs={12} md={4}>
+              <Card
                 sx={{
-                  marginTop: "1.5rem",
-                  backgroundColor: "#FFA500",
-                  padding: "0.75rem 1.5rem",
-                  "&:hover": {
-                    backgroundColor: "#cc8500",
-                  },
+                  backgroundColor: "#fff",
+                  padding: "2rem",
+                  borderRadius: "12px",
+                  textAlign: "center",
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
                 }}
-                onClick={handleNavigateToChat} // Skapa eller navigera till chatt
               >
-                Starta chatt
-              </Button>
-            </Card>
-          </Grid>
+                <Typography variant="h5" gutterBottom>
+                  Kontakta annonsören
+                </Typography>
+                <Button
+                  variant="contained"
+                  sx={{
+                    marginTop: "1.5rem",
+                    backgroundColor: "#FFA500",
+                    padding: "0.75rem 1.5rem",
+                    "&:hover": {
+                      backgroundColor: "#cc8500",
+                    },
+                  }}
+                  onClick={handleNavigateToChat} // Skapa eller navigera till chatt
+                >
+                  Starta chatt
+                </Button>
+              </Card>
+            </Grid>
+          )}
         </Grid>
       ) : (
         <Typography variant="h6">Ingen annons hittades.</Typography>
