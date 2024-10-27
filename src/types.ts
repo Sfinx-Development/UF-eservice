@@ -71,9 +71,9 @@ export interface AdChatSession {
   lastUpdated: string;
 }
 export interface Message {
-  id: string;             
-  text: string;            
-  timestamp: Date;         
-  userId?: string;           
-  username: string;         
+  id: string;
+  text: string;
+  timestamp: string;
+  userId?: string;
+  username: string;
 }

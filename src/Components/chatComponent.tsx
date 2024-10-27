@@ -3,14 +3,13 @@ import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useAppSelector, useAppDispatch } from "../SLICES/store"; // Se till att inkludera useAppDispatch
 import {
   addMessageAsync,
   deleteMessageAsync,
   getAllMessagesAsync,
   updateMessageAsync,
-  //   deleteMessageAsync,
 } from "../SLICES/messageSlice";
+import { useAppDispatch, useAppSelector } from "../SLICES/store"; // Se till att inkludera useAppDispatch
 
 const ChatComponent: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -31,7 +30,7 @@ const ChatComponent: React.FC = () => {
         userId: user?.id,
         // userId: user?.id || "", // Använd en tom sträng om userId är undefined
         username: user?.username || "Anonym", // Använd "Anonym" om username är undefined
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       };
 
       // Kontrollera om userId är en tom sträng (du kanske vill hantera detta)
@@ -56,7 +55,7 @@ const ChatComponent: React.FC = () => {
         messageId: editingMessageId,
         updates: {
           text: messageText,
-          timestamp: new Date(),
+          timestamp: new Date().toISOString(),
         },
       };
       dispatch(updateMessageAsync(updatedMessage));
@@ -99,7 +98,7 @@ const ChatComponent: React.FC = () => {
                 <strong>{message.username}</strong>: {message.text}
               </Typography>
               <Typography variant="caption">
-                {new Date(message.timestamp).toLocaleString()}
+                {new Date(message.timestamp).toLocaleDateString()}
               </Typography>
             </>
           )}
