@@ -135,24 +135,58 @@ export default function Login() {
           marginBottom: "1rem",
           backgroundColor: "rgba(255, 255, 255, 0.1)",
           borderRadius: "5px",
-          color: "#FFF",
-        }}
-        InputLabelProps={{
-          style: { color: "#FFF" },
-        }}
-        InputProps={{
-          style: { color: "#FFF" },
+          "& .MuiInput-underline:before": {
+            borderBottomColor: "rgba(255, 255, 255, 0.5)", // Underlinje i vanligt tillstånd
+          },
+          "& .MuiInput-underline:hover:before": {
+            borderBottomColor: "rgba(255, 255, 255, 0.7)", // Underlinje vid hovring
+          },
+          "& .MuiInput-underline:after": {
+            borderBottomColor: "transparent", // Tar bort blå underlinje vid fokus
+          },
+          "& .MuiInputBase-input": {
+            color: "#FFF", // Textfärg i fältet
+          },
+          "& .MuiFormLabel-root": {
+            color: "#FFF", // Etikettfärg i vanligt tillstånd
+          },
+          "& .MuiFormLabel-root.Mui-focused": {
+            color: "#FFF", // Behåller vit färg på etiketten vid fokus
+          },
         }}
         onChange={(event) => setEmail(event.target.value)}
         onKeyDown={handleKeyPress}
       />
 
       <FormControl
-        sx={{ width: "250px", marginBottom: "1rem" }}
+        sx={{
+          width: "250px",
+          marginBottom: "1rem",
+          backgroundColor: "rgba(255, 255, 255, 0.1)",
+          borderRadius: "5px",
+          "& .MuiInput-underline:before": {
+            borderBottomColor: "rgba(255, 255, 255, 0.5)", // Underlinje i vanligt tillstånd
+          },
+          "& .MuiInput-underline:hover:before": {
+            borderBottomColor: "rgba(255, 255, 255, 0.7)", // Underlinje vid hovring
+          },
+          "& .MuiInput-underline:after": {
+            borderBottomColor: "transparent", // Tar bort blå underlinje vid fokus
+          },
+          "& .MuiInputBase-input": {
+            color: "#FFF", // Textfärg i fältet
+          },
+          "& .MuiFormLabel-root": {
+            color: "#FFF", // Etikettfärg i vanligt tillstånd
+          },
+          "& .MuiFormLabel-root.Mui-focused": {
+            color: "#FFF", // Behåller vit färg på etiketten vid fokus
+          },
+        }}
         variant="standard"
       >
         <InputLabel htmlFor="password" style={{ color: "#FFF" }}>
-          Password
+          Lösenord
         </InputLabel>
         <Input
           id="password"
