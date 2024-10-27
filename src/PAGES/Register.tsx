@@ -4,6 +4,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   FormLabel,
   Radio,
   RadioGroup,
@@ -11,9 +12,9 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
-  FormHelperText,
 } from "@mui/material";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../SLICES/store";
 import { addUserAsync } from "../SLICES/userSlice";
 import { UserCreate } from "../types";
@@ -22,6 +23,7 @@ const RegisterPage: React.FC = () => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
 
   const [formValues, setFormValues] = useState<UserCreate>({
     email: "",
@@ -38,7 +40,7 @@ const RegisterPage: React.FC = () => {
     role: false,
     termsAccepted: false,
     phone: false,
-    address: false
+    address: false,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,6 +94,7 @@ const RegisterPage: React.FC = () => {
 
     if (!hasErrors) {
       dispatch(addUserAsync(formValues));
+      navigate("/login");
     }
   };
 

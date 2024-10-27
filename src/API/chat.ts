@@ -150,7 +150,7 @@ export const addMessageToChat = async (
     await updateDoc(sessionRef, {
       messages: arrayUnion(message), // Lägg till meddelandet till listan
       lastMessage: message.message, // Uppdatera senaste meddelandet
-      lastUpdated: Timestamp.now().toString(), // Sätt senaste uppdateringen till nuvarande tid
+      lastUpdated: Date.now().toString(), // Sätt senaste uppdateringen till nuvarande tid
     });
 
     console.log("Meddelandet lades till framgångsrikt.");
