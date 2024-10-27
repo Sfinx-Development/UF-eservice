@@ -47,6 +47,24 @@ export const getAdById = async (adId: string): Promise<Ad | null> => {
   }
 };
 
+export const getAdsByPlace = async (city: string): Promise<Ad[] | null> => {
+  try {
+    const adsCollectionRef = collection(db, "ads");
+    const adsQuery = query(adsCollectionRef, where("location", "==", city));
+    const querySnapshot = await getDocs(adsQuery);
+
+    if (!querySnapshot.empty) {
+      const ads: Ad[] = querySnapshot.docs.map((doc) => doc.data() as Ad);
+      return ads;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching ads:", error);
+    throw error;
+  }
+};
+
 // Hämta alla annonser
 export const getAllAds = async (): Promise<Ad[]> => {
   try {

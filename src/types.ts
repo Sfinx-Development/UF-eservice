@@ -7,6 +7,7 @@ export interface UserCreate {
   profileDescription: string;
   role: string;
   termsAccepted: boolean;
+  city: string;
 }
 
 export interface LogIn {
@@ -20,11 +21,6 @@ export interface User {
   email: string | null;
 }
 
-export interface UserCreate {
-  email: string;
-  password: string;
-}
-
 export interface Profile {
   id: string;
   email: string;
@@ -34,6 +30,7 @@ export interface Profile {
   address: string;
   profileDescription: string;
   role: string;
+  city: string;
 }
 
 export interface Ad {

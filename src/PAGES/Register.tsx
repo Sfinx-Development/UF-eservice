@@ -34,6 +34,7 @@ const RegisterPage: React.FC = () => {
     profileDescription: "",
     role: "",
     termsAccepted: false,
+    city: "",
   });
 
   const [errors, setErrors] = useState({
@@ -41,6 +42,7 @@ const RegisterPage: React.FC = () => {
     termsAccepted: false,
     phone: false,
     address: false,
+    city: false,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,14 +53,8 @@ const RegisterPage: React.FC = () => {
     }));
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   console.log("KÖR");
-  //   dispatch(addUserAsync(formValues));
-  // };
-
   const validatePhone = (phone: string) => {
-    const phoneRegex = /^[0-9]{10}$/; // Adjust regex based on your phone format
+    const phoneRegex = /^[0-9]{10}$/;
     return phoneRegex.test(phone);
   };
 
@@ -71,6 +67,7 @@ const RegisterPage: React.FC = () => {
       termsAccepted: false,
       phone: false,
       address: false,
+      city: false,
     };
 
     if (!formValues.role) {
@@ -89,10 +86,15 @@ const RegisterPage: React.FC = () => {
       newErrors.address = true;
       hasErrors = true;
     }
+    if (!formValues.city.trim()) {
+      newErrors.city = true;
+      hasErrors = true;
+    }
 
     setErrors(newErrors);
 
     if (!hasErrors) {
+      console.log("FORM VALUES: ", formValues);
       dispatch(addUserAsync(formValues));
       navigate("/login");
     }
@@ -175,6 +177,16 @@ const RegisterPage: React.FC = () => {
           fullWidth
           error={errors.address}
           helperText={errors.address ? "Adress kan inte vara tom" : ""}
+        />
+        <TextField
+          label="Stad"
+          name="city"
+          value={formValues.city}
+          onChange={handleChange}
+          required
+          fullWidth
+          error={errors.city}
+          helperText={errors.city ? "Stad kan inte vara tom" : ""}
         />
         <TextField
           label="Profilbeskrivning (valfritt)"
