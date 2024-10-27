@@ -80,6 +80,9 @@ const AdDetailPage: React.FC = () => {
     }
   };
 
+  //SPARA TIL LOCALSTORAGE ALLA STATES!!!!
+  //OM FORTFARANDE EJ FUNKAR - KOLLA OM ADID SPARAS ORDENRLIGT PÅ ADCHATSESSIONEN
+
   return (
     <Box
       sx={{

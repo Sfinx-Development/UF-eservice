@@ -106,9 +106,9 @@ const RootLayout = () => {
         sx={{
           flexGrow: 1,
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
+          // flexDirection: "column",
+          // justifyContent: "center",
+          // alignItems: "center",
           width: "100%",
           minHeight: "calc(100vh - 4rem)",
           margin: 0,

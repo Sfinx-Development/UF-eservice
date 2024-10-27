@@ -1,12 +1,11 @@
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
+  Box,
   Button,
   Checkbox,
-  Container,
   FormControl,
   FormControlLabel,
-  FormGroup,
   IconButton,
   Input,
   InputAdornment,
@@ -73,83 +72,122 @@ export default function Login() {
   };
 
   return (
-    <Container
+    <Box
       sx={{
-        padding: "20px",
-        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
         width: "100%",
+        margin: 0,
+        backgroundImage:
+          "linear-gradient(315deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.9) 74%)",
+        color: "#FFF",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          flex: 1,
-          padding: 50,
+      <Typography
+        variant="h4"
+        sx={{
+          fontWeight: "bold",
+          color: "#FFA500",
+          marginBottom: "1rem",
         }}
       >
-        {error && (
-          <Typography variant="h6" color="error">
-            Inloggning misslyckades
-          </Typography>
-        )}
-        <TextField
-          id="standard-basic"
-          label="Email"
-          variant="standard"
-          sx={{ width: "250px", marginTop: 5 }}
-          onChange={(event) => setEmail(event.target.value)}
+        Välkommen tillbaka!
+      </Typography>
+      <Typography
+        variant="body1"
+        sx={{
+          maxWidth: "600px",
+          marginBottom: "2rem",
+          lineHeight: "1.5",
+          textAlign: "center",
+        }}
+      >
+        Logga in för att fortsätta till din dashboard och hålla koll på dina
+        bikupor och nätverk.
+      </Typography>
+
+      <TextField
+        id="email"
+        label="Email"
+        variant="standard"
+        sx={{
+          width: "250px",
+          marginBottom: "1rem",
+          backgroundColor: "rgba(255, 255, 255, 0.1)",
+          borderRadius: "5px",
+          color: "#FFF",
+        }}
+        InputLabelProps={{
+          style: { color: "#FFF" },
+        }}
+        InputProps={{
+          style: { color: "#FFF" },
+        }}
+        onChange={(event) => setEmail(event.target.value)}
+        onKeyDown={handleKeyPress}
+      />
+
+      <FormControl
+        sx={{ width: "250px", marginBottom: "1rem" }}
+        variant="standard"
+      >
+        <InputLabel htmlFor="password" style={{ color: "#FFF" }}>
+          Password
+        </InputLabel>
+        <Input
+          id="password"
+          type={showPassword ? "text" : "password"}
+          onChange={(event) => setPassword(event.target.value)}
           onKeyDown={handleKeyPress}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                style={{ color: "#FFF" }}
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
         />
-
-        <FormControl sx={{ width: "250px", marginTop: 5 }} variant="standard">
-          <InputLabel htmlFor="standard-adornment-password">
-            Password
-          </InputLabel>
-          <Input
-            id="standard-adornment-password"
-            type={showPassword ? "text" : "password"}
-            onChange={(event) => setPassword(event.target.value)}
-            onKeyDown={handleKeyPress}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
+      </FormControl>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={keepAlive}
+            onChange={handleKeepAliveChange}
+            sx={{
+              color: "#FFA500",
+              "&.Mui-checked": {
+                color: "#FFA500",
+              },
+            }}
           />
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={keepAlive}
-                  onChange={handleKeepAliveChange}
-                />
-              }
-              label="Håll mig inloggad"
-            />
-          </FormGroup>
-        </FormControl>
+        }
+        label="Håll mig inloggad"
+        sx={{ color: "#FFF", marginBottom: "1rem" }}
+      />
 
-        <Button
-          variant="contained"
-          sx={{
-            marginTop: 4,
-            marginBottom: 1,
-            paddingRight: 5,
-            paddingLeft: 5,
-          }}
-          onClick={handleSignIn}
-        >
-          Logga in
-        </Button>
-      </div>
-    </Container>
+      <Button
+        variant="contained"
+        sx={{
+          backgroundColor: "#FFA500",
+          color: "#FFF",
+          padding: "0.75rem 1.5rem",
+          fontSize: "1.2rem",
+          "&:hover": {
+            backgroundColor: "#cc8500",
+          },
+        }}
+        onClick={handleSignIn}
+      >
+        Logga in
+      </Button>
+    </Box>
   );
 }
