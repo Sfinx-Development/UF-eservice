@@ -8,6 +8,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from "@mui/material";
@@ -74,10 +75,8 @@ const AdListPage: React.FC = () => {
     setLocationFilter(e.target.value);
   };
 
-  const handleAdTypeFilterChange = (
-    e: React.ChangeEvent<{ value: unknown }>
-  ) => {
-    setAdTypeFilter(e.target.value as string);
+  const handleAdTypeFilterChange = (event: SelectChangeEvent<string>) => {
+    setAdTypeFilter(event.target.value as string);
   };
 
   return (

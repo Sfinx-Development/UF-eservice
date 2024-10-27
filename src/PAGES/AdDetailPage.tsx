@@ -15,6 +15,7 @@ import {
   getChatByAdAndUserAsync,
 } from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
+import { AdChatSession } from "../types";
 
 const AdDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -66,14 +67,22 @@ const AdDetailPage: React.FC = () => {
       };
       const result = await dispatch(addChatAsync(newChat));
       if (result.meta.requestStatus === "fulfilled") {
-        navigate(`/chat/${result.payload.id}`);
+        const payload = result.payload as AdChatSession;
+        if (payload && payload.id) {
+          navigate(`/chat/${payload.id}`);
+        }
       }
     } else if (selectedAd && userProfile) {
       const result = await dispatch(
         getChatByAdAndUserAsync({ adId: selectedAd.id, userId: userProfile.id })
       );
       if (result.meta.requestStatus === "fulfilled") {
-        navigate(`/chat/${result.payload.id}`);
+        if (result.meta.requestStatus === "fulfilled") {
+          const payload = result.payload as AdChatSession;
+          if (payload && payload.id) {
+            navigate(`/chat/${payload.id}`);
+          }
+        }
       }
     }
   };
@@ -134,12 +143,6 @@ const AdDetailPage: React.FC = () => {
                 </Typography>
                 <Typography variant="body1">
                   Antal bikupor: {selectedAd.numberOfHives}
-                </Typography>
-                <Typography variant="body1">
-                  Typ av bin: {selectedAd.beeType || "Ej specificerat"}
-                </Typography>
-                <Typography variant="body1">
-                  Föreslagen kostnad: {selectedAd.cost || "Ej angivet"}
                 </Typography>
               </>
             ) : selectedAd.areaSize ? (

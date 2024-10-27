@@ -141,7 +141,7 @@ const userSlice = createSlice({
       .addCase(logOutUserAsync.rejected, (state, action) => {
         state.error = action.payload || "Något gick fel vid utloggningen.";
       })
-      .addCase(addUserAsync.fulfilled, (state, action) => {
+      .addCase(addUserAsync.fulfilled, (state) => {
         state.createAccountError = null;
       })
       .addCase(addUserAsync.rejected, (state, action) => {
