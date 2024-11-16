@@ -68,6 +68,8 @@ export interface AdChatSession {
   messages: ChatMessage[];
   lastMessage: string;
   lastUpdated: string;
+  hasUnreadMessages?: boolean;
+  latestSenderId?: string;
 }
 export interface Message {
   id: string;
@@ -75,4 +77,5 @@ export interface Message {
   timestamp: string;
   userId?: string;
   username: string;
+  isRead?: boolean;
 }

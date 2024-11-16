@@ -60,7 +60,14 @@ export const getChatById = async (
     const adSnapshot = await getDoc(adDocRef);
 
     if (adSnapshot.exists()) {
-      return adSnapshot.data() as AdChatSession;
+      const chat = adSnapshot.data() as AdChatSession;
+      const updatedSession: AdChatSession = {
+        ...chat,
+        hasUnreadMessages: false,
+      };
+
+      await updateAdSession(chat.id, updatedSession);
+      return chat;
     } else {
       console.error("Chat not found with ID:", chatId);
       return null;
@@ -87,6 +94,14 @@ export const getChatSessionByAdAndUser = async (
 
     if (!chatSnapshot.empty) {
       const chatSession = chatSnapshot.docs[0].data() as AdChatSession;
+
+      const updatedSession: AdChatSession = {
+        ...chatSession,
+        hasUnreadMessages: true,
+      };
+
+      await updateAdSession(chatSession.id, updatedSession);
+
       return chatSession;
     } else {
       return null;
@@ -146,14 +161,22 @@ export const addMessageToChat = async (
   try {
     const sessionRef = doc(db, "chat", sessionId);
 
-    // Uppdatera chatt-sessionen med det nya meddelandet och senaste uppdatering
+    message.read = false;
+
     await updateDoc(sessionRef, {
       messages: arrayUnion(message), // Lägg till meddelandet till listan
       lastMessage: message.message, // Uppdatera senaste meddelandet
       lastUpdated: Date.now().toString(), // Sätt senaste uppdateringen till nuvarande tid
     });
 
-    console.log("Meddelandet lades till framgångsrikt.");
+    const session = await getAdSessionById(sessionId);
+
+    const updates = {
+      ...session,
+      hasUnreadMessages: true,
+    };
+
+    await updateAdSession(sessionId, updates, message.senderId);
   } catch (error) {
     console.error("Error adding message to chat:", error);
     throw error;
@@ -173,6 +196,48 @@ export const updateChatMessage = async (
     console.log("Meddelandet uppdaterades framgångsrikt.");
   } catch (error) {
     console.error("Error updating chat message:", error);
+    throw error;
+  }
+};
+
+export const updateAdSession = async (
+  sessionId: string,
+  chatSessionUpdates: Partial<AdChatSession>,
+  senderId?: string
+): Promise<void> => {
+  try {
+    const sessionRef = doc(db, `chat`, sessionId);
+
+    const updates = {
+      ...chatSessionUpdates,
+      latestSenderId: senderId ?? chatSessionUpdates.latestSenderId ?? "",
+    };
+
+    await updateDoc(sessionRef, updates);
+
+    console.log("Chattsessionen uppdaterades framgångsrikt.");
+  } catch (error) {
+    console.error("Error updating chat session:", error);
+    throw error;
+  }
+};
+
+export const getAdSessionById = async (
+  sessionId: string
+): Promise<AdChatSession | null> => {
+  try {
+    const sessionRef = doc(db, `chat`, sessionId);
+    const sessionSnapshot = await getDoc(sessionRef);
+
+    if (sessionSnapshot.exists()) {
+      const sessionData = sessionSnapshot.data() as AdChatSession;
+      return sessionData;
+    } else {
+      console.warn(`No session found with id: ${sessionId}`);
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching chat session:", error);
     throw error;
   }
 };
