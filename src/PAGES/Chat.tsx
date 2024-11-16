@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  Link,
   Paper,
   TextField,
   Typography,
@@ -117,17 +118,22 @@ export default function Chat() {
                       message.senderId === user?.id ? "flex-end" : "flex-start",
                   }}
                 >
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      color:
-                        message.senderId === user?.id
-                          ? theme.palette.primary.main
-                          : theme.palette.secondary.main,
-                    }}
+                  <Link
+                    href={`/profile/${message.senderId}`}
+                    sx={{ textDecoration: "none" }}
                   >
-                    {message.senderName}:
-                  </Typography>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        color:
+                          message.senderId === user?.id
+                            ? theme.palette.primary.main
+                            : theme.palette.secondary.main,
+                      }}
+                    >
+                      {message.senderName}:
+                    </Typography>
+                  </Link>
                   <Box
                     sx={{
                       backgroundColor:

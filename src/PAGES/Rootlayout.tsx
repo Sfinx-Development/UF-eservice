@@ -1,4 +1,5 @@
 import HomeIcon from "@mui/icons-material/Home";
+import Person2Icon from "@mui/icons-material/Person2";
 import { AppBar, Box, Button, Link, Toolbar, Typography } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
@@ -78,6 +79,24 @@ const RootLayout = () => {
               >
                 <HomeIcon />
               </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  navigate("/profile");
+                }}
+                sx={{
+                  borderColor: "#FFA500",
+                  color: "#FFA500",
+                  paddingX: 2,
+                  "&:hover": {
+                    borderColor: "#cc8500",
+                    color: "#cc8500",
+                  },
+                }}
+              >
+                <Person2Icon />
+              </Button>
+
               {/* Logga ut knapp */}
               <Button
                 variant="outlined"

@@ -5,6 +5,7 @@ export interface UserCreate {
   password: string;
   address: string;
   profileDescription: string;
+  profileImages?: string[];
   role: string;
   termsAccepted: boolean;
   city: string;
@@ -29,6 +30,7 @@ export interface Profile {
   username: string;
   address: string;
   profileDescription: string;
+  profileImages?: string[];
   role: string;
   city: string;
 }
