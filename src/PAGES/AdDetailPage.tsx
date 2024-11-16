@@ -1,4 +1,4 @@
-import { Box, Button, Card, CircularProgress, Grid } from "@mui/material";
+import { Box, Button, Card, CircularProgress, Grid, Link } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAdAsync } from "../SLICES/adSlice";
@@ -122,6 +122,14 @@ const AdDetailPage: React.FC = () => {
             <Text variant="h6" sx={{ color: "#777" }}>
               Plats: {selectedAd.location}
             </Text>
+            <Link
+              href={`profile/${selectedAd.profileId}`}
+              sx={{ textDecoration: "none" }}
+            >
+              <Text variant="h6" sx={{ color: "#777" }}>
+                Om annonsören
+              </Text>
+            </Link>
           </Grid>
 
           {/* Huvudinnehåll */}

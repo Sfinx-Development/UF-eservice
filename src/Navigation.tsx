@@ -56,6 +56,10 @@ const Navigation = () => {
         <Route path="newad" element={<ProtectedRoute element={NewAdPage} />} />
         <Route path="profile" element={<ProtectedRoute element={Profile} />} />
         <Route
+          path="profile/:id"
+          element={<ProtectedRoute element={Profile} />}
+        />
+        <Route
           path="adlist"
           element={<ProtectedRoute element={AdListPage} />}
         />

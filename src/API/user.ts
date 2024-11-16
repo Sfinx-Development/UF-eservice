@@ -7,6 +7,7 @@ import {
 import {
   addDoc,
   collection,
+  doc,
   getDoc,
   getDocs,
   query,
@@ -25,6 +26,24 @@ export const getUserByUserId = async (userId: string) => {
 
     if (querySnapshot.size === 0) {
       console.error("User not found with ID:", userId);
+      return null;
+    }
+
+    const userData = querySnapshot.docs[0].data() as Profile;
+    return userData;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getProfileByProfileId = async (profileId: string) => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const userCollectionRef = collection(db, "profiles");
+    const userQuery = query(userCollectionRef, where("id", "==", profileId));
+    const querySnapshot = await getDocs(userQuery);
+
+    if (querySnapshot.size === 0) {
       return null;
     }
 
@@ -54,6 +73,28 @@ export const addProfileToDB = async (profile: Profile) => {
       return null;
     }
   } catch (error) {
+    throw error;
+  }
+};
+
+export const updateProfileInDB = async (
+  id: string,
+  updates: Partial<Profile>
+) => {
+  const profileDocRef = doc(db, "profiles", id);
+
+  try {
+    await updateDoc(profileDocRef, updates);
+
+    const profileDoc = await getDoc(profileDocRef);
+    if (profileDoc.exists()) {
+      const profileData = profileDoc.data();
+      return profileData as Profile; // Returnera uppdaterad profil
+    } else {
+      throw new Error("Profile not found.");
+    }
+  } catch (error) {
+    console.error("Error updating profile:", error);
     throw error;
   }
 };
@@ -91,10 +132,6 @@ export const updateUserWithAPI = async (updates: Partial<Profile>) => {
   if (updates.email) {
     await updateEmail(user, updates.email);
   }
-
-  //   if (updates.password) {
-  //     await updatePassword(user, updates.password);
-  //   }
 
   if (updates.username) {
     await updateProfile(user, {

@@ -2,7 +2,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { signInWithAPI, signOutWithAuth } from "../API/signin";
-import { registerUserWithAPI, updateUserWithAPI } from "../API/user";
+import {
+  getProfileByProfileId,
+  registerUserWithAPI,
+  updateProfileInDB,
+  updateUserWithAPI,
+} from "../API/user";
 import { LogIn, Profile, UserCreate } from "../types";
 
 // User state definition
@@ -11,6 +16,7 @@ export interface UserState {
   error: string | null;
   logInError: string | null;
   createAccountError: string | null;
+  activeProfile: Profile | null;
 }
 
 const loadUserFromLocalStorage = (): Profile | null => {
@@ -31,6 +37,7 @@ export const initialState: UserState = {
   error: null,
   logInError: null,
   createAccountError: null,
+  activeProfile: null,
 };
 
 export const addUserAsync = createAsyncThunk<
@@ -49,6 +56,22 @@ export const addUserAsync = createAsyncThunk<
     return thunkAPI.rejectWithValue(error.message);
   }
 });
+export const getProfileByIdAsync = createAsyncThunk<
+  Profile,
+  string,
+  { rejectValue: string }
+>("user/getProfileAsync", async (profileId, thunkAPI) => {
+  try {
+    const profile = await getProfileByProfileId(profileId);
+    if (profile) {
+      return profile;
+    } else {
+      return thunkAPI.rejectWithValue("failed to get profile");
+    }
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
 
 // Update user
 export const updateUserAsync = createAsyncThunk<
@@ -58,6 +81,22 @@ export const updateUserAsync = createAsyncThunk<
 >("user/updateUser", async (updates, thunkAPI) => {
   try {
     const updatedUser = await updateUserWithAPI(updates);
+    return updatedUser;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(
+      "Något gick fel vid uppdateringen av användare."
+    );
+  }
+});
+
+export const updateUserPresentationAsync = createAsyncThunk<
+  Profile,
+  Partial<Profile>,
+  { rejectValue: string }
+>("user/updateUserPresentation", async (updates, thunkAPI) => {
+  try {
+    const updatedUser = await updateProfileInDB(updates.id ?? "", updates);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
     return updatedUser;
   } catch (error) {
     return thunkAPI.rejectWithValue(
@@ -134,6 +173,15 @@ const userSlice = createSlice({
         state.logInError =
           action.payload || "Användarnamn eller lösenord är felaktigt.";
       })
+      .addCase(getProfileByIdAsync.fulfilled, (state, action) => {
+        state.activeProfile = action.payload;
+        state.logInError = null;
+      })
+      .addCase(getProfileByIdAsync.rejected, (state, action) => {
+        state.activeProfile = null;
+        state.logInError =
+          action.payload || "Användarnamn eller lösenord är felaktigt.";
+      })
       .addCase(logOutUserAsync.fulfilled, (state) => {
         state.user = null;
         state.error = null;
@@ -153,6 +201,13 @@ const userSlice = createSlice({
         state.error = null;
       })
       .addCase(updateUserAsync.rejected, (state, action) => {
+        state.error = action.payload || "Ett oväntat fel inträffade.";
+      })
+      .addCase(updateUserPresentationAsync.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.error = null;
+      })
+      .addCase(updateUserPresentationAsync.rejected, (state, action) => {
         state.error = action.payload || "Ett oväntat fel inträffade.";
       });
     //   .addCase(deleteUserAsync.fulfilled, (state) => {
