@@ -11,13 +11,13 @@ import {
   InputAdornment,
   InputLabel,
   TextField,
-  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { logInUserAsync } from "../SLICES/userSlice";
 import { LogIn } from "../types";
+import { Rubrik, Text } from "./Index";
 
 export default function Login() {
   const error = useAppSelector((state) => state.userSlice.logInError);
@@ -86,7 +86,7 @@ export default function Login() {
         color: "#FFF",
       }}
     >
-      <Typography
+      <Rubrik
         variant="h4"
         sx={{
           fontWeight: "bold",
@@ -95,8 +95,8 @@ export default function Login() {
         }}
       >
         Välkommen tillbaka!
-      </Typography>
-      <Typography
+      </Rubrik>
+      <Text
         variant="body1"
         sx={{
           maxWidth: "600px",
@@ -107,10 +107,10 @@ export default function Login() {
       >
         Logga in för att fortsätta till din dashboard och hålla koll på dina
         bikupor och nätverk.
-      </Typography>
+      </Text>
 
       {error && (
-        <Typography
+        <Text
           variant="body2"
           sx={{
             color: "red",
@@ -123,7 +123,7 @@ export default function Login() {
           }}
         >
           {error}
-        </Typography>
+        </Text>
       )}
 
       <TextField
@@ -237,7 +237,7 @@ export default function Login() {
         }}
         onClick={handleSignIn}
       >
-        Logga in
+        <Text> Logga in</Text>
       </Button>
     </Box>
   );

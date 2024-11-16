@@ -8,3 +8,17 @@ body {
 ::-webkit-scrollbar {
   display: none;
 }
+
+
+@font-face {
+  font-family: 'TAN';
+  src: url('/fonts/TAN - AEGEAN Regular.ttf') format('opentype');
+  font-weight: 100 900; /* Om det är en variabel font */
+  font-style: light;
+}
+@font-face {
+  font-family: 'POPPINS';
+  src: url('/fonts/Poppins-Regular.ttf') format('opentype');
+  font-weight: 100 900; /* Om det är en variabel font */
+  font-style: light;
+}

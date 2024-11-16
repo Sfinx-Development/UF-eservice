@@ -9,7 +9,6 @@ import {
   Radio,
   RadioGroup,
   TextField,
-  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -18,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../SLICES/store";
 import { addUserAsync } from "../SLICES/userSlice";
 import { UserCreate } from "../types";
+import { Rubrik } from "./Index";
 
 const RegisterPage: React.FC = () => {
   const theme = useTheme();
@@ -113,9 +113,9 @@ const RegisterPage: React.FC = () => {
         backgroundColor: "#f7f7f7",
       }}
     >
-      <Typography variant={isMobile ? "h4" : "h3"} gutterBottom>
+      <Rubrik variant={isMobile ? "h4" : "h3"} gutterBottom>
         Registrera dig
-      </Typography>
+      </Rubrik>
 
       <Box
         component="form"

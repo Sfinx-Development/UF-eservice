@@ -1,11 +1,22 @@
 import {
   Box,
   Button,
+  styled,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+
+export const Rubrik = styled(Typography)`
+  font-family: "TAN", sans-serif;
+  font-variation-settings: "wght" 300;
+`;
+
+export const Text = styled(Typography)`
+  font-family: "POPPINS", sans-serif;
+  font-variation-settings: "wght" 300;
+`;
 
 const IndexPage = () => {
   const theme = useTheme();
@@ -28,20 +39,20 @@ const IndexPage = () => {
       }}
     >
       {/* Tjänstens rubrik */}
-      <Typography
-        variant={isMobile ? "h4" : "h2"} // Mindre rubrikstorlek för mobil
+      <Rubrik
+        variant={isMobile ? "h4" : "h2"}
         sx={{
           fontWeight: "bold",
-          color: "#FFA500", // Gul/orange från din logga
+          color: "#FFA500",
           marginBottom: "1rem",
         }}
       >
         Välkommen till Bikupetjänsten!
-      </Typography>
+      </Rubrik>
 
       {/* Beskrivning av vad tjänsten gör */}
-      <Typography
-        variant={isMobile ? "body1" : "h5"} // Mindre textstorlek för mobil
+      <Text
+        variant={isMobile ? "body1" : "h5"}
         sx={{
           maxWidth: "600px",
           marginBottom: "2rem",
@@ -51,13 +62,13 @@ const IndexPage = () => {
         Vi kopplar samman biodlare och markägare för att hjälpa till med
         pollinering och placering av bikupor. Registrera dig för att komma åt
         annonser och börja nätverka!
-      </Typography>
+      </Text>
 
       {/* Registrerings- och inloggningsknappar */}
       <Box
         sx={{
           display: "flex",
-          flexDirection: isMobile ? "column" : "row", // Vertikalt för mobil, horisontellt för desktop
+          flexDirection: isMobile ? "column" : "row",
           gap: "1rem",
         }}
       >
@@ -65,12 +76,12 @@ const IndexPage = () => {
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#FFA500", // Gul/orange
+            backgroundColor: "#FFA500",
             color: "#FFF",
-            padding: isMobile ? "0.5rem 1rem" : "0.75rem 1.5rem", // Anpassad knappstorlek för mobil
-            fontSize: isMobile ? "1rem" : "1.2rem", // Mindre textstorlek på knappen för mobil
+            padding: isMobile ? "0.5rem 1rem" : "0.75rem 1.5rem",
+            fontSize: isMobile ? "1rem" : "1.2rem",
             "&:hover": {
-              backgroundColor: "#cc8500", // Mörkare version av gul/orange
+              backgroundColor: "#cc8500",
             },
           }}
           onClick={() => {

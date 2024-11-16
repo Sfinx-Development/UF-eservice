@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import { addChatMessageAsync, getChatByIdAsync } from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { ChatMessage } from "../types";
+import { Rubrik } from "./Index";
 
 export default function Chat() {
   const { chatId } = useParams<{ chatId: string }>();
@@ -85,13 +86,13 @@ export default function Chat() {
           }}
         >
           {/* Titel och Annonsinformation */}
-          <Typography
+          <Rubrik
             variant={isMobile ? "h5" : "h4"}
             gutterBottom
             sx={{ fontWeight: "bold" }}
           >
             Chat för annons: {selectedChat.adTitle}
-          </Typography>
+          </Rubrik>
 
           {/* Lista över meddelanden */}
           <Paper

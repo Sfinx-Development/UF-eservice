@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  CircularProgress,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Card, CircularProgress, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAdAsync } from "../SLICES/adSlice";
@@ -16,6 +9,7 @@ import {
 } from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { AdChatSession } from "../types";
+import { Text } from "./Index";
 
 const AdDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -106,7 +100,7 @@ const AdDetailPage: React.FC = () => {
       {loading ? (
         <CircularProgress />
       ) : error ? (
-        <Typography color="error">{error}</Typography>
+        <Text color="error">{error}</Text>
       ) : selectedAd ? (
         <Grid
           container
@@ -122,47 +116,47 @@ const AdDetailPage: React.FC = () => {
         >
           {/* Titel och plats */}
           <Grid item xs={12}>
-            <Typography variant="h3" gutterBottom sx={{ fontWeight: "bold" }}>
+            <Text variant="h3" gutterBottom sx={{ fontWeight: "bold" }}>
               {selectedAd.title}
-            </Typography>
-            <Typography variant="h6" sx={{ color: "#777" }}>
+            </Text>
+            <Text variant="h6" sx={{ color: "#777" }}>
               Plats: {selectedAd.location}
-            </Typography>
+            </Text>
           </Grid>
 
           {/* Huvudinnehåll */}
           <Grid item xs={12} md={8}>
-            <Typography variant="body1" paragraph>
+            <Text variant="body1" paragraph>
               {selectedAd.description}
-            </Typography>
+            </Text>
 
             {selectedAd.numberOfHives ? (
               <>
-                <Typography variant="h5" sx={{ marginTop: "2rem" }}>
+                <Text variant="h5" sx={{ marginTop: "2rem" }}>
                   Information för biodlare
-                </Typography>
-                <Typography variant="body1">
+                </Text>
+                <Text variant="body1">
                   Antal bikupor: {selectedAd.numberOfHives}
-                </Typography>
+                </Text>
               </>
             ) : selectedAd.areaSize ? (
               <>
-                <Typography variant="h5" sx={{ marginTop: "2rem" }}>
+                <Text variant="h5" sx={{ marginTop: "2rem" }}>
                   Information för markägare
-                </Typography>
-                <Typography variant="body1">
+                </Text>
+                <Text variant="body1">
                   Markyta: {selectedAd.areaSize} hektar
-                </Typography>
-                <Typography variant="body1">
+                </Text>
+                <Text variant="body1">
                   Grödor: {selectedAd.crops || "Ej specificerat"}
-                </Typography>
-                <Typography variant="body1">
+                </Text>
+                <Text variant="body1">
                   Använder besprutning: {selectedAd.spraying ? "Ja" : "Nej"}
-                </Typography>
-                <Typography variant="body1">
+                </Text>
+                <Text variant="body1">
                   Använder gödsel:{" "}
                   {selectedAd.fertilization || "Ej specificerat"}
-                </Typography>
+                </Text>
               </>
             ) : null}
           </Grid>
@@ -178,9 +172,9 @@ const AdDetailPage: React.FC = () => {
                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
                 }}
               >
-                <Typography variant="h5" gutterBottom>
+                <Text variant="h5" gutterBottom>
                   Kontakta annonsören
-                </Typography>
+                </Text>
                 <Button
                   variant="contained"
                   sx={{
@@ -193,14 +187,14 @@ const AdDetailPage: React.FC = () => {
                   }}
                   onClick={handleNavigateToChat} // Skapa eller navigera till chatt
                 >
-                  Starta chatt
+                  <Text> Starta chatt</Text>
                 </Button>
               </Card>
             </Grid>
           )}
         </Grid>
       ) : (
-        <Typography variant="h6">Ingen annons hittades.</Typography>
+        <Text variant="h6">Ingen annons hittades.</Text>
       )}
     </Box>
   );

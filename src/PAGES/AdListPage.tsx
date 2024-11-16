@@ -10,13 +10,13 @@ import {
   Select,
   SelectChangeEvent,
   TextField,
-  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllAdsAsync, setSelectedAd } from "../SLICES/adSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { Ad } from "../types";
+import { Rubrik, Text } from "./Index";
 
 const AdListPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -92,9 +92,9 @@ const AdListPage: React.FC = () => {
         backgroundColor: "#f7f7f7",
       }}
     >
-      <Typography variant="h4" gutterBottom>
+      <Rubrik variant="h4" gutterBottom>
         Sök och filtrera annonser
-      </Typography>
+      </Rubrik>
 
       <Box
         sx={{
@@ -137,36 +137,34 @@ const AdListPage: React.FC = () => {
       </Box>
 
       {loading ? (
-        <Typography>Laddar annonser...</Typography>
+        <Text>Laddar annonser...</Text>
       ) : error ? (
-        <Typography color="error">{error}</Typography>
+        <Text color="error">{error}</Text>
       ) : filteredAds && filteredAds.length > 0 ? (
         <Grid container spacing={2}>
           {filteredAds.map((ad) => (
             <Grid item xs={12} sm={6} md={4} key={ad.id}>
               <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
                 <CardContent>
-                  <Typography variant="h6" component="div">
-                    {ad.title}
-                  </Typography>
-                  <Typography sx={{ marginBottom: "1rem", color: "#777" }}>
+                  <Text variant="h6">{ad.title}</Text>
+                  <Text sx={{ marginBottom: "1rem", color: "#777" }}>
                     {ad.location}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  </Text>
+                  <Text variant="body2" color="text.secondary">
                     {ad.description}
-                  </Typography>
+                  </Text>
                 </CardContent>
                 <CardActionArea onClick={() => handleNavigateToAd(ad)}>
-                  <Typography sx={{ padding: "1rem", color: "#FFA500" }}>
+                  <Text sx={{ padding: "1rem", color: "#FFA500" }}>
                     Till annonsen
-                  </Typography>
+                  </Text>
                 </CardActionArea>
               </Card>
             </Grid>
           ))}
         </Grid>
       ) : (
-        <Typography variant="h6">Inga annonser hittades.</Typography>
+        <Text variant="h6">Inga annonser hittades.</Text>
       )}
     </Box>
   );

@@ -6,7 +6,6 @@ import {
   CardActions,
   CardContent,
   Grid,
-  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -16,6 +15,7 @@ import ChatComponent from "../Components/chatComponent";
 import { getAdsByLocationAsync, setSelectedAd } from "../SLICES/adSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { Ad } from "../types";
+import { Rubrik, Text } from "./Index";
 
 const DashboardPage: React.FC = () => {
   const theme = useTheme();
@@ -49,9 +49,9 @@ const DashboardPage: React.FC = () => {
         backgroundColor: "#f7f7f7",
       }}
     >
-      <Typography variant={isMobile ? "h4" : "h3"} gutterBottom>
+      <Rubrik variant={isMobile ? "h4" : "h3"} gutterBottom>
         Välkommen tillbaka, {user?.username}!
-      </Typography>
+      </Rubrik>
 
       <Box
         sx={{
@@ -76,7 +76,7 @@ const DashboardPage: React.FC = () => {
             navigate("/newad");
           }}
         >
-          Lägg till ny annons
+          <Text>Lägg till ny annons</Text>
         </Button>
 
         <Button
@@ -95,7 +95,7 @@ const DashboardPage: React.FC = () => {
             navigate("/adlist");
           }}
         >
-          Visa alla annonser
+          <Text> Visa alla annonser</Text>
         </Button>
 
         <Button
@@ -115,14 +115,14 @@ const DashboardPage: React.FC = () => {
             navigate("/chatlist");
           }}
         >
-          Visa alla chattar
+          <Text>Visa alla chattar</Text>
           <ChatIcon />
         </Button>
       </Box>
 
-      <Typography variant="h5" sx={{ marginBottom: "1rem" }}>
+      <Rubrik variant="h5" sx={{ marginBottom: "1rem" }}>
         Annonser i ditt område
-      </Typography>
+      </Rubrik>
 
       <Grid container spacing={2} justifyContent="center">
         {adsByLocation && adsByLocation.length > 0 ? (
@@ -130,17 +130,15 @@ const DashboardPage: React.FC = () => {
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
                 <CardContent>
-                  <Typography variant="h6" component="div">
-                    {ad.title}
-                  </Typography>
+                  <Text variant="h6">{ad.title}</Text>
                   {ad.numberOfHives && (
-                    <Typography sx={{ marginBottom: "1rem", color: "#777" }}>
+                    <Text sx={{ marginBottom: "1rem", color: "#777" }}>
                       {`${ad.numberOfHives} kupor tillgängliga`}
-                    </Typography>
+                    </Text>
                   )}
-                  <Typography variant="body2" color="text.secondary">
+                  <Text variant="body2" color="text.secondary">
                     Plats: {ad.location || "Ingen plats angiven"}
-                  </Typography>
+                  </Text>
                 </CardContent>
                 <CardActions>
                   <Button
@@ -155,9 +153,9 @@ const DashboardPage: React.FC = () => {
             </Grid>
           ))
         ) : (
-          <Typography sx={{ color: "#777", marginTop: "1rem" }}>
+          <Text sx={{ color: "#777", marginTop: "1rem" }}>
             Inga annonser tillgängliga i ditt område
-          </Typography>
+          </Text>
         )}
       </Grid>
 

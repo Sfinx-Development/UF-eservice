@@ -6,14 +6,13 @@ import {
   RadioGroup,
   Snackbar,
   TextField,
-  Typography,
-  
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addAdAsync } from "../SLICES/adSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { Ad } from "../types";
+import { Rubrik, Text } from "./Index";
 
 const NewAdPage: React.FC = () => {
   const user = useAppSelector((state) => state.userSlice.user);
@@ -51,7 +50,7 @@ const NewAdPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     // Reset errors
     const newErrors = {
       title: false,
@@ -60,9 +59,9 @@ const NewAdPage: React.FC = () => {
       areaSize: false,
       crops: false,
     };
-  
+
     let hasErrors = false;
-  
+
     // Check required fields
     if (!formValues.title) {
       newErrors.title = true;
@@ -72,13 +71,13 @@ const NewAdPage: React.FC = () => {
       newErrors.location = true;
       hasErrors = true;
     }
-    
+
     // Error handling for biodlare
     if (user?.role === "biodlare" && !formValues.numberOfHives) {
       newErrors.numberOfHives = true;
       hasErrors = true;
     }
-    
+
     // Error handling for markägare
     if (user?.role === "markägare") {
       if (!formValues.areaSize) {
@@ -90,9 +89,9 @@ const NewAdPage: React.FC = () => {
         hasErrors = true;
       }
     }
-  
+
     setErrors(newErrors);
-  
+
     if (!hasErrors && user) {
       const ad: Ad = {
         ...formValues,
@@ -100,17 +99,16 @@ const NewAdPage: React.FC = () => {
         profileId: user.id,
       };
       dispatch(addAdAsync(ad));
-  
+
       // Show success message
       setSnackbarOpen(true);
-  
+
       // Redirect to dashboard after a short delay
       setTimeout(() => {
         navigate("/dashboard");
       }, 1500); // Wait 1.5 seconds
     }
   };
-  
 
   // const handleSubmit = (e: React.FormEvent) => {
   //   e.preventDefault();
@@ -145,11 +143,11 @@ const NewAdPage: React.FC = () => {
         backgroundColor: "#f7f7f7",
       }}
     >
-      <Typography variant="h4" gutterBottom>
+      <Rubrik variant="h4" gutterBottom>
         {user?.role === "biodlare"
           ? "Skapa annons - Ställa ut bikupor"
           : "Skapa annons - Söka efter bikupor"}
-      </Typography>
+      </Rubrik>
 
       <Box
         component="form"
@@ -233,7 +231,7 @@ const NewAdPage: React.FC = () => {
               helperText={errors.crops ? "Ange grödor" : ""}
               fullWidth
             />
-            <Typography variant="h6">Användning av kemikalier:</Typography>
+            <Text variant="h6">Användning av kemikalier:</Text>
             <RadioGroup
               name="spraying"
               value={formValues.spraying}
@@ -251,7 +249,7 @@ const NewAdPage: React.FC = () => {
               />
             </RadioGroup>
 
-            <Typography variant="h6">Gödsling:</Typography>
+            <Text variant="h6">Gödsling:</Text>
             <RadioGroup
               name="fertilization"
               value={formValues.fertilization}

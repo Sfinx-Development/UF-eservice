@@ -6,7 +6,6 @@ import {
   ListItem,
   ListItemText,
   Paper,
-  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -14,6 +13,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllChatsByProfileAsync } from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
+import { Rubrik, Text } from "./Index";
 
 export default function ChatList() {
   const dispatch = useAppDispatch();
@@ -69,13 +69,13 @@ export default function ChatList() {
           }}
         >
           {/* Titel */}
-          <Typography
+          <Rubrik
             variant={isMobile ? "h5" : "h4"}
             gutterBottom
             sx={{ fontWeight: "bold" }}
           >
             Dina chattar
-          </Typography>
+          </Rubrik>
 
           {/* Lista över alla chatt-sessioner */}
           <Paper
@@ -121,7 +121,7 @@ export default function ChatList() {
                       },
                     }}
                   >
-                    Öppna chatt
+                    <Text>Öppna chatt</Text>
                   </Button>
                 </ListItem>
               ))}
@@ -129,7 +129,7 @@ export default function ChatList() {
           </Paper>
         </Box>
       ) : (
-        <Typography>Du har inga pågående chattar.</Typography>
+        <Text>Du har inga pågående chattar.</Text>
       )}
     </Box>
   );

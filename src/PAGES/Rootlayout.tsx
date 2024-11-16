@@ -1,9 +1,8 @@
 import HomeIcon from "@mui/icons-material/Home";
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, Link, Toolbar, Typography } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { logOutUserAsync } from "../SLICES/userSlice";
-
 const RootLayout = () => {
   const user = useAppSelector((state) => state.userSlice.user);
   const navigate = useNavigate();
@@ -122,23 +121,166 @@ const RootLayout = () => {
       {/* Footer */}
       <footer
         style={{
-          backgroundColor: "#333333", // Dark gray
-          color: "white",
-          width: "100%",
-          textAlign: "center",
-          padding: "1rem 0",
-          marginTop: "auto",
-          boxSizing: "border-box",
+          backgroundColor: "#222", // Modern mörk färg
+          color: "#fff",
+          padding: "2rem 1rem",
+          textAlign: "left", // Vänsterjusterat innehåll
         }}
       >
-        <Typography
-          variant="body2"
+        <Box
           sx={{
-            color: "white",
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" }, // Kolumner på stora skärmar
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: "2rem",
+            maxWidth: "1200px",
+            margin: "0 auto",
           }}
         >
-          © 2024 Företaget
-        </Typography>
+          {/* Kolumn 1: BeeZmart Info */}
+          <Box>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                textTransform: "uppercase",
+                letterSpacing: "2px",
+                marginBottom: "0.5rem",
+              }}
+            >
+              BeeZmart UF
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{ color: "#bbb", marginBottom: "1rem" }}
+            >
+              En smart e-tjänst för biodlare och markägare.
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "#bbb",
+              }}
+            >
+              För frågor eller support:{" "}
+              <Link
+                href="mailto:beezmartuf@gmail.com"
+                sx={{
+                  color: "#FFA500",
+                  fontWeight: "bold",
+                  textDecoration: "none",
+                  "&:hover": { textDecoration: "underline" },
+                }}
+              >
+                beezmartuf@gmail.com
+              </Link>
+            </Typography>
+          </Box>
+
+          {/* Kolumn 2: Snabblänkar */}
+          <Box>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                textTransform: "uppercase",
+                letterSpacing: "2px",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Snabblänkar
+            </Typography>
+            <Box
+              sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+            >
+              <Link
+                href="/dashboard"
+                sx={{
+                  color: "#fff",
+                  textDecoration: "none",
+                  fontSize: "0.9rem",
+                  "&:hover": { textDecoration: "underline" },
+                }}
+              >
+                Dashboard
+              </Link>
+              <Link
+                href="/newad"
+                sx={{
+                  color: "#fff",
+                  textDecoration: "none",
+                  fontSize: "0.9rem",
+                  "&:hover": { textDecoration: "underline" },
+                }}
+              >
+                Lägg till annons
+              </Link>
+              <Link
+                href="/chatlist"
+                sx={{
+                  color: "#fff",
+                  textDecoration: "none",
+                  fontSize: "0.9rem",
+                  "&:hover": { textDecoration: "underline" },
+                }}
+              >
+                Visa chattar
+              </Link>
+            </Box>
+          </Box>
+
+          {/* Kolumn 3: Powered by Zeroett */}
+          <Box>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                textTransform: "uppercase",
+                letterSpacing: "2px",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Powered By
+            </Typography>
+            <Link
+              href="https://zeroett.se"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                color: "#FFA500",
+                fontWeight: "bold",
+                textDecoration: "none",
+                "&:hover": { textDecoration: "underline" },
+              }}
+            >
+              Zeroett AB
+            </Link>
+            <Typography
+              variant="body2"
+              sx={{ color: "#bbb", marginTop: "0.5rem", fontSize: "0.85rem" }}
+            >
+              BeeZmart UF utvecklades med stöd från Zeroett AB.
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Upphovsrätt */}
+        <Box
+          sx={{
+            borderTop: "1px solid #444",
+            marginTop: "2rem",
+            paddingTop: "1rem",
+            textAlign: "center",
+          }}
+        >
+          <Typography
+            variant="body2"
+            sx={{ fontSize: "0.8rem", color: "#bbb" }}
+          >
+            © 2024 BeeZmart UF. Alla rättigheter förbehållna.
+          </Typography>
+        </Box>
       </footer>
     </div>
   );
