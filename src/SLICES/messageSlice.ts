@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addMessageToDB, deleteMessageInDB, getAllMessages, updateMessageInDB  } from "../API/messages";
+import {
+  addMessageToDB,
+  deleteMessageInDB,
+  getAllMessages,
+  updateMessageInDB,
+} from "../API/messages";
 // import {
 //   addMessageToDB,
 //   deleteMessageInDB,
@@ -29,6 +34,7 @@ export const addMessageAsync = createAsyncThunk<
 >("messages/addMessage", async (message, thunkAPI) => {
   try {
     const addedMessage = await addMessageToDB(message);
+
     return addedMessage;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
@@ -124,7 +130,8 @@ const messageSlice = createSlice({
       .addCase(updateMessageAsync.rejected, (state, action) => {
         state.loading = false;
         state.error =
-          action.payload || "Ett fel inträffade vid uppdatering av meddelandet.";
+          action.payload ||
+          "Ett fel inträffade vid uppdatering av meddelandet.";
       });
 
     builder
@@ -133,13 +140,16 @@ const messageSlice = createSlice({
       })
       .addCase(deleteMessageAsync.fulfilled, (state, action) => {
         state.loading = false;
-        state.messages = state.messages.filter((message) => message.id !== action.payload);
+        state.messages = state.messages.filter(
+          (message) => message.id !== action.payload
+        );
         state.error = null;
       })
       .addCase(deleteMessageAsync.rejected, (state, action) => {
         state.loading = false;
         state.error =
-          action.payload || "Ett fel inträffade vid borttagning av meddelandet.";
+          action.payload ||
+          "Ett fel inträffade vid borttagning av meddelandet.";
       });
   },
 });

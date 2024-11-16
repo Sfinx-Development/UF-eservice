@@ -1,5 +1,6 @@
 import ChatIcon from "@mui/icons-material/Chat";
 import {
+  Badge,
   Box,
   Button,
   Card,
@@ -9,10 +10,11 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ChatComponent from "../Components/chatComponent";
 import { getAdsByLocationAsync, setSelectedAd } from "../SLICES/adSlice";
+import { getAllChatsByProfileAsync } from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { Ad } from "../types";
 import { Rubrik, Text } from "./Index";
@@ -23,13 +25,30 @@ const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.userSlice.user);
   const adsByLocation = useAppSelector((state) => state.adSlice.adsByLocation);
+  const chatSessions = useAppSelector((state) => state.chatSlice.chatSessions);
   const dispatch = useAppDispatch();
+  const [unreadMessages, setUnreadMessages] = useState(0);
 
   useEffect(() => {
     if (user) {
       dispatch(getAdsByLocationAsync(user.city));
     }
   }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      dispatch(getAllChatsByProfileAsync(user?.id));
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (chatSessions) {
+      const unreadSessions = chatSessions.filter(
+        (c) => c.hasUnreadMessages == true && c.latestSenderId != user?.id
+      ).length;
+      setUnreadMessages(unreadSessions);
+    }
+  }, [chatSessions]);
 
   const handleNavigateToAd = (ad: Ad) => {
     dispatch(setSelectedAd(ad));
@@ -98,26 +117,32 @@ const DashboardPage: React.FC = () => {
           <Text> Visa alla annonser</Text>
         </Button>
 
-        <Button
-          variant="outlined"
-          sx={{
-            borderColor: "#FFA500",
-            color: "#FFA500",
-            padding: "0.75rem 1.5rem",
-            fontSize: isMobile ? "1rem" : "1.2rem",
-            gap: 1,
-            "&:hover": {
-              borderColor: "#cc8500",
-              color: "#cc8500",
-            },
-          }}
-          onClick={() => {
-            navigate("/chatlist");
-          }}
+        <Badge
+          badgeContent={unreadMessages}
+          color="success"
+          invisible={unreadMessages === 0}
         >
-          <Text>Visa alla chattar</Text>
-          <ChatIcon />
-        </Button>
+          <Button
+            variant="outlined"
+            sx={{
+              borderColor: "#FFA500",
+              color: "#FFA500",
+              padding: "0.75rem 1.5rem",
+              fontSize: isMobile ? "1rem" : "1.2rem",
+              gap: 1,
+              "&:hover": {
+                borderColor: "#cc8500",
+                color: "#cc8500",
+              },
+            }}
+            onClick={() => {
+              navigate("/chatlist");
+            }}
+          >
+            <Text>Visa alla chattar</Text>
+            <ChatIcon />
+          </Button>
+        </Badge>
       </Box>
 
       <Rubrik variant="h5" sx={{ marginBottom: "1rem" }}>

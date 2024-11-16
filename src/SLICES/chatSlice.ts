@@ -178,7 +178,24 @@ const chatSlice = createSlice({
       })
       .addCase(getChatByIdAsync.fulfilled, (state, action) => {
         state.loading = false;
-        state.selectedChat = action.payload;
+
+        const payload = action.payload;
+
+        if (payload) {
+          state.selectedChat = payload;
+
+          const sessionIndex = state.chatSessions.findIndex(
+            (c) => c.adId === payload.adId
+          );
+
+          if (sessionIndex !== -1) {
+            state.chatSessions[sessionIndex] = {
+              ...state.chatSessions[sessionIndex],
+              ...payload,
+            };
+          }
+        }
+
         state.error = null;
       })
       .addCase(getChatByIdAsync.rejected, (state, action) => {

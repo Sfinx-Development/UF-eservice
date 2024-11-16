@@ -106,10 +106,21 @@ export default function ChatList() {
                 >
                   <ListItemText
                     primary={`Annons: ${chat.adTitle}`}
-                    secondary={`Senaste meddelande: ${new Date(
-                      chat.lastUpdated
-                    ).toLocaleString()}`}
+                    secondary={
+                      chat.hasUnreadMessages &&
+                      chat.latestSenderId != user?.id ? (
+                        <Text variant="body2" color="success">
+                          Finns olästa meddelanden
+                        </Text>
+                      ) : (
+                        <Text variant="body2" color="textSecondary">
+                          Senaste meddelande:{" "}
+                          {new Date(chat.lastUpdated).toDateString()}
+                        </Text>
+                      )
+                    }
                   />
+
                   <Button
                     variant="outlined"
                     sx={{
