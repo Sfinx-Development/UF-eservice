@@ -10,6 +10,7 @@ import RegisterPage from "./PAGES/Register";
 import RootLayout from "./PAGES/Rootlayout";
 import ProtectedRoute from "./ProtectedRoute";
 import ChatList from "./PAGES/ChatList";
+import Profile from "./PAGES/Profile";
 
 const Navigation = () => {
   // const [userLoaded, setUserLoaded] = useState(false);
@@ -53,6 +54,7 @@ const Navigation = () => {
           element={<ProtectedRoute element={DashboardPage} />}
         />
         <Route path="newad" element={<ProtectedRoute element={NewAdPage} />} />
+        <Route path="profile" element={<ProtectedRoute element={Profile} />} />
         <Route
           path="adlist"
           element={<ProtectedRoute element={AdListPage} />}
