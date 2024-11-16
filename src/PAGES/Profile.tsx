@@ -2,18 +2,13 @@ import {
   Avatar,
   Box,
   Button,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Grid,
-  Radio,
-  RadioGroup,
   TextField,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import LoadingIndicator from "../Components/Loading";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import {
   getProfileByIdAsync,
@@ -22,44 +17,57 @@ import {
 import { Profile } from "../types";
 import { Rubrik, Text } from "./Index";
 
-export default function Profile() {
-  const { id } = useParams();
+export default function ProfilePage() {
+  const { id } = useParams(); // Få ID från URL:en
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.userSlice.user);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const user = useAppSelector((state) => state.userSlice.user); // Inloggad användare
   const activeProfile = useAppSelector(
     (state) => state.userSlice.activeProfile
-  );
+  ); // Aktiv profil (annans data)
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [editMode, setIsEditMode] = useState(false);
-
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
   const [role, setRole] = useState("");
   const [desc, setDesc] = useState("");
 
-  // Hämta profil-data
+  // Hämta profildata baserat på ID
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        if (id && id !== user?.id) {
-          dispatch(getProfileByIdAsync(id));
-        } else {
-          setName(user?.username || "");
-          setCity(user?.city || "");
-          setRole(user?.role || "");
-          setDesc(user?.profileDescription || "");
-        }
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      }
-    };
+    if (id) {
+      // Om ID finns, hämta annans profil
+      dispatch(getProfileByIdAsync(id));
+    } else {
+      // Annars använd den inloggade användarens data
+      setName(user?.username || "");
+      setCity(user?.city || "");
+      setRole(user?.role || "");
+      setDesc(user?.profileDescription || "");
+    }
+  }, [id, user, dispatch]);
 
-    fetchProfile();
-  }, [id, user]);
+  // Kontrollera aktuell profil som visas
+  const currentProfile = id ? activeProfile : user;
 
-  const profileImages = user?.profileImages || [];
+  if (id && !currentProfile) {
+    // Visa laddningsindikator tills `activeProfile` är laddad
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          width: "100%",
+        }}
+      >
+        <LoadingIndicator />
+      </Box>
+    );
+  }
+
+  const isOwnProfile = !id || id === user?.id;
 
   const handleChange =
     (setter: React.Dispatch<React.SetStateAction<string>>) =>
@@ -68,7 +76,7 @@ export default function Profile() {
     };
 
   const handleSave = () => {
-    if (user && name != "" && city != "" && role != "" && desc != "") {
+    if (user && name && city && role && desc) {
       const updatedProfile: Profile = {
         ...user,
         username: name,
@@ -94,6 +102,7 @@ export default function Profile() {
         backgroundColor: "#f7f7f7",
       }}
     >
+      {/* Profilinformation */}
       <Box
         sx={{
           display: "flex",
@@ -111,7 +120,7 @@ export default function Profile() {
       >
         <Avatar
           src={"/default-avatar.png"}
-          alt={activeProfile?.username || user?.username}
+          alt={currentProfile?.username}
           sx={{
             width: "120px",
             height: "120px",
@@ -123,67 +132,17 @@ export default function Profile() {
           {editMode ? (
             <TextField
               label="Namn"
-              type="name"
-              name="namme"
               value={name}
               onChange={handleChange(setName)}
-              required
               fullWidth
             />
           ) : (
             <Rubrik sx={{ fontSize: isMobile ? "1.5rem" : "2rem" }}>
-              {activeProfile?.username || user?.username}
+              {currentProfile?.username}
             </Rubrik>
           )}
-
-          {editMode ? (
-            <FormControl component="fieldset">
-              <FormLabel component="legend">
-                {activeProfile?.role || user?.role}
-              </FormLabel>
-              <RadioGroup
-                name="role"
-                value={role}
-                onChange={handleChange(setRole)}
-              >
-                <FormControlLabel
-                  value="Biodlare"
-                  control={<Radio />}
-                  label="Biodlare"
-                />
-                <FormControlLabel
-                  value="Markägare"
-                  control={<Radio />}
-                  label="Markägare"
-                />
-                <FormControlLabel
-                  value="Biodlare och Markägare"
-                  control={<Radio />}
-                  label="Båda"
-                />
-              </RadioGroup>
-            </FormControl>
-          ) : (
-            <Text sx={{ fontSize: 18 }}>
-              {activeProfile?.role || user?.role}
-            </Text>
-          )}
-
-          {editMode ? (
-            <TextField
-              label="Stad"
-              type="city"
-              name="city"
-              value={city}
-              onChange={handleChange(setCity)}
-              required
-              fullWidth
-            />
-          ) : (
-            <Text sx={{ fontSize: 18 }}>
-              {activeProfile?.city || user?.city}
-            </Text>
-          )}
+          <Text sx={{ fontSize: 18 }}>{currentProfile?.role}</Text>
+          <Text sx={{ fontSize: 18 }}>{currentProfile?.city}</Text>
         </Box>
       </Box>
 
@@ -201,15 +160,11 @@ export default function Profile() {
         }}
       >
         <Rubrik sx={{ marginBottom: "1rem" }}>Om mig</Rubrik>
-
         {editMode ? (
           <TextField
             label="Beskrivning"
-            type="description"
-            name="description"
             value={desc}
             onChange={handleChange(setDesc)}
-            required
             fullWidth
           />
         ) : (
@@ -218,49 +173,25 @@ export default function Profile() {
               color: "#555",
               marginBottom: "1.5rem",
               textAlign: "justify",
-              whiteSpace: "pre-line", // Bevara radbrytningar och mellanslag
+              whiteSpace: "pre-line",
             }}
           >
-            {activeProfile?.profileDescription || user?.profileDescription}
+            {currentProfile?.profileDescription}
           </Text>
-        )}
-
-        {profileImages.length > 0 && (
-          <Grid container spacing={2}>
-            {profileImages.slice(0, 4).map((image: string, index: number) => (
-              <Grid item xs={6} sm={4} key={index}>
-                <Box
-                  component="img"
-                  src={image}
-                  alt={`Profile image ${index + 1}`}
-                  sx={{
-                    width: "100%",
-                    borderRadius: "8px",
-                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                  }}
-                />
-              </Grid>
-            ))}
-          </Grid>
         )}
       </Box>
 
-      {!activeProfile && user && (
+      {isOwnProfile && (
         <Button
           variant="contained"
           sx={{
             marginTop: "2rem",
             backgroundColor: "#FFA500",
             color: "#FFF",
-            padding: "0.75rem 1.5rem",
-            fontSize: "1rem",
-            "&:hover": {
-              backgroundColor: "#cc8500",
-            },
           }}
           onClick={() => (editMode ? handleSave() : setIsEditMode(true))}
         >
-          <Text>{editMode ? "Spara ändringar" : "Redigera profil"}</Text>
+          {editMode ? "Spara ändringar" : "Redigera profil"}
         </Button>
       )}
     </Box>
