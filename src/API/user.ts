@@ -54,6 +54,30 @@ export const getProfileByProfileId = async (profileId: string) => {
   }
 };
 
+export const getAdminByUserId = async (profileId: string) => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    const userCollectionRef = collection(db, "profiles");
+    const userQuery = query(
+      userCollectionRef,
+      where("userId", "==", profileId),
+      where("isAdmin", "==", true)
+    );
+    const querySnapshot = await getDocs(userQuery);
+
+    console.log("SVARET: ", querySnapshot);
+
+    if (querySnapshot.size === 0) {
+      return null;
+    }
+
+    const userData = querySnapshot.docs[0].data() as Profile;
+    return userData;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const addProfileToDB = async (profile: Profile) => {
   const profileCollectionRef = collection(db, "profiles");
 
@@ -118,6 +142,7 @@ export const registerUserWithAPI = async (newUser: UserCreate) => {
       profileDescription: newUser.profileDescription,
       role: newUser.role,
       city: newUser.city,
+      isAdmin: newUser.isAdmin,
     };
     const profile = await addProfileToDB(profileToAdd);
     return profile;

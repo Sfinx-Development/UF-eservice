@@ -34,7 +34,6 @@ export const addMessageAsync = createAsyncThunk<
 >("messages/addMessage", async (message, thunkAPI) => {
   try {
     const addedMessage = await addMessageToDB(message);
-
     return addedMessage;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);

@@ -1,15 +1,21 @@
 import { Route, Routes } from "react-router-dom";
 import AdDetailPage from "./PAGES/AdDetailPage";
 import AdListPage from "./PAGES/AdListPage";
+import AdminAdListPage from "./PAGES/AdminAdList";
+import AdminChatList from "./PAGES/AdminChatList";
+import AdminDashboard from "./PAGES/AdminDashboard";
+import AdminAdDetailPage from "./PAGES/AdminDetailPage";
 import Chat from "./PAGES/Chat";
 import ChatList from "./PAGES/ChatList";
 import DashboardPage from "./PAGES/Dashboard";
 import IndexPage from "./PAGES/Index";
 import Login from "./PAGES/Login";
+import LoginAdmin from "./PAGES/LogInAdmin";
 import NewAdPage from "./PAGES/NewAdd";
 import ProfilePage from "./PAGES/Profile";
 import RegisterPage from "./PAGES/Register";
 import RootLayout from "./PAGES/Rootlayout";
+import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import ProtectedRoute from "./ProtectedRoute";
 
 const Navigation = () => {
@@ -79,7 +85,26 @@ const Navigation = () => {
           element={<ProtectedRoute element={Chat} />}
         ></Route>
 
+        <Route
+          path="admin-dashboard"
+          element={<ProtectedAdminRoute element={AdminDashboard} />}
+        ></Route>
+
+        <Route
+          path="admin-chatlist"
+          element={<ProtectedAdminRoute element={AdminChatList} />}
+        ></Route>
+        <Route
+          path="admin-addetail"
+          element={<ProtectedAdminRoute element={AdminAdDetailPage} />}
+        ></Route>
+        <Route
+          path="admin-adlist"
+          element={<ProtectedAdminRoute element={AdminAdListPage} />}
+        ></Route>
+
         <Route path="login" element={<Login />} />
+        <Route path="admin-login" element={<LoginAdmin />} />
       </Route>
     </Routes>
   );

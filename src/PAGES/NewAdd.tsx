@@ -97,6 +97,8 @@ const NewAdPage: React.FC = () => {
         ...formValues,
         id: "undefined",
         profileId: user.id,
+        isReviewed: false,
+        isPublic: false,
       };
       dispatch(addAdAsync(ad));
 

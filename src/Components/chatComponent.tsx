@@ -5,6 +5,7 @@ import {
   Edit,
   Send,
 } from "@mui/icons-material";
+import VerifiedIcon from "@mui/icons-material/Verified";
 import {
   Box,
   Button,
@@ -28,6 +29,7 @@ const ChatComponent: React.FC = () => {
   const dispatch = useAppDispatch();
   const messages = useAppSelector((state) => state.messageSlice.messages);
   const user = useAppSelector((state) => state.userSlice.user);
+  const admin = useAppSelector((state) => state.userSlice.admin);
   const [messageText, setMessageText] = useState("");
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false); // För att kontrollera om chatten är öppen eller stängd
@@ -41,9 +43,10 @@ const ChatComponent: React.FC = () => {
       const newMessage = {
         id: uuidv4(),
         text: messageText,
-        userId: user?.id,
-        username: user?.username || "Anonym",
+        userId: user?.id || admin?.id,
+        username: user?.username || admin?.username || "Anonym",
         timestamp: new Date().toISOString(),
+        isAdmin: admin?.isAdmin || false,
       };
       if (newMessage.userId) {
         dispatch(addMessageAsync(newMessage));
@@ -152,9 +155,16 @@ const ChatComponent: React.FC = () => {
                   alignItems: "flex-start",
                 }}
               >
-                <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-                  {message.username}
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                    {message.username}
+                  </Typography>
+                  {message.isAdmin && (
+                    <VerifiedIcon
+                      sx={{ color: "lightblue", fontSize: 12, marginLeft: 0.3 }}
+                    />
+                  )}
+                </Box>
                 <Typography variant="body1" sx={{ wordBreak: "break-word" }}>
                   {editingMessageId === message.id ? (
                     <TextField

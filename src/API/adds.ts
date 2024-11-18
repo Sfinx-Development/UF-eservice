@@ -50,7 +50,29 @@ export const getAdById = async (adId: string): Promise<Ad | null> => {
 export const getAdsByPlace = async (city: string): Promise<Ad[] | null> => {
   try {
     const adsCollectionRef = collection(db, "ads");
-    const adsQuery = query(adsCollectionRef, where("location", "==", city));
+    const adsQuery = query(
+      adsCollectionRef,
+      where("location", "==", city),
+      where("isPublic", "==", true)
+    );
+    const querySnapshot = await getDocs(adsQuery);
+
+    if (!querySnapshot.empty) {
+      const ads: Ad[] = querySnapshot.docs.map((doc) => doc.data() as Ad);
+      return ads;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching ads:", error);
+    throw error;
+  }
+};
+
+export const getUnReviewedAds = async (): Promise<Ad[] | null> => {
+  try {
+    const adsCollectionRef = collection(db, "ads");
+    const adsQuery = query(adsCollectionRef, where("isReviewed", "==", false));
     const querySnapshot = await getDocs(adsQuery);
 
     if (!querySnapshot.empty) {
@@ -69,7 +91,8 @@ export const getAdsByPlace = async (city: string): Promise<Ad[] | null> => {
 export const getAllAds = async (): Promise<Ad[]> => {
   try {
     const adCollectionRef = collection(db, "ads");
-    const adSnapshot = await getDocs(adCollectionRef);
+    const adsQuery = query(adCollectionRef, where("isPublic", "==", true));
+    const adSnapshot = await getDocs(adsQuery);
 
     const ads: Ad[] = adSnapshot.docs.map((doc) => doc.data() as Ad);
     return ads;
@@ -83,7 +106,11 @@ export const getAllAds = async (): Promise<Ad[]> => {
 export const getAdsByUserId = async (userId: string): Promise<Ad[]> => {
   try {
     const adCollectionRef = collection(db, "ads");
-    const userAdsQuery = query(adCollectionRef, where("userId", "==", userId));
+    const userAdsQuery = query(
+      adCollectionRef,
+      where("userId", "==", userId),
+      where("isPublic", "==", true)
+    );
     const querySnapshot = await getDocs(userAdsQuery);
 
     const userAds: Ad[] = querySnapshot.docs.map((doc) => doc.data() as Ad);

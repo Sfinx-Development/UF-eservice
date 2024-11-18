@@ -8,6 +8,7 @@ import {
   getAdById,
   getAdsByPlace,
   getAllAds,
+  getUnReviewedAds,
   updateAdInDB,
 } from "../API/adds";
 import { Ad } from "../types";
@@ -16,6 +17,7 @@ export interface AdState {
   ads: Ad[];
   selectedAd: Ad | null;
   adsByLocation: Ad[] | null;
+  unreviewedAds: Ad[] | null;
   error: string | null;
   loading: boolean;
 }
@@ -37,6 +39,7 @@ const initialState: AdState = {
   ads: [],
   selectedAd: loadSelectedAdFromLocalStorage(),
   adsByLocation: null,
+  unreviewedAds: null,
   error: null,
   loading: false,
 };
@@ -92,6 +95,19 @@ export const getAdsByLocationAsync = createAsyncThunk<
   }
 });
 
+export const getUnreviewedAdsAsync = createAsyncThunk<
+  Ad[] | null,
+  void,
+  { rejectValue: string }
+>("ads/getUnreviewedAdsAsync", async (_, thunkAPI) => {
+  try {
+    const ads = await getUnReviewedAds();
+    return ads;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
 export const updateAdAsync = createAsyncThunk<
   Ad,
   { adId: string; updates: Partial<Ad> },
@@ -128,7 +144,16 @@ const adSlice = createSlice({
         state.selectedAd = ad;
         localStorage.setItem("selectedAd", JSON.stringify(ad));
       } else {
-        localStorage.setItem("selectedAd", JSON.stringify(undefined));
+        const unreviewed = state.unreviewedAds?.find(
+          (a: Ad) => a.id == action.payload.id
+        );
+        if (unreviewed) {
+          state.selectedAd = unreviewed;
+          localStorage.setItem("selectedAd", JSON.stringify(unreviewed));
+        } else {
+          state.selectedAd = null;
+          localStorage.setItem("selectedAd", JSON.stringify(undefined));
+        }
       }
     },
   },
@@ -180,6 +205,18 @@ const adSlice = createSlice({
         state.loading = false;
         state.adsByLocation = action.payload;
         state.error = null;
+      })
+      .addCase(getUnreviewedAdsAsync.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getUnreviewedAdsAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.unreviewedAds = action.payload;
+        state.error = null;
+      })
+      .addCase(getUnreviewedAdsAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.ads = [];
       })
       .addCase(getAllAdsAsync.rejected, (state, action) => {
         state.loading = false;
