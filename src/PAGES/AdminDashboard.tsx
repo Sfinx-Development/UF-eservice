@@ -1,11 +1,8 @@
-import ChatIcon from "@mui/icons-material/Chat";
-import { Badge, Box, Button, useMediaQuery, useTheme } from "@mui/material";
-import React, { useState } from "react";
+import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import ChatComponent from "../Components/chatComponent";
-import { setSelectedAd } from "../SLICES/adSlice";
-import { useAppDispatch, useAppSelector } from "../SLICES/store";
-import { Ad } from "../types";
+import { useAppSelector } from "../SLICES/store";
 import { Rubrik, Text } from "./Index";
 
 const AdminDashboardPage: React.FC = () => {
@@ -13,10 +10,10 @@ const AdminDashboardPage: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
   const admin = useAppSelector((state) => state.userSlice.admin);
-  const adsByLocation = useAppSelector((state) => state.adSlice.adsByLocation);
-  const chatSessions = useAppSelector((state) => state.chatSlice.chatSessions);
-  const dispatch = useAppDispatch();
-  const [unreadMessages, setUnreadMessages] = useState(0);
+  //   const adsByLocation = useAppSelector((state) => state.adSlice.adsByLocation);
+  //   const chatSessions = useAppSelector((state) => state.chatSlice.chatSessions);
+  //   const dispatch = useAppDispatch();
+  //   const [unreadMessages, setUnreadMessages] = useState(0);
 
   //   useEffect(() => {
   //     if (admin) {
@@ -39,10 +36,10 @@ const AdminDashboardPage: React.FC = () => {
   //     }
   //   }, [chatSessions]);
 
-  const handleNavigateToAd = (ad: Ad) => {
-    dispatch(setSelectedAd(ad));
-    navigate("/addetail");
-  };
+  //   const handleNavigateToAd = (ad: Ad) => {
+  //     dispatch(setSelectedAd(ad));
+  //     navigate("/addetail");
+  //   };
 
   return (
     <Box
@@ -88,12 +85,12 @@ const AdminDashboardPage: React.FC = () => {
           <Text> Visa ogranskade annonser</Text>
         </Button>
 
-        <Badge
+        {/* <Badge
           badgeContent={unreadMessages}
           color="success"
           invisible={unreadMessages === 0}
-        >
-          <Button
+        > */}
+        {/* <Button
             variant="outlined"
             sx={{
               borderColor: "#FFA500",
@@ -107,13 +104,13 @@ const AdminDashboardPage: React.FC = () => {
               },
             }}
             onClick={() => {
-              navigate("/chatlist");
+              navigate("/admin-chatlist");
             }}
           >
             <Text>Visa alla chattar</Text>
             <ChatIcon />
-          </Button>
-        </Badge>
+          </Button> */}
+        {/* </Badge> */}
       </Box>
 
       <ChatComponent />
