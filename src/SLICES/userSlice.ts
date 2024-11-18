@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { signInWithAPI, signOutWithAuth } from "../API/signin";
 import {
+  signInAdminWithAPI,
+  signInWithAPI,
+  signOutWithAuth,
+} from "../API/signin";
+import {
+  getAdminByUserId,
   getProfileByProfileId,
   registerUserWithAPI,
   updateProfileInDB,
@@ -17,6 +22,7 @@ export interface UserState {
   logInError: string | null;
   createAccountError: string | null;
   activeProfile: Profile | null;
+  admin: Profile | null;
 }
 
 const loadUserFromLocalStorage = (): Profile | null => {
@@ -31,9 +37,22 @@ const loadUserFromLocalStorage = (): Profile | null => {
     return null;
   }
 };
+const loadAdminFromLocalStorage = (): Profile | null => {
+  try {
+    const serializedUser = localStorage.getItem("admin");
+    if (serializedUser === null) {
+      return null;
+    }
+    return JSON.parse(serializedUser);
+  } catch (error) {
+    console.error("Fel vid laddning av användardata från localStorage:", error);
+    return null;
+  }
+};
 
 export const initialState: UserState = {
   user: loadUserFromLocalStorage(),
+  admin: loadAdminFromLocalStorage(),
   error: null,
   logInError: null,
   createAccountError: null,
@@ -67,6 +86,23 @@ export const getProfileByIdAsync = createAsyncThunk<
       return profile;
     } else {
       return thunkAPI.rejectWithValue("failed to get profile");
+    }
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const getAdminByIdAsync = createAsyncThunk<
+  Profile,
+  string,
+  { rejectValue: string }
+>("user/getAdminAsync", async (profileId, thunkAPI) => {
+  try {
+    const profile = await getAdminByUserId(profileId);
+    if (profile) {
+      return profile;
+    } else {
+      return thunkAPI.rejectWithValue("failed to get admin");
     }
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
@@ -138,6 +174,23 @@ export const logInUserAsync = createAsyncThunk<
   }
 });
 
+export const logInAdminAsync = createAsyncThunk<
+  Profile, // Returnerar en användare vid lyckad inloggning
+  LogIn, // Input-typ för inloggningsuppgifter (LogIn)
+  { rejectValue: string } // Typ för felhantering (rejectValue)
+>("user/logInAdmin", async (login, thunkAPI) => {
+  try {
+    const userCredential = await signInAdminWithAPI(login);
+    console.log("LOGGGA RIN", userCredential);
+    localStorage.setItem("admin", JSON.stringify(userCredential));
+    return userCredential;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(
+      "Inloggningen för admin misslyckades. Felaktiga uppgifter."
+    );
+  }
+});
+
 // Log out user
 export const logOutUserAsync = createAsyncThunk<
   boolean, // Returnerar ett boolean-värde vid lyckad utloggning
@@ -147,6 +200,7 @@ export const logOutUserAsync = createAsyncThunk<
   try {
     await signOutWithAuth();
     localStorage.removeItem("user");
+    localStorage.removeItem("admin");
     return true;
   } catch (error) {
     return thunkAPI.rejectWithValue("Något gick fel vid utloggningen.");
@@ -170,6 +224,15 @@ const userSlice = createSlice({
       })
       .addCase(logInUserAsync.rejected, (state, action) => {
         state.user = null;
+        state.logInError =
+          action.payload || "Användarnamn eller lösenord är felaktigt.";
+      })
+      .addCase(logInAdminAsync.fulfilled, (state, action) => {
+        state.admin = action.payload;
+        state.logInError = null;
+      })
+      .addCase(logInAdminAsync.rejected, (state, action) => {
+        state.admin = null;
         state.logInError =
           action.payload || "Användarnamn eller lösenord är felaktigt.";
       })

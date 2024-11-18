@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import AdDetailPage from "./PAGES/AdDetailPage";
 import AdListPage from "./PAGES/AdListPage";
+import AdminDashboard from "./PAGES/AdminDashboard";
 import Chat from "./PAGES/Chat";
 import ChatList from "./PAGES/ChatList";
 import DashboardPage from "./PAGES/Dashboard";
@@ -10,7 +11,9 @@ import NewAdPage from "./PAGES/NewAdd";
 import ProfilePage from "./PAGES/Profile";
 import RegisterPage from "./PAGES/Register";
 import RootLayout from "./PAGES/Rootlayout";
+import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import ProtectedRoute from "./ProtectedRoute";
+import LoginAdmin from "./PAGES/LogInAdmin";
 
 const Navigation = () => {
   // const [userLoaded, setUserLoaded] = useState(false);
@@ -79,7 +82,13 @@ const Navigation = () => {
           element={<ProtectedRoute element={Chat} />}
         ></Route>
 
+        <Route
+          path="admin-dashboard"
+          element={<ProtectedAdminRoute element={AdminDashboard} />}
+        ></Route>
+
         <Route path="login" element={<Login />} />
+        <Route path="admin-login" element={<LoginAdmin />} />
       </Route>
     </Routes>
   );

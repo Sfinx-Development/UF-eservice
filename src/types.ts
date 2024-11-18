@@ -9,6 +9,7 @@ export interface UserCreate {
   role: string;
   termsAccepted: boolean;
   city: string;
+  isAdmin: boolean;
 }
 
 export interface LogIn {
@@ -33,6 +34,7 @@ export interface Profile {
   profileImages?: string[];
   role: string;
   city: string;
+  isAdmin: boolean;
 }
 
 export interface Ad {
@@ -46,6 +48,8 @@ export interface Ad {
   spraying?: string;
   fertilization?: string;
   profileId: string;
+  isReviewed?: boolean;
+  isPublic?: boolean;
 }
 
 export interface ChatMessage {
@@ -78,4 +82,5 @@ export interface Message {
   userId?: string;
   username: string;
   isRead?: boolean;
+  isAdmin?: boolean;
 }

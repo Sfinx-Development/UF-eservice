@@ -246,6 +246,17 @@ const RootLayout = () => {
               >
                 Visa chattar
               </Link>
+              <Link
+                href="/admin-login"
+                sx={{
+                  color: "#fff",
+                  textDecoration: "none",
+                  fontSize: "0.9rem",
+                  "&:hover": { textDecoration: "underline" },
+                }}
+              >
+                Administration
+              </Link>
             </Box>
           </Box>
 
