@@ -11,6 +11,7 @@ import {
   getAdminByUserId,
   getProfileByProfileId,
   registerUserWithAPI,
+  resetPassword,
   updateProfileInDB,
   updateUserWithAPI,
 } from "../API/user";
@@ -175,6 +176,25 @@ export const logInUserAsync = createAsyncThunk<
     return thunkAPI.rejectWithValue(
       "Inloggningen misslyckades. Felaktiga uppgifter."
     );
+  }
+});
+
+export const resetPasswordAsync = createAsyncThunk<
+  boolean,
+  string,
+  { rejectValue: string }
+>("user/resetPassword", async (email, thunkAPI) => {
+  try {
+    const isResetPassword = await resetPassword(email);
+    if (isResetPassword == true) {
+      return isResetPassword;
+    } else {
+      return thunkAPI.rejectWithValue(
+        "something went wrong with resetting password"
+      );
+    }
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
   }
 });
 
