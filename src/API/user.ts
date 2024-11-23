@@ -7,6 +7,7 @@ import {
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -14,8 +15,11 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { Profile, UserCreate } from "../types";
+import { ChatMessage, Profile, UserCreate } from "../types";
+import { deleteAdInDB, getAdsByUserId } from "./adds";
+import { getAllChatSessionsByProfile, updateChatMessage } from "./chat";
 import { auth, db } from "./config";
+import { deleteMessageInDB, getMessagesByUserId } from "./messages";
 
 export const getUserByUserId = async (userId: string) => {
   // eslint-disable-next-line no-useless-catch
@@ -64,8 +68,6 @@ export const getAdminByUserId = async (profileId: string) => {
       where("isAdmin", "==", true)
     );
     const querySnapshot = await getDocs(userQuery);
-
-    console.log("SVARET: ", querySnapshot);
 
     if (querySnapshot.size === 0) {
       return null;
@@ -134,10 +136,10 @@ export const registerUserWithAPI = async (newUser: UserCreate) => {
   if (userCredential) {
     const profileToAdd: Profile = {
       id: "undefined",
-      email: newUser.email,
+      email: newUser.email.toLocaleLowerCase(),
       userId: userCredential.user.uid,
       username: newUser.username,
-      profileDescription: newUser.profileDescription,
+      profileDescription: newUser.profileDescription || "",
       role: newUser.role,
       city: newUser.city,
       isAdmin: newUser.isAdmin,
@@ -172,11 +174,68 @@ export const updateUserWithAPI = async (updates: Partial<Profile>) => {
   } as Profile;
 };
 
-// Radera en användare
-export const deleteUserWithAPI = async () => {
+export const deleteUserWithAPI = async (): Promise<boolean> => {
   const user = auth.currentUser;
   if (!user) throw new Error("User not authenticated");
 
-  await deleteUser(user);
-  console.log("User deleted:", user.uid);
+  try {
+    const profile = await getUserByUserId(user.uid);
+    if (!profile) return false;
+
+    const operations: (() => Promise<void>)[] = [];
+    const ads = await getAdsByUserId(profile.id);
+    if (ads) {
+      ads.forEach((ad) => {
+        operations.push(() => deleteAdInDB(ad.id));
+      });
+    }
+    const commonMessages = await getMessagesByUserId(profile.id);
+    if (commonMessages) {
+      commonMessages.forEach((message) => {
+        operations.push(() => deleteMessageInDB(message.id));
+      });
+    }
+    const adSessions = await getAllChatSessionsByProfile(profile.id);
+    const sessionsByProfile = adSessions.filter(
+      (session) =>
+        session.senderId === profile.id || session.receiverId === profile.id
+    );
+
+    if (sessionsByProfile.length > 0) {
+      sessionsByProfile.forEach((session) => {
+        session.messages.forEach((message) => {
+          if (message.senderId === profile.id) {
+            const updatedMessage: ChatMessage = {
+              ...message,
+              senderName: "Borttagen användare",
+              senderId: "undefined",
+            };
+            operations.push(() =>
+              updateChatMessage(session.id, message.id, updatedMessage)
+            );
+          }
+        });
+      });
+    }
+    operations.push(() => deleteProfileWithAPI(profile.id));
+
+    await Promise.all(operations.map((operation) => operation()));
+
+    await deleteUser(user);
+    return true;
+  } catch (error) {
+    console.error("Error during deletion:", error);
+    return false;
+  }
+};
+
+export const deleteProfileWithAPI = async (id: string): Promise<void> => {
+  const profileDocRef = doc(db, "profiles", id);
+
+  try {
+    await deleteDoc(profileDocRef);
+  } catch (error) {
+    console.error("Error deleting profile:", error);
+    throw error;
+  }
 };

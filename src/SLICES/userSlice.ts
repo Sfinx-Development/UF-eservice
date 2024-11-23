@@ -7,6 +7,7 @@ import {
   signOutWithAuth,
 } from "../API/signin";
 import {
+  deleteUserWithAPI,
   getAdminByUserId,
   getProfileByProfileId,
   registerUserWithAPI,
@@ -142,20 +143,23 @@ export const updateUserPresentationAsync = createAsyncThunk<
 });
 
 // // Delete user
-// export const deleteUserAsync = createAsyncThunk<
-//   boolean, // Returnerar ett boolean-värde vid lyckad borttagning
-//   void, // Ingen input för borttagning
-//   { rejectValue: string } // Typ för felhantering (rejectValue)
-// >("user/deleteUser", async (_, thunkAPI) => {
-//   try {
-//     const isDeleted = await deleteUserWithAPI();
-//     return isDeleted;
-//   } catch (error) {
-//     return thunkAPI.rejectWithValue(
-//       "Något gick fel vid borttagning av användare."
-//     );
-//   }
-// });
+export const deleteUserAsync = createAsyncThunk<
+  boolean,
+  void,
+  { rejectValue: string }
+>("user/deleteUser", async (_, thunkAPI) => {
+  try {
+    const isDeleted = await deleteUserWithAPI();
+    if (isDeleted) {
+      localStorage.clear();
+    }
+    return isDeleted;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(
+      "Något gick fel vid borttagning av användare."
+    );
+  }
+});
 
 // Log in user
 export const logInUserAsync = createAsyncThunk<
@@ -272,14 +276,16 @@ const userSlice = createSlice({
       })
       .addCase(updateUserPresentationAsync.rejected, (state, action) => {
         state.error = action.payload || "Ett oväntat fel inträffade.";
+      })
+      .addCase(deleteUserAsync.fulfilled, (state) => {
+        state.user = null;
+        state.activeProfile = null;
+        state.admin = null;
+        state.error = null;
+      })
+      .addCase(deleteUserAsync.rejected, (state, action) => {
+        state.error = action.payload || "Ett oväntat fel inträffade.";
       });
-    //   .addCase(deleteUserAsync.fulfilled, (state) => {
-    //     state.user = null;
-    //     state.error = null;
-    //   })
-    //   .addCase(deleteUserAsync.rejected, (state, action) => {
-    //     state.error = action.payload || "Ett oväntat fel inträffade.";
-    //   });
   },
 });
 

@@ -108,8 +108,8 @@ export const getAdsByUserId = async (userId: string): Promise<Ad[]> => {
     const adCollectionRef = collection(db, "ads");
     const userAdsQuery = query(
       adCollectionRef,
-      where("userId", "==", userId),
-      where("isPublic", "==", true)
+      where("profileId", "==", userId)
+      // where("isPublic", "==", true)
     );
     const querySnapshot = await getDocs(userAdsQuery);
 
@@ -136,7 +136,7 @@ export const updateAdInDB = async (adId: string, updates: Partial<Ad>) => {
 };
 
 // Radera en annons
-export const deleteAdInDB = async (adId: string) => {
+export const deleteAdInDB = async (adId: string): Promise<void> => {
   try {
     const adDocRef = doc(db, "ads", adId);
     await deleteDoc(adDocRef);

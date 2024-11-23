@@ -42,7 +42,7 @@ export default function Chat() {
         addChatMessageAsync({
           sessionId: chatId,
           message: {
-            messageId: "",
+            id: "",
             senderId: user.id,
             senderName: user.username,
             message: newMessage,
@@ -109,7 +109,7 @@ export default function Chat() {
             {selectedChat.messages.length > 0 ? (
               selectedChat.messages.map((message: ChatMessage) => (
                 <Box
-                  key={message.messageId}
+                  key={message.id}
                   sx={{
                     marginBottom: "1rem",
                     display: "flex",
