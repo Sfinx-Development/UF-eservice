@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../SLICES/store";
 import { addUserAsync } from "../SLICES/userSlice";
 import { UserCreate } from "../types";
-import { Rubrik } from "./Index";
+import { Rubrik, Text } from "./Index";
 
 const RegisterPage: React.FC = () => {
   const theme = useTheme();
@@ -34,12 +34,15 @@ const RegisterPage: React.FC = () => {
     profileDescription: "",
     role: "",
     termsAccepted: false,
+    shareLocation: false,
     city: "",
+    isAdmin: false,
   });
 
   const [errors, setErrors] = useState({
     role: false,
     termsAccepted: false,
+    shareLocation: false,
     phone: false,
     address: false,
     city: false,
@@ -65,6 +68,7 @@ const RegisterPage: React.FC = () => {
     const newErrors = {
       role: false,
       termsAccepted: false,
+      shareLocation: false,
       phone: false,
       address: false,
       city: false,
@@ -116,6 +120,16 @@ const RegisterPage: React.FC = () => {
       <Rubrik variant={isMobile ? "h4" : "h3"} gutterBottom>
         Registrera dig
       </Rubrik>
+      <Box>
+        <Text>
+          Genom att registrera dig godkänner du att vi behandlar dina
+          personuppgifter enligt vår{" "}
+          <a href="/privacy-policy" target="_blank">
+            integritetspolicy
+          </a>
+          .
+        </Text>
+      </Box>
 
       <Box
         component="form"
@@ -229,8 +243,32 @@ const RegisterPage: React.FC = () => {
               required
             />
           }
-          label="Jag godkänner användarvillkoren"
+          label={
+            <>
+              Jag godkänner{" "}
+              <a href="/terms" target="_blank">
+                användarvillkoren
+              </a>{" "}
+              och{" "}
+              <a href="/privacy-policy" target="_blank">
+                integritetspolicyn
+              </a>
+              .
+            </>
+          }
         />
+
+        <FormControlLabel
+          control={
+            <Checkbox
+              name="shareLocation"
+              checked={formValues.shareLocation || false}
+              onChange={handleChange}
+            />
+          }
+          label="Tillåt att andra kan söka på min plats"
+        />
+
         {errors.termsAccepted && <FormHelperText error></FormHelperText>}
 
         <Button
