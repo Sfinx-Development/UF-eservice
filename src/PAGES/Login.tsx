@@ -10,12 +10,13 @@ import {
   Input,
   InputAdornment,
   InputLabel,
+  Link,
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
-import { logInUserAsync } from "../SLICES/userSlice";
+import { logInUserAsync, resetPasswordAsync } from "../SLICES/userSlice";
 import { LogIn } from "../types";
 import { Rubrik, Text } from "./Index";
 
@@ -50,6 +51,28 @@ export default function Login() {
       setSignedIn(true);
     } catch (error) {
       console.error("Sign in error:", error);
+    }
+  };
+
+  const [resetPasswordMessage, setResetPasswordMessage] = useState("");
+
+  const handleForgotPassword = async () => {
+    try {
+      if (email) {
+        await dispatch(resetPasswordAsync(email)).unwrap();
+        setResetPasswordMessage(
+          "Om e-postadressen finns registrerad har ett återställningsmail skickats."
+        );
+      } else {
+        setResetPasswordMessage(
+          "Fyll i din e-postadress för att återställa lösenordet."
+        );
+      }
+    } catch (error) {
+      console.error("Error during password reset:", error);
+      setResetPasswordMessage(
+        "Om e-postadressen finns registrerad har ett återställningsmail skickats."
+      );
     }
   };
 
@@ -123,6 +146,19 @@ export default function Login() {
           }}
         >
           {error}
+        </Text>
+      )}
+      {resetPasswordMessage && (
+        <Text
+          variant="body2"
+          sx={{
+            color: "#FFA500",
+            marginTop: "1rem",
+            textAlign: "center",
+            maxWidth: "300px",
+          }}
+        >
+          {resetPasswordMessage}
         </Text>
       )}
 
@@ -207,6 +243,17 @@ export default function Login() {
           }
         />
       </FormControl>
+      <Link
+        sx={{
+          color: "#FFA500",
+          textDecoration: "none",
+          marginBottom: "1rem",
+          cursor: "pointer",
+        }}
+        onClick={handleForgotPassword}
+      >
+        <Text sx={{ fontSize: 14 }}>Glömt lösenord</Text>
+      </Link>
       <FormControlLabel
         control={
           <Checkbox
@@ -221,7 +268,7 @@ export default function Login() {
           />
         }
         label="Håll mig inloggad"
-        sx={{ color: "#FFF", marginBottom: "1rem" }}
+        sx={{ color: "#FFF" }}
       />
 
       <Button
