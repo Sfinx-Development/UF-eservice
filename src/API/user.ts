@@ -1,6 +1,8 @@
 import {
   createUserWithEmailAndPassword,
   deleteUser,
+  getAuth,
+  sendPasswordResetEmail,
   updateEmail,
   updateProfile,
 } from "firebase/auth";
@@ -238,4 +240,17 @@ export const deleteProfileWithAPI = async (id: string): Promise<void> => {
     console.error("Error deleting profile:", error);
     throw error;
   }
+};
+
+export const resetPassword = async (email: string): Promise<boolean> => {
+  const auth = getAuth();
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      return true;
+    })
+    .catch((error) => {
+      console.log(error);
+      return false;
+    });
+  return false;
 };
