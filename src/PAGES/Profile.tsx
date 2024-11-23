@@ -2,6 +2,8 @@ import {
   Avatar,
   Box,
   Button,
+  Checkbox,
+  FormControlLabel,
   TextField,
   useMediaQuery,
   useTheme,
@@ -32,6 +34,9 @@ export default function ProfilePage() {
   const [city, setCity] = useState("");
   const [role, setRole] = useState("");
   const [desc, setDesc] = useState("");
+  const [shareLoc, setShareLoc] = useState<boolean>(
+    user?.shareLocation || false
+  );
 
   // Hämta profildata baserat på ID
   useEffect(() => {
@@ -76,13 +81,14 @@ export default function ProfilePage() {
     };
 
   const handleSave = () => {
-    if (user && name && city && role && desc) {
+    if (user && name && city && role) {
       const updatedProfile: Profile = {
         ...user,
         username: name,
         city: city,
         role: role,
         profileDescription: desc,
+        shareLocation: shareLoc,
       };
       dispatch(updateUserPresentationAsync(updatedProfile));
       setIsEditMode(false);
@@ -178,6 +184,26 @@ export default function ProfilePage() {
           >
             {currentProfile?.profileDescription}
           </Text>
+        )}
+        {editMode ? (
+          <FormControlLabel
+            control={
+              <Checkbox
+                name="shareLocation"
+                checked={shareLoc}
+                onChange={(e) => setShareLoc(e.target.checked)}
+              />
+            }
+            label="Tillåt att andra kan söka på min plats"
+          />
+        ) : (
+          isOwnProfile && (
+            <Text>
+              {currentProfile?.shareLocation
+                ? "Du har valt att andra kan söka på din plats."
+                : "Du har valt att andra inte kan söka på din plats."}{" "}
+            </Text>
+          )
         )}
       </Box>
 

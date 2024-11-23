@@ -27,10 +27,8 @@ const RegisterPage: React.FC = () => {
 
   const [formValues, setFormValues] = useState<UserCreate>({
     email: "",
-    phone: "",
     username: "",
     password: "",
-    address: "",
     profileDescription: "",
     role: "",
     termsAccepted: false,
@@ -43,8 +41,6 @@ const RegisterPage: React.FC = () => {
     role: false,
     termsAccepted: false,
     shareLocation: false,
-    phone: false,
-    address: false,
     city: false,
   });
 
@@ -56,11 +52,6 @@ const RegisterPage: React.FC = () => {
     }));
   };
 
-  const validatePhone = (phone: string) => {
-    const phoneRegex = /^[0-9]{10}$/;
-    return phoneRegex.test(phone);
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -69,8 +60,6 @@ const RegisterPage: React.FC = () => {
       role: false,
       termsAccepted: false,
       shareLocation: false,
-      phone: false,
-      address: false,
       city: false,
     };
 
@@ -80,14 +69,6 @@ const RegisterPage: React.FC = () => {
     }
     if (!formValues.termsAccepted) {
       newErrors.termsAccepted = true;
-      hasErrors = true;
-    }
-    if (!validatePhone(formValues.phone)) {
-      newErrors.phone = true;
-      hasErrors = true;
-    }
-    if (!formValues.address.trim()) {
-      newErrors.address = true;
       hasErrors = true;
     }
     if (!formValues.city.trim()) {
@@ -155,17 +136,6 @@ const RegisterPage: React.FC = () => {
           fullWidth
         />
         <TextField
-          label="Telefonnummer"
-          type="tel"
-          name="phone"
-          value={formValues.phone}
-          onChange={handleChange}
-          required
-          fullWidth
-          error={errors.phone}
-          helperText={errors.phone ? "Ogiltigt telefonnummer" : ""}
-        />
-        <TextField
           label="Användarnamn"
           name="username"
           value={formValues.username}
@@ -181,16 +151,6 @@ const RegisterPage: React.FC = () => {
           onChange={handleChange}
           required
           fullWidth
-        />
-        <TextField
-          label="Adress"
-          name="address"
-          value={formValues.address}
-          onChange={handleChange}
-          required
-          fullWidth
-          error={errors.address}
-          helperText={errors.address ? "Adress kan inte vara tom" : ""}
         />
         <TextField
           label="Stad"

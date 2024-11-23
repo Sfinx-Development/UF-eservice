@@ -1,9 +1,7 @@
 export interface UserCreate {
   email: string;
-  phone: string;
   username: string;
   password: string;
-  address: string;
   profileDescription?: string;
   profileImages?: string[];
   role: string;
@@ -28,9 +26,7 @@ export interface Profile {
   id: string;
   email: string;
   userId: string;
-  phone: string;
   username: string;
-  address: string;
   profileDescription?: string;
   profileImages?: string[];
   role: string;

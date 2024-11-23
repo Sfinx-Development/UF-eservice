@@ -42,8 +42,7 @@ export default function PrivacyPolicy() {
       </Typography>
       <ul>
         <li>
-          <strong>Personuppgifter:</strong> E-postadress, telefonnummer,
-          användarnamn, adress och stad.
+          <strong>Personuppgifter:</strong> E-postadress, användarnamn och stad.
         </li>
         <li>
           <strong>Profilinformation:</strong> Profilbeskrivning, annonser och
