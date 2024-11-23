@@ -30,7 +30,7 @@ const DashboardPage: React.FC = () => {
   const [unreadMessages, setUnreadMessages] = useState(0);
 
   useEffect(() => {
-    if (user) {
+    if (user && user.shareLocation == true) {
       dispatch(getAdsByLocationAsync(user.city));
     }
   }, [user]);
@@ -177,6 +177,11 @@ const DashboardPage: React.FC = () => {
               </Card>
             </Grid>
           ))
+        ) : user?.shareLocation == false ? (
+          <Text sx={{ color: "#777", marginTop: "1rem" }}>
+            För att se annonser baserad på din plats, tillåt annonssökning
+            baserad på stad på din profilsida.
+          </Text>
         ) : (
           <Text sx={{ color: "#777", marginTop: "1rem" }}>
             Inga annonser tillgängliga i ditt område

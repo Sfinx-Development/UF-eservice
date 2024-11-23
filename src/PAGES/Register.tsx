@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../SLICES/store";
 import { addUserAsync } from "../SLICES/userSlice";
 import { UserCreate } from "../types";
-import { Rubrik } from "./Index";
+import { Rubrik, Text } from "./Index";
 
 const RegisterPage: React.FC = () => {
   const theme = useTheme();
@@ -27,21 +27,20 @@ const RegisterPage: React.FC = () => {
 
   const [formValues, setFormValues] = useState<UserCreate>({
     email: "",
-    phone: "",
     username: "",
     password: "",
-    address: "",
     profileDescription: "",
     role: "",
     termsAccepted: false,
+    shareLocation: false,
     city: "",
+    isAdmin: false,
   });
 
   const [errors, setErrors] = useState({
     role: false,
     termsAccepted: false,
-    phone: false,
-    address: false,
+    shareLocation: false,
     city: false,
   });
 
@@ -53,11 +52,6 @@ const RegisterPage: React.FC = () => {
     }));
   };
 
-  const validatePhone = (phone: string) => {
-    const phoneRegex = /^[0-9]{10}$/;
-    return phoneRegex.test(phone);
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -65,8 +59,7 @@ const RegisterPage: React.FC = () => {
     const newErrors = {
       role: false,
       termsAccepted: false,
-      phone: false,
-      address: false,
+      shareLocation: false,
       city: false,
     };
 
@@ -76,14 +69,6 @@ const RegisterPage: React.FC = () => {
     }
     if (!formValues.termsAccepted) {
       newErrors.termsAccepted = true;
-      hasErrors = true;
-    }
-    if (!validatePhone(formValues.phone)) {
-      newErrors.phone = true;
-      hasErrors = true;
-    }
-    if (!formValues.address.trim()) {
-      newErrors.address = true;
       hasErrors = true;
     }
     if (!formValues.city.trim()) {
@@ -116,6 +101,16 @@ const RegisterPage: React.FC = () => {
       <Rubrik variant={isMobile ? "h4" : "h3"} gutterBottom>
         Registrera dig
       </Rubrik>
+      <Box>
+        <Text>
+          Genom att registrera dig godkänner du att vi behandlar dina
+          personuppgifter enligt vår{" "}
+          <a href="/privacy-policy" target="_blank">
+            integritetspolicy
+          </a>
+          .
+        </Text>
+      </Box>
 
       <Box
         component="form"
@@ -141,17 +136,6 @@ const RegisterPage: React.FC = () => {
           fullWidth
         />
         <TextField
-          label="Telefonnummer"
-          type="tel"
-          name="phone"
-          value={formValues.phone}
-          onChange={handleChange}
-          required
-          fullWidth
-          error={errors.phone}
-          helperText={errors.phone ? "Ogiltigt telefonnummer" : ""}
-        />
-        <TextField
           label="Användarnamn"
           name="username"
           value={formValues.username}
@@ -167,16 +151,6 @@ const RegisterPage: React.FC = () => {
           onChange={handleChange}
           required
           fullWidth
-        />
-        <TextField
-          label="Adress"
-          name="address"
-          value={formValues.address}
-          onChange={handleChange}
-          required
-          fullWidth
-          error={errors.address}
-          helperText={errors.address ? "Adress kan inte vara tom" : ""}
         />
         <TextField
           label="Stad"
@@ -229,8 +203,32 @@ const RegisterPage: React.FC = () => {
               required
             />
           }
-          label="Jag godkänner användarvillkoren"
+          label={
+            <>
+              Jag godkänner{" "}
+              <a href="/terms" target="_blank">
+                användarvillkoren
+              </a>{" "}
+              och{" "}
+              <a href="/privacy-policy" target="_blank">
+                integritetspolicyn
+              </a>
+              .
+            </>
+          }
         />
+
+        <FormControlLabel
+          control={
+            <Checkbox
+              name="shareLocation"
+              checked={formValues.shareLocation || false}
+              onChange={handleChange}
+            />
+          }
+          label="Tillåt att andra kan söka på min plats"
+        />
+
         {errors.termsAccepted && <FormHelperText error></FormHelperText>}
 
         <Button

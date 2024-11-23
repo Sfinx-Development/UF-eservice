@@ -15,8 +15,10 @@ import NewAdPage from "./PAGES/NewAdd";
 import ProfilePage from "./PAGES/Profile";
 import RegisterPage from "./PAGES/Register";
 import RootLayout from "./PAGES/Rootlayout";
+import Terms from "./PAGES/Terms";
 import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import ProtectedRoute from "./ProtectedRoute";
+import PrivacyPolicy from "./PAGES/PrivacyPolicy";
 
 const Navigation = () => {
   // const [userLoaded, setUserLoaded] = useState(false);
@@ -55,6 +57,8 @@ const Navigation = () => {
       <Route element={<RootLayout />}>
         <Route index element={<IndexPage />} />
         <Route path="register" element={<RegisterPage />} />
+        <Route path="terms" element={<Terms />} />
+        <Route path="privacy-policy" element={<PrivacyPolicy />} />
         <Route
           path="dashboard"
           element={<ProtectedRoute element={DashboardPage} />}

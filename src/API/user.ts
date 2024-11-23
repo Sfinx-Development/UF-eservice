@@ -136,13 +136,12 @@ export const registerUserWithAPI = async (newUser: UserCreate) => {
       id: "undefined",
       email: newUser.email,
       userId: userCredential.user.uid,
-      phone: newUser.phone,
       username: newUser.username,
-      address: newUser.address,
       profileDescription: newUser.profileDescription,
       role: newUser.role,
       city: newUser.city,
       isAdmin: newUser.isAdmin,
+      shareLocation: newUser.shareLocation,
     };
     const profile = await addProfileToDB(profileToAdd);
     return profile;
