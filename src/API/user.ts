@@ -7,6 +7,7 @@ import {
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -15,7 +16,10 @@ import {
   where,
 } from "firebase/firestore";
 import { Profile, UserCreate } from "../types";
+import { deleteAdInDB, getAdsByUserId } from "./adds";
+import { getAllChatSessionsByProfile } from "./chat";
 import { auth, db } from "./config";
+import { deleteMessageInDB, getMessagesByUserId } from "./messages";
 
 export const getUserByUserId = async (userId: string) => {
   // eslint-disable-next-line no-useless-catch
@@ -64,8 +68,6 @@ export const getAdminByUserId = async (profileId: string) => {
       where("isAdmin", "==", true)
     );
     const querySnapshot = await getDocs(userQuery);
-
-    console.log("SVARET: ", querySnapshot);
 
     if (querySnapshot.size === 0) {
       return null;
@@ -174,9 +176,48 @@ export const updateUserWithAPI = async (updates: Partial<Profile>) => {
 
 // Radera en användare
 export const deleteUserWithAPI = async () => {
+  //radera allt med den också via uidt
+  //hämta profilen på uidt
   const user = auth.currentUser;
   if (!user) throw new Error("User not authenticated");
 
-  await deleteUser(user);
-  console.log("User deleted:", user.uid);
+  const profile = await getUserByUserId(user.uid);
+  //hämta ads, messages, adsession, ad... allt på profileid
+  if (profile) {
+    const ads = getAdsByUserId(profile.id);
+    if (ads) {
+      (await ads).forEach((a) => deleteAdInDB(a.id));
+    }
+    const commonMessages = await getMessagesByUserId(profile.id);
+    if (commonMessages) {
+      (await commonMessages).forEach((a) => deleteMessageInDB(a.id));
+    }
+    const adSessions = await getAllChatSessionsByProfile(profile.id);
+    const messagesByProfile = adSessions.filter(
+      (a) => a.senderId == profile.id
+    );
+    if (messagesByProfile) {
+      if (messagesByProfile) {
+        (await messagesByProfile).forEach((m) => deleteMessageInDB(m.id));
+      }
+    }
+    await deleteProfileWithAPI(profile.id);
+    //ta bort alla de och sen ta bort profil och sist:
+
+    await deleteUser(user);
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const deleteProfileWithAPI = async (id: string) => {
+  const profileDocRef = doc(db, "profiles", id);
+
+  try {
+    await deleteDoc(profileDocRef);
+  } catch (error) {
+    console.error("Error deleting profile:", error);
+    throw error;
+  }
 };

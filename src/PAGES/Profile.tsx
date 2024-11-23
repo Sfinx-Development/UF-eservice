@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import LoadingIndicator from "../Components/Loading";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import {
+  deleteUserAsync,
   getProfileByIdAsync,
   updateUserPresentationAsync,
 } from "../SLICES/userSlice";
@@ -92,6 +93,15 @@ export default function ProfilePage() {
       };
       dispatch(updateUserPresentationAsync(updatedProfile));
       setIsEditMode(false);
+    }
+  };
+  const handleDeleteAccount = () => {
+    if (
+      window.confirm(
+        "Är du säker på att du vill radera all din data? Denna åtgärd kan inte ångras."
+      )
+    ) {
+      dispatch(deleteUserAsync());
     }
   };
 
@@ -208,17 +218,34 @@ export default function ProfilePage() {
       </Box>
 
       {isOwnProfile && (
-        <Button
-          variant="contained"
-          sx={{
-            marginTop: "2rem",
-            backgroundColor: "#FFA500",
-            color: "#FFF",
-          }}
-          onClick={() => (editMode ? handleSave() : setIsEditMode(true))}
-        >
-          {editMode ? "Spara ändringar" : "Redigera profil"}
-        </Button>
+        <>
+          <Button
+            variant="contained"
+            sx={{
+              marginTop: "2rem",
+              backgroundColor: "#FFA500",
+              color: "#FFF",
+            }}
+            onClick={() => (editMode ? handleSave() : setIsEditMode(true))}
+          >
+            {editMode ? "Spara ändringar" : "Redigera profil"}
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            sx={{
+              marginTop: "1rem",
+              borderColor: "#FF5733",
+              color: "#FF5733",
+              "&:hover": {
+                backgroundColor: "rgba(255, 87, 51, 0.1)",
+              },
+            }}
+            onClick={handleDeleteAccount}
+          >
+            Radera konto och all data
+          </Button>
+        </>
       )}
     </Box>
   );
