@@ -180,6 +180,7 @@ export default function ProfilePage() {
           <TextField
             label="Beskrivning"
             value={desc}
+            multiline
             onChange={handleChange(setDesc)}
             fullWidth
           />
