@@ -2,6 +2,7 @@ export interface UserCreate {
   email: string;
   username: string;
   password: string;
+  password2: string;
   profileDescription?: string;
   profileImages?: string[];
   role: string;
@@ -51,7 +52,7 @@ export interface Ad {
 }
 
 export interface ChatMessage {
-  messageId: string;
+  id: string;
   senderId: string;
   senderName: string;
   message: string;

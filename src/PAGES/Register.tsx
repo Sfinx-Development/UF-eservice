@@ -29,6 +29,7 @@ const RegisterPage: React.FC = () => {
     email: "",
     username: "",
     password: "",
+    password2: "",
     profileDescription: "",
     role: "",
     termsAccepted: false,
@@ -61,10 +62,15 @@ const RegisterPage: React.FC = () => {
       termsAccepted: false,
       shareLocation: false,
       city: false,
+      password: false,
     };
 
     if (!formValues.role) {
       newErrors.role = true;
+      hasErrors = true;
+    }
+    if (formValues.password != formValues.password2) {
+      newErrors.password = true;
       hasErrors = true;
     }
     if (!formValues.termsAccepted) {
@@ -79,7 +85,6 @@ const RegisterPage: React.FC = () => {
     setErrors(newErrors);
 
     if (!hasErrors) {
-      console.log("FORM VALUES: ", formValues);
       dispatch(addUserAsync(formValues));
       navigate("/login");
     }
@@ -148,6 +153,15 @@ const RegisterPage: React.FC = () => {
           type="password"
           name="password"
           value={formValues.password}
+          onChange={handleChange}
+          required
+          fullWidth
+        />
+        <TextField
+          label="Bekräfta Lösenord"
+          type="password"
+          name="password2"
+          value={formValues.password2}
           onChange={handleChange}
           required
           fullWidth

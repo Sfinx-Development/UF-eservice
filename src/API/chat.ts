@@ -11,6 +11,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
 import { AdChatSession, ChatMessage } from "../types";
 import { db } from "./config";
 
@@ -162,11 +163,12 @@ export const addMessageToChat = async (
     const sessionRef = doc(db, "chat", sessionId);
 
     message.read = false;
+    message.id = uuidv4();
 
     await updateDoc(sessionRef, {
-      messages: arrayUnion(message), // Lägg till meddelandet till listan
-      lastMessage: message.message, // Uppdatera senaste meddelandet
-      lastUpdated: Date.now().toString(), // Sätt senaste uppdateringen till nuvarande tid
+      messages: arrayUnion(message),
+      lastMessage: message.message,
+      lastUpdated: Date.now().toString(),
     });
 
     const session = await getAdSessionById(sessionId);
@@ -182,22 +184,41 @@ export const addMessageToChat = async (
     throw error;
   }
 };
-
 export const updateChatMessage = async (
   sessionId: string,
   messageId: string,
-  updatedMessage: Partial<ChatMessage>
+  updatedMessage: ChatMessage
 ): Promise<void> => {
-  try {
-    const messageRef = doc(db, `chat/${sessionId}/messages`, messageId);
+  const sessionRef = doc(db, "chat", sessionId);
 
-    await updateDoc(messageRef, updatedMessage);
-
-    console.log("Meddelandet uppdaterades framgångsrikt.");
-  } catch (error) {
-    console.error("Error updating chat message:", error);
-    throw error;
+  // Hämta nuvarande dokument
+  const sessionDoc = await getDoc(sessionRef);
+  if (!sessionDoc.exists()) {
+    throw new Error("Chat session does not exist");
   }
+
+  const sessionData = sessionDoc.data();
+  const messages = sessionData?.messages || [];
+
+  // Uppdatera specifikt meddelande i arrayen baserat på `message.id`
+  const updatedMessages = messages.map((msg: ChatMessage) =>
+    msg.id === messageId ? { ...msg, ...updatedMessage } : msg
+  );
+
+  // Kontrollera att meddelandet hittades och uppdaterades
+  const messageExists = messages.some(
+    (msg: ChatMessage) => msg.id === messageId
+  );
+  if (!messageExists) {
+    throw new Error(
+      `Message with ID ${messageId} not found in chat session ${sessionId}`
+    );
+  }
+
+  // Uppdatera dokumentet i databasen
+  await updateDoc(sessionRef, {
+    messages: updatedMessages,
+  });
 };
 
 export const updateAdSession = async (
@@ -244,10 +265,10 @@ export const getAdSessionById = async (
 
 export const deleteChatMessage = async (
   sessionId: string,
-  messageId: string
+  id: string
 ): Promise<void> => {
   try {
-    const messageRef = doc(db, `chat/${sessionId}/messages`, messageId);
+    const messageRef = doc(db, `chat/${sessionId}/messages`, id);
 
     await deleteDoc(messageRef);
 

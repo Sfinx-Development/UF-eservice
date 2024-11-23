@@ -39,8 +39,6 @@ export const signInAdminWithAPI = async (
     );
 
     if (userCredential.user) {
-      // Hämta användaren med deras UID
-      console.log("USER HITTAR", userCredential.user);
       const user = await getAdminByUserId(userCredential.user.uid);
       if (user) {
         return user as Profile;

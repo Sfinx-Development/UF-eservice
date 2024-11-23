@@ -150,6 +150,9 @@ export const deleteUserAsync = createAsyncThunk<
 >("user/deleteUser", async (_, thunkAPI) => {
   try {
     const isDeleted = await deleteUserWithAPI();
+    if (isDeleted) {
+      localStorage.clear();
+    }
     return isDeleted;
   } catch (error) {
     return thunkAPI.rejectWithValue(

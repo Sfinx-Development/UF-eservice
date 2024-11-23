@@ -195,7 +195,8 @@ const adSlice = createSlice({
       })
       .addCase(getAllAdsAsync.fulfilled, (state, action) => {
         state.loading = false;
-        state.ads = action.payload;
+        const publicAds = action.payload.filter((a) => a.isPublic == true);
+        state.ads = publicAds;
         state.error = null;
       })
       .addCase(getAdsByLocationAsync.pending, (state) => {

@@ -24,6 +24,7 @@ import {
   updateMessageAsync,
 } from "../SLICES/messageSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
+import { Message } from "../types";
 
 const ChatComponent: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -33,10 +34,21 @@ const ChatComponent: React.FC = () => {
   const [messageText, setMessageText] = useState("");
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false); // För att kontrollera om chatten är öppen eller stängd
+  const [filteredMessages, setFilteredMessages] = useState<Message[]>([]);
 
   useEffect(() => {
     dispatch(getAllMessagesAsync());
   }, [dispatch]);
+
+  useEffect(() => {
+    const filteredMessages = [...messages].sort((a, b) => {
+      const dateA = new Date(a.timestamp).getTime();
+      const dateB = new Date(b.timestamp).getTime();
+
+      return dateA - dateB;
+    });
+    setFilteredMessages(filteredMessages);
+  }, [messages]);
 
   const handleSendMessage = () => {
     if (messageText.trim()) {
@@ -144,7 +156,7 @@ const ChatComponent: React.FC = () => {
               backgroundColor: "#fff",
             }}
           >
-            {messages.map((message) => (
+            {filteredMessages.map((message) => (
               <Box
                 key={message.id}
                 sx={{

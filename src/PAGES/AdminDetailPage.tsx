@@ -1,6 +1,9 @@
 import { Box, Button, Card, CircularProgress, Grid, Link } from "@mui/material";
 import React from "react";
-import { useAppSelector } from "../SLICES/store";
+import { useNavigate } from "react-router-dom";
+import { updateAdAsync } from "../SLICES/adSlice";
+import { useAppDispatch, useAppSelector } from "../SLICES/store";
+import { Ad } from "../types";
 import { Text } from "./Index";
 
 const AdminAdDetailPage: React.FC = () => {
@@ -9,9 +12,32 @@ const AdminAdDetailPage: React.FC = () => {
   //   const admin = useAppSelector((state) => state.userSlice.admin);
   const error = useAppSelector((state) => state.adSlice.error);
   const loading = useAppSelector((state) => state.adSlice.loading);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const handleAcceptAd = () => {};
-  const handleDeclineAd = () => {};
+  const handleAcceptAd = () => {
+    if (selectedAd) {
+      const updatedAd: Ad = {
+        ...selectedAd,
+        isPublic: true,
+        isReviewed: true,
+      };
+      dispatch(updateAdAsync({ adId: selectedAd.id, updates: updatedAd }));
+      navigate("/admin-adlist");
+    }
+  };
+  const handleDeclineAd = () => {
+    if (selectedAd) {
+      //skicka meddelande till annnonsören om varför nekades sen?
+      const updatedAd: Ad = {
+        ...selectedAd,
+        isPublic: false,
+        isReviewed: true,
+      };
+      dispatch(updateAdAsync({ adId: selectedAd.id, updates: updatedAd }));
+      navigate("/admin-adlist");
+    }
+  };
 
   return (
     <Box
