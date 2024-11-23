@@ -106,7 +106,7 @@ export const updateChatMessageAsync = createAsyncThunk<
   {
     sessionId: string;
     messageId: string;
-    updatedMessage: Partial<ChatMessage>;
+    updatedMessage: ChatMessage;
   },
   { rejectValue: string }
 >(
