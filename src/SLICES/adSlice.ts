@@ -214,7 +214,7 @@ const adSlice = createSlice({
         state.unreviewedAds = action.payload;
         state.error = null;
       })
-      .addCase(getUnreviewedAdsAsync.rejected, (state, action) => {
+      .addCase(getUnreviewedAdsAsync.rejected, (state) => {
         state.loading = false;
         state.ads = [];
       })
