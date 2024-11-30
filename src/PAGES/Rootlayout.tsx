@@ -30,15 +30,16 @@ const RootLayout = () => {
       }}
     >
       {/* Header / Navbar */}
+
+      {/* Header / Navbar */}
       <AppBar
         position="static"
+        component="header"
         sx={{
           backgroundColor: "#fffaeb",
-          height: "4rem",
-          // boxShadow: "0px 4px 6px rgba(81, 1, 2, 0.2)",
-          // borderBottom: "1px solid",
-          // borderImage:
-          //   "linear-gradient(to right, #510102, rgba(81, 1, 2, 0)) 1",
+          height: { xs: "4rem", md: "4.5rem" }, // Ge tillräcklig höjd för ikoner och innehåll
+          paddingX: { xs: 2, md: 3 }, // Mindre padding på mindre skärmar
+          boxSizing: "border-box",
         }}
       >
         <Toolbar
@@ -46,27 +47,39 @@ const RootLayout = () => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            paddingX: 3,
+            height: "100%", // Se till att allt innehåll är centrerat
           }}
         >
+          {/* Logotyp */}
           <img
             src="https://i.imgur.com/AP6Z5iV.png"
             alt="Logo for BeeZmart UF"
-            style={{ height: 70, marginLeft: 10, cursor: "pointer" }}
+            style={{
+              height: "3rem", // Anpassad höjd för telefoner
+              maxHeight: "100%",
+              cursor: "pointer",
+            }}
             onClick={() => navigate("/")}
           />
+
           {/* Användarens navigeringsalternativ */}
           {user && (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: { xs: 1, md: 2 },
+                flexDirection: { xs: "row", md: "row" }, // Kolumnlayout för mindre skärmar
+              }}
+            >
               <Button
                 variant="outlined"
-                onClick={() => {
-                  navigate("/dashboard");
-                }}
+                onClick={() => navigate("/dashboard")}
                 sx={{
                   borderColor: "#510102",
                   color: "#510102",
-                  paddingX: 2,
+                  paddingX: { xs: 1, md: 2 },
+                  fontSize: { xs: "0.8rem", md: "1rem" },
                   "&:hover": {
                     borderColor: "#510102",
                     color: "#510102",
@@ -77,13 +90,12 @@ const RootLayout = () => {
               </Button>
               <Button
                 variant="outlined"
-                onClick={() => {
-                  navigate("/profile");
-                }}
+                onClick={() => navigate("/profile")}
                 sx={{
                   borderColor: "#510102",
                   color: "#510102",
-                  paddingX: 2,
+                  paddingX: { xs: 1, md: 2 },
+                  fontSize: { xs: "0.8rem", md: "1rem" },
                   "&:hover": {
                     borderColor: "#510102",
                     color: "#510102",
@@ -92,15 +104,14 @@ const RootLayout = () => {
               >
                 <Person2Icon />
               </Button>
-
-              {/* Logga ut knapp */}
               <Button
                 variant="outlined"
                 onClick={handleSignOut}
                 sx={{
                   borderColor: "#510102",
                   color: "#510102",
-                  paddingX: 2,
+                  paddingX: { xs: 1, md: 2 },
+                  fontSize: { xs: "0.8rem", md: "1rem" },
                   "&:hover": {
                     borderColor: "#510102",
                     color: "#510102",
