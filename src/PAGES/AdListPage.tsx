@@ -9,7 +9,6 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-  TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +16,7 @@ import { getAllAdsAsync, setSelectedAd } from "../SLICES/adSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { Ad } from "../types";
 import { Rubrik, Text } from "./Index";
+import { RedBorderTextfield } from "./Register";
 
 const AdListPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -89,10 +89,10 @@ const AdListPage: React.FC = () => {
         minHeight: "100vh",
         width: "100%",
         padding: "2rem",
-        backgroundColor: "#f7f7f7",
+        backgroundColor: "#fffaeb",
       }}
     >
-      <Rubrik variant="h4" gutterBottom>
+      <Rubrik variant="h4" gutterBottom sx={{ color: "#510102" }}>
         Sök och filtrera annonser
       </Rubrik>
 
@@ -106,7 +106,7 @@ const AdListPage: React.FC = () => {
           marginBottom: "2rem",
         }}
       >
-        <TextField
+        <RedBorderTextfield
           label="Sök efter titel eller beskrivning"
           variant="outlined"
           value={searchTerm}
@@ -114,7 +114,7 @@ const AdListPage: React.FC = () => {
           fullWidth
         />
 
-        <TextField
+        <RedBorderTextfield
           label="Filtrera på plats"
           variant="outlined"
           value={locationFilter}
@@ -122,7 +122,28 @@ const AdListPage: React.FC = () => {
           fullWidth
         />
 
-        <FormControl fullWidth>
+        <FormControl
+          sx={{
+            "& .MuiInputLabel-root": {
+              color: "#510102",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#510102",
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#510102",
+              },
+              "&:hover fieldset": {
+                borderColor: "#510102",
+              },
+              "&.Mui-focused fieldset": {
+                borderColor: "#510102",
+              },
+            },
+          }}
+          fullWidth
+        >
           <InputLabel>Filtrera efter typ av annons</InputLabel>
           <Select
             value={adTypeFilter}
@@ -144,18 +165,20 @@ const AdListPage: React.FC = () => {
         <Grid container spacing={2}>
           {filteredAds.map((ad) => (
             <Grid item xs={12} sm={6} md={4} key={ad.id}>
-              <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
+              <Card sx={{ backgroundColor: "#510102", borderRadius: "8px" }}>
                 <CardContent>
-                  <Text variant="h6">{ad.title}</Text>
-                  <Text sx={{ marginBottom: "1rem", color: "#777" }}>
+                  <Text variant="h6" sx={{ color: "#fffaeb" }}>
+                    {ad.title}
+                  </Text>
+                  <Text sx={{ marginBottom: "1rem", color: "#fffaeb" }}>
                     {ad.location}
                   </Text>
-                  <Text variant="body2" color="text.secondary">
+                  <Text variant="body2" sx={{ color: "#fffaeb" }}>
                     {ad.description}
                   </Text>
                 </CardContent>
                 <CardActionArea onClick={() => handleNavigateToAd(ad)}>
-                  <Text sx={{ padding: "1rem", color: "#FFA500" }}>
+                  <Text sx={{ padding: "1rem", color: "#fffaeb" }}>
                     Till annonsen
                   </Text>
                 </CardActionArea>

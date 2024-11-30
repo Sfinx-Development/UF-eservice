@@ -10,15 +10,19 @@ body {
 }
 
 
+/* döp om till quicksand: */
 @font-face {
-  font-family: 'TAN';
-  src: url('/fonts/TAN - AEGEAN Regular.ttf') format('opentype');
-  font-weight: 100 900; /* Om det är en variabel font */
-  font-style: light;
+  font-family: 'QUICKSAND';
+  src: url('/fonts/Quicksand-VariableFont_wght.ttf') format('truetype'); /* 'truetype' är korrekt om filen är TTF */
+  font-weight: 100 900; /* Variabel font - viktintervall */
+  font-style: normal; /* 'light' är inte en giltig stil, använd 'normal', 'italic', eller specifika vikter */
 }
+
+/* Döp om till Alice: */
 @font-face {
-  font-family: 'POPPINS';
-  src: url('/fonts/Poppins-Regular.ttf') format('opentype');
-  font-weight: 100 900; /* Om det är en variabel font */
-  font-style: light;
+  font-family: 'Alice';
+  src: url('/fonts/Alice-Regular.ttf') format('truetype'); /* 'truetype' för TTF */
+  font-weight: 400; /* Vikt för en vanlig font */
+  font-style: normal; /* 'light' ändrad till 'normal' */
 }
+

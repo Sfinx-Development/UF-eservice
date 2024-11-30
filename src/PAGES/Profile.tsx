@@ -4,7 +4,6 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
-  TextField,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -19,6 +18,7 @@ import {
 } from "../SLICES/userSlice";
 import { Profile } from "../types";
 import { Rubrik, Text } from "./Index";
+import { RedBorderTextfield } from "./Register";
 
 export default function ProfilePage() {
   const { id } = useParams(); // Få ID från URL:en
@@ -115,7 +115,7 @@ export default function ProfilePage() {
         minHeight: "100vh",
         width: "100%",
         padding: isMobile ? "1rem" : "2rem",
-        backgroundColor: "#f7f7f7",
+        backgroundColor: "#510102",
       }}
     >
       {/* Profilinformation */}
@@ -128,8 +128,9 @@ export default function ProfilePage() {
           marginBottom: "2rem",
           width: "100%",
           maxWidth: "800px",
+
           borderRadius: "8px",
-          backgroundColor: "#fff",
+          backgroundColor: "#fffaeb",
           padding: "2rem",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
@@ -140,25 +141,31 @@ export default function ProfilePage() {
           sx={{
             width: "120px",
             height: "120px",
-            border: "4px solid #FFA500",
+            border: "4px solid #510102",
             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
           }}
         />
         <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
           {editMode ? (
-            <TextField
+            <RedBorderTextfield
               label="Namn"
               value={name}
               onChange={handleChange(setName)}
               fullWidth
             />
           ) : (
-            <Rubrik sx={{ fontSize: isMobile ? "1.5rem" : "2rem" }}>
+            <Rubrik
+              sx={{ fontSize: isMobile ? "1.5rem" : "2rem", color: "#510102" }}
+            >
               {currentProfile?.username}
             </Rubrik>
           )}
-          <Text sx={{ fontSize: 18 }}>{currentProfile?.role}</Text>
-          <Text sx={{ fontSize: 18 }}>{currentProfile?.city}</Text>
+          <Text sx={{ fontSize: 18, color: "#510102" }}>
+            {currentProfile?.role}
+          </Text>
+          <Text sx={{ fontSize: 18, color: "#510102" }}>
+            {currentProfile?.city}
+          </Text>
         </Box>
       </Box>
 
@@ -169,15 +176,15 @@ export default function ProfilePage() {
           alignItems: "center",
           width: "100%",
           maxWidth: "800px",
-          backgroundColor: "#fff",
+          backgroundColor: "#fffaeb",
           borderRadius: "8px",
           padding: "2rem",
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <Rubrik sx={{ marginBottom: "1rem" }}>Om mig</Rubrik>
+        <Rubrik sx={{ marginBottom: "1rem", color: "#510102" }}>Om mig</Rubrik>
         {editMode ? (
-          <TextField
+          <RedBorderTextfield
             label="Beskrivning"
             value={desc}
             multiline
@@ -187,7 +194,7 @@ export default function ProfilePage() {
         ) : (
           <Text
             sx={{
-              color: "#555",
+              color: "#510102",
               marginBottom: "1.5rem",
               textAlign: "justify",
               whiteSpace: "pre-line",
@@ -203,6 +210,12 @@ export default function ProfilePage() {
                 name="shareLocation"
                 checked={shareLoc}
                 onChange={(e) => setShareLoc(e.target.checked)}
+                sx={{
+                  color: "#510102",
+                  "&.Mui-checked": {
+                    color: "#510102",
+                  },
+                }}
               />
             }
             label="Tillåt att andra kan söka på min plats"
@@ -224,20 +237,20 @@ export default function ProfilePage() {
             variant="contained"
             sx={{
               marginTop: "2rem",
-              backgroundColor: "#FFA500",
-              color: "#FFF",
+              backgroundColor: "#fffaeb",
+              color: "#510102",
             }}
             onClick={() => (editMode ? handleSave() : setIsEditMode(true))}
           >
-            {editMode ? "Spara ändringar" : "Redigera profil"}
+           <Text>{editMode ? "Spara ändringar" : "Redigera profil"}</Text>
           </Button>
           <Button
             variant="outlined"
             color="error"
             sx={{
               marginTop: "1rem",
-              borderColor: "#FF5733",
-              color: "#FF5733",
+              borderColor: "#fffaeb",
+              color: "#fffaeb",
               "&:hover": {
                 backgroundColor: "rgba(255, 87, 51, 0.1)",
               },

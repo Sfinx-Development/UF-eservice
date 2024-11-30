@@ -8,6 +8,7 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
+  styled,
   TextField,
   useMediaQuery,
   useTheme,
@@ -18,6 +19,32 @@ import { useAppDispatch } from "../SLICES/store";
 import { addUserAsync } from "../SLICES/userSlice";
 import { UserCreate } from "../types";
 import { Rubrik, Text } from "./Index";
+
+export const RedBorderTextfield = styled(TextField)`
+  & label.Mui-focused {
+    color: #510102;
+  }
+  &:hover fieldset {
+    border-color: #510102;
+  }
+  &.Mui-focused fieldset {
+    border-color: #510102;
+  }
+  & .MuiInput-underline:after {
+    border-bottom-color: #510102;
+  }
+  & .MuiOutlinedInput-root {
+    & fieldset {
+      border-color: #510102;
+    }
+    &.Mui-focused fieldset {
+      border-color: #510102;
+    }
+  }
+  & label.Mui-focused {
+    color: #510102;
+  }
+`;
 
 const RegisterPage: React.FC = () => {
   const theme = useTheme();
@@ -100,17 +127,25 @@ const RegisterPage: React.FC = () => {
         minHeight: "100vh",
         width: "100%",
         padding: isMobile ? "1rem" : "2rem",
-        backgroundColor: "#f7f7f7",
+        backgroundColor: "#510102",
       }}
     >
-      <Rubrik variant={isMobile ? "h4" : "h3"} gutterBottom>
+      <Rubrik
+        variant={isMobile ? "h4" : "h3"}
+        sx={{ color: "#fffaeb" }}
+        gutterBottom
+      >
         Registrera dig
       </Rubrik>
-      <Box>
-        <Text>
+      <Box sx={{ marginBottom: 2 }}>
+        <Text sx={{ color: "#fffaeb" }}>
           Genom att registrera dig godkänner du att vi behandlar dina
           personuppgifter enligt vår{" "}
-          <a href="/privacy-policy" target="_blank">
+          <a
+            href="/privacy-policy"
+            target="_blank"
+            style={{ color: "#fffaeb" }}
+          >
             integritetspolicy
           </a>
           .
@@ -124,14 +159,14 @@ const RegisterPage: React.FC = () => {
           flexDirection: "column",
           width: isMobile ? "100%" : "50%",
           gap: "1rem",
-          backgroundColor: "white",
+          backgroundColor: "#fffaeb",
           padding: "2rem",
           borderRadius: "8px",
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
         }}
         onSubmit={handleSubmit}
       >
-        <TextField
+        <RedBorderTextfield
           label="E-post"
           type="email"
           name="email"
@@ -140,7 +175,7 @@ const RegisterPage: React.FC = () => {
           required
           fullWidth
         />
-        <TextField
+        <RedBorderTextfield
           label="Användarnamn"
           name="username"
           value={formValues.username}
@@ -148,7 +183,7 @@ const RegisterPage: React.FC = () => {
           required
           fullWidth
         />
-        <TextField
+        <RedBorderTextfield
           label="Lösenord"
           type="password"
           name="password"
@@ -157,7 +192,7 @@ const RegisterPage: React.FC = () => {
           required
           fullWidth
         />
-        <TextField
+        <RedBorderTextfield
           label="Bekräfta Lösenord"
           type="password"
           name="password2"
@@ -166,7 +201,7 @@ const RegisterPage: React.FC = () => {
           required
           fullWidth
         />
-        <TextField
+        <RedBorderTextfield
           label="Stad"
           name="city"
           value={formValues.city}
@@ -176,7 +211,7 @@ const RegisterPage: React.FC = () => {
           error={errors.city}
           helperText={errors.city ? "Stad kan inte vara tom" : ""}
         />
-        <TextField
+        <RedBorderTextfield
           label="Profilbeskrivning (valfritt)"
           name="profileDescription"
           value={formValues.profileDescription}
@@ -187,7 +222,17 @@ const RegisterPage: React.FC = () => {
         />
 
         <FormControl component="fieldset" error={errors.role}>
-          <FormLabel component="legend">Roll</FormLabel>
+          <FormLabel
+            component="legend"
+            sx={{
+              color: "#510102",
+              "&.Mui-focused": {
+                color: "#510102",
+              },
+            }}
+          >
+            Roll
+          </FormLabel>
           <RadioGroup
             name="role"
             value={formValues.role}
@@ -195,15 +240,46 @@ const RegisterPage: React.FC = () => {
           >
             <FormControlLabel
               value="biodlare"
-              control={<Radio />}
+              control={
+                <Radio
+                  sx={{
+                    color: "#510102",
+                    "&.Mui-checked": {
+                      color: "#510102",
+                    },
+                  }}
+                />
+              }
               label="Biodlare"
             />
             <FormControlLabel
               value="markägare"
-              control={<Radio />}
+              control={
+                <Radio
+                  sx={{
+                    color: "#510102",
+                    "&.Mui-checked": {
+                      color: "#510102",
+                    },
+                  }}
+                />
+              }
               label="Markägare"
             />
-            <FormControlLabel value="båda" control={<Radio />} label="Båda" />
+            <FormControlLabel
+              value="båda"
+              control={
+                <Radio
+                  sx={{
+                    color: "#510102",
+                    "&.Mui-checked": {
+                      color: "#510102",
+                    },
+                  }}
+                />
+              }
+              label="Båda"
+            />
           </RadioGroup>
           {errors.role && <FormHelperText>Välj en roll</FormHelperText>}
         </FormControl>
@@ -215,16 +291,26 @@ const RegisterPage: React.FC = () => {
               checked={formValues.termsAccepted}
               onChange={handleChange}
               required
+              sx={{
+                color: "#510102",
+                "&.Mui-checked": {
+                  color: "#510102",
+                },
+              }}
             />
           }
           label={
             <>
               Jag godkänner{" "}
-              <a href="/terms" target="_blank">
+              <a href="/terms" target="_blank" style={{ color: "#510102" }}>
                 användarvillkoren
               </a>{" "}
               och{" "}
-              <a href="/privacy-policy" target="_blank">
+              <a
+                href="/privacy-policy"
+                target="_blank"
+                style={{ color: "#510102" }}
+              >
                 integritetspolicyn
               </a>
               .
@@ -238,6 +324,12 @@ const RegisterPage: React.FC = () => {
               name="shareLocation"
               checked={formValues.shareLocation || false}
               onChange={handleChange}
+              sx={{
+                color: "#510102",
+                "&.Mui-checked": {
+                  color: "#510102",
+                },
+              }}
             />
           }
           label="Tillåt att andra kan söka på min plats"
@@ -249,14 +341,14 @@ const RegisterPage: React.FC = () => {
           type="submit"
           variant="contained"
           sx={{
-            backgroundColor: "#FFA500",
+            backgroundColor: "#510102",
             "&:hover": {
-              backgroundColor: "#cc8500",
+              backgroundColor: "#6B2020",
             },
           }}
           fullWidth
         >
-          Registrera dig
+          <Text>Registrera dig</Text>
         </Button>
       </Box>
     </Box>

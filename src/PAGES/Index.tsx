@@ -9,12 +9,12 @@ import {
 import { useNavigate } from "react-router-dom";
 
 export const Rubrik = styled(Typography)`
-  font-family: "TAN", sans-serif;
+  font-family: "QUICKSAND", sans-serif;
   font-variation-settings: "wght" 300;
 `;
 
 export const Text = styled(Typography)`
-  font-family: "POPPINS", sans-serif;
+  font-family: "Alice", serif;
   font-variation-settings: "wght" 300;
 `;
 
@@ -32,8 +32,7 @@ const IndexPage = () => {
         justifyContent: "center",
         minHeight: "100vh",
         width: "100%",
-        backgroundImage:
-          "linear-gradient(315deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.9) 74%)",
+        backgroundColor: "#fffaeb",
         color: "#FFF",
         textAlign: "center",
       }}
@@ -43,7 +42,7 @@ const IndexPage = () => {
         variant={isMobile ? "h4" : "h2"}
         sx={{
           fontWeight: "bold",
-          color: "#FFA500",
+          color: "#510102",
           marginBottom: "1rem",
         }}
       >
@@ -57,6 +56,7 @@ const IndexPage = () => {
           maxWidth: "600px",
           marginBottom: "2rem",
           lineHeight: "1.5",
+          color: "#510102",
         }}
       >
         Vi kopplar samman biodlare och markägare för att hjälpa till med
@@ -76,39 +76,39 @@ const IndexPage = () => {
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#FFA500",
+            backgroundColor: "#510102",
             color: "#FFF",
             padding: isMobile ? "0.5rem 1rem" : "0.75rem 1.5rem",
             fontSize: isMobile ? "1rem" : "1.2rem",
             "&:hover": {
-              backgroundColor: "#cc8500",
+              backgroundColor: "#6B2020",
             },
           }}
           onClick={() => {
             navigate("/register");
           }}
         >
-          Registrera dig nu
+          <Text>Registrera dig nu</Text>
         </Button>
 
         {/* Logga in-knapp */}
         <Button
           variant="outlined"
           sx={{
-            borderColor: "#FFA500", // Gul/orange ram
-            color: "#FFA500", // Textfärg
+            borderColor: "#510102", // Gul/orange ram
+            color: "#510102", // Textfärg
             padding: isMobile ? "0.5rem 1rem" : "0.75rem 1.5rem",
             fontSize: isMobile ? "1rem" : "1.2rem",
             "&:hover": {
-              borderColor: "#cc8500", // Mörkare gul/orange vid hover
-              color: "#cc8500",
+              borderColor: "#6B2020",
+              color: "#6B2020",
             },
           }}
           onClick={() => {
             navigate("/login");
           }}
         >
-          Logga in
+          <Text>Logga in</Text>
         </Button>
       </Box>
     </Box>

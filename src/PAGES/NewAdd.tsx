@@ -5,7 +5,6 @@ import {
   Radio,
   RadioGroup,
   Snackbar,
-  TextField,
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +12,7 @@ import { addAdAsync } from "../SLICES/adSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { Ad } from "../types";
 import { Rubrik, Text } from "./Index";
+import { RedBorderTextfield } from "./Register";
 
 const NewAdPage: React.FC = () => {
   const user = useAppSelector((state) => state.userSlice.user);
@@ -142,10 +142,10 @@ const NewAdPage: React.FC = () => {
         minHeight: "100vh",
         width: "100%",
         padding: "2rem",
-        backgroundColor: "#f7f7f7",
+        backgroundColor: "#fffaeb",
       }}
     >
-      <Rubrik variant="h4" gutterBottom>
+      <Rubrik variant="h4" gutterBottom sx={{ color: "#510102" }}>
         {user?.role === "biodlare"
           ? "Skapa annons - Ställa ut bikupor"
           : "Skapa annons - Söka efter bikupor"}
@@ -159,14 +159,14 @@ const NewAdPage: React.FC = () => {
           width: "100%",
           maxWidth: "600px",
           gap: "1rem",
-          backgroundColor: "white",
+          backgroundColor: "#fffaeb",
           padding: "2rem",
           borderRadius: "8px",
-          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+          // boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
         }}
         onSubmit={handleSubmit}
       >
-        <TextField
+        <RedBorderTextfield
           label="Titel"
           name="title"
           value={formValues.title}
@@ -176,7 +176,7 @@ const NewAdPage: React.FC = () => {
           helperText={errors.title ? "Titel är obligatorisk" : ""}
           fullWidth
         />
-        <TextField
+        <RedBorderTextfield
           label="Beskrivning"
           name="description"
           value={formValues.description}
@@ -185,7 +185,7 @@ const NewAdPage: React.FC = () => {
           rows={4}
           fullWidth
         />
-        <TextField
+        <RedBorderTextfield
           label="Plats"
           name="location"
           value={formValues.location}
@@ -198,7 +198,7 @@ const NewAdPage: React.FC = () => {
 
         {/* Biodlare-formulär */}
         {user?.role === "biodlare" && (
-          <TextField
+          <RedBorderTextfield
             label="Hur många bikupor vill du ställa ut?"
             name="numberOfHives"
             value={formValues.numberOfHives}
@@ -213,7 +213,7 @@ const NewAdPage: React.FC = () => {
         {/* Markägare-formulär */}
         {user?.role === "markägare" && (
           <>
-            <TextField
+            <RedBorderTextfield
               label="Hur mycket mark har du som ska pollineras?"
               name="areaSize"
               value={formValues.areaSize}
@@ -223,7 +223,7 @@ const NewAdPage: React.FC = () => {
               helperText={errors.areaSize ? "Ange storlek på mark" : ""}
               fullWidth
             />
-            <TextField
+            <RedBorderTextfield
               label="Vilka grödor odlar du?"
               name="crops"
               value={formValues.crops}
@@ -241,12 +241,30 @@ const NewAdPage: React.FC = () => {
             >
               <FormControlLabel
                 value="yes"
-                control={<Radio />}
+                control={
+                  <Radio
+                    sx={{
+                      color: "#510102",
+                      "&.Mui-checked": {
+                        color: "#510102",
+                      },
+                    }}
+                  />
+                }
                 label="Jag besprutar min mark"
               />
               <FormControlLabel
                 value="no"
-                control={<Radio />}
+                control={
+                  <Radio
+                    sx={{
+                      color: "#510102",
+                      "&.Mui-checked": {
+                        color: "#510102",
+                      },
+                    }}
+                  />
+                }
                 label="Jag besprutar inte min mark"
               />
             </RadioGroup>
@@ -259,17 +277,44 @@ const NewAdPage: React.FC = () => {
             >
               <FormControlLabel
                 value="chemical"
-                control={<Radio />}
+                control={
+                  <Radio
+                    sx={{
+                      color: "#510102",
+                      "&.Mui-checked": {
+                        color: "#510102",
+                      },
+                    }}
+                  />
+                }
                 label="Jag gödslar med konstgödsel"
               />
               <FormControlLabel
                 value="natural"
-                control={<Radio />}
+                control={
+                  <Radio
+                    sx={{
+                      color: "#510102",
+                      "&.Mui-checked": {
+                        color: "#510102",
+                      },
+                    }}
+                  />
+                }
                 label="Jag gödslar med naturlig gödsel"
               />
               <FormControlLabel
                 value="none"
-                control={<Radio />}
+                control={
+                  <Radio
+                    sx={{
+                      color: "#510102",
+                      "&.Mui-checked": {
+                        color: "#510102",
+                      },
+                    }}
+                  />
+                }
                 label="Jag använder ingen gödsling"
               />
             </RadioGroup>
@@ -280,14 +325,14 @@ const NewAdPage: React.FC = () => {
           type="submit"
           variant="contained"
           sx={{
-            backgroundColor: "#FFA500",
+            backgroundColor: "#510102",
             "&:hover": {
-              backgroundColor: "#cc8500",
+              backgroundColor: "#6B2020",
             },
           }}
           fullWidth
         >
-          Skicka annons
+       <Text>Skicka annons</Text>   
         </Button>
       </Box>
 

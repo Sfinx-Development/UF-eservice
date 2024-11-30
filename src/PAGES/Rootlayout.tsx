@@ -4,6 +4,7 @@ import { AppBar, Box, Button, Link, Toolbar, Typography } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { logOutUserAsync } from "../SLICES/userSlice";
+import { Rubrik, Text } from "./Index";
 const RootLayout = () => {
   const user = useAppSelector((state) => state.userSlice.user);
   const navigate = useNavigate();
@@ -32,10 +33,12 @@ const RootLayout = () => {
       <AppBar
         position="static"
         sx={{
-          backgroundColor: "#FFF",
+          backgroundColor: "#fffaeb",
           height: "4rem",
-          boxShadow: "none",
-          borderBottom: "1px solid #ddd", // Tunn linje för att separera header från innehållet
+          // boxShadow: "0px 4px 6px rgba(81, 1, 2, 0.2)",
+          // borderBottom: "1px solid",
+          // borderImage:
+          //   "linear-gradient(to right, #510102, rgba(81, 1, 2, 0)) 1",
         }}
       >
         <Toolbar
@@ -43,22 +46,15 @@ const RootLayout = () => {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            paddingX: 3, // Mer utrymme för att ge andrum
+            paddingX: 3,
           }}
         >
-          {/* Logotyp / Företagsnamn */}
-          <Typography
-            variant="h6"
-            onClick={() => navigate("/")} // Klickbar logotyp som navigerar hem
-            sx={{
-              color: "#FFA500", // Gul/orange färg
-              fontWeight: "bold",
-              cursor: "pointer", // Gör logotypen klickbar
-            }}
-          >
-            LOGGA
-          </Typography>
-
+          <img
+            src="https://i.imgur.com/AP6Z5iV.png"
+            alt="Logo for BeeZmart UF"
+            style={{ height: 70, marginLeft: 10, cursor: "pointer" }}
+            onClick={() => navigate("/")}
+          />
           {/* Användarens navigeringsalternativ */}
           {user && (
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -68,12 +64,12 @@ const RootLayout = () => {
                   navigate("/dashboard");
                 }}
                 sx={{
-                  borderColor: "#FFA500",
-                  color: "#FFA500",
+                  borderColor: "#510102",
+                  color: "#510102",
                   paddingX: 2,
                   "&:hover": {
-                    borderColor: "#cc8500",
-                    color: "#cc8500",
+                    borderColor: "#510102",
+                    color: "#510102",
                   },
                 }}
               >
@@ -85,12 +81,12 @@ const RootLayout = () => {
                   navigate("/profile");
                 }}
                 sx={{
-                  borderColor: "#FFA500",
-                  color: "#FFA500",
+                  borderColor: "#510102",
+                  color: "#510102",
                   paddingX: 2,
                   "&:hover": {
-                    borderColor: "#cc8500",
-                    color: "#cc8500",
+                    borderColor: "#510102",
+                    color: "#510102",
                   },
                 }}
               >
@@ -102,12 +98,12 @@ const RootLayout = () => {
                 variant="outlined"
                 onClick={handleSignOut}
                 sx={{
-                  borderColor: "#FFA500",
-                  color: "#FFA500",
+                  borderColor: "#510102",
+                  color: "#510102",
                   paddingX: 2,
                   "&:hover": {
-                    borderColor: "#cc8500",
-                    color: "#cc8500",
+                    borderColor: "#510102",
+                    color: "#510102",
                   },
                 }}
               >
@@ -137,11 +133,10 @@ const RootLayout = () => {
         <Outlet />
       </Box>
 
-      {/* Footer */}
       <footer
         style={{
-          backgroundColor: "#222", // Modern mörk färg
-          color: "#fff",
+          backgroundColor: "#510102", // Bakgrundsfärg
+          color: "#fffaeb", // Textfärg
           padding: "2rem 1rem",
           textAlign: "left", // Vänsterjusterat innehåll
         }}
@@ -159,7 +154,7 @@ const RootLayout = () => {
         >
           {/* Kolumn 1: BeeZmart Info */}
           <Box>
-            <Typography
+            <Rubrik
               variant="h6"
               sx={{
                 fontWeight: "bold",
@@ -169,24 +164,19 @@ const RootLayout = () => {
               }}
             >
               BeeZmart UF
-            </Typography>
-            <Typography
+            </Rubrik>
+            <Text
               variant="body2"
-              sx={{ color: "#bbb", marginBottom: "1rem" }}
+              sx={{ color: "#fffaeb", marginBottom: "1rem" }}
             >
               En smart e-tjänst för biodlare och markägare.
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                color: "#bbb",
-              }}
-            >
+            </Text>
+            <Text variant="body2" sx={{ color: "#fffaeb" }}>
               För frågor eller support:{" "}
               <Link
                 href="mailto:beezmartuf@gmail.com"
                 sx={{
-                  color: "#FFA500",
+                  color: "#fffaeb",
                   fontWeight: "bold",
                   textDecoration: "none",
                   "&:hover": { textDecoration: "underline" },
@@ -194,12 +184,12 @@ const RootLayout = () => {
               >
                 beezmartuf@gmail.com
               </Link>
-            </Typography>
+            </Text>
           </Box>
 
           {/* Kolumn 2: Snabblänkar */}
           <Box>
-            <Typography
+            <Rubrik
               variant="h6"
               sx={{
                 fontWeight: "bold",
@@ -209,60 +199,60 @@ const RootLayout = () => {
               }}
             >
               Snabblänkar
-            </Typography>
+            </Rubrik>
             <Box
               sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
             >
               <Link
                 href="/dashboard"
                 sx={{
-                  color: "#fff",
+                  color: "#fffaeb",
                   textDecoration: "none",
                   fontSize: "0.9rem",
                   "&:hover": { textDecoration: "underline" },
                 }}
               >
-                Dashboard
+                <Text>Dashboard</Text>
               </Link>
               <Link
                 href="/newad"
                 sx={{
-                  color: "#fff",
+                  color: "#fffaeb",
                   textDecoration: "none",
                   fontSize: "0.9rem",
                   "&:hover": { textDecoration: "underline" },
                 }}
               >
-                Lägg till annons
+                <Text>Lägg till annons</Text>
               </Link>
               <Link
                 href="/chatlist"
                 sx={{
-                  color: "#fff",
+                  color: "#fffaeb",
                   textDecoration: "none",
                   fontSize: "0.9rem",
                   "&:hover": { textDecoration: "underline" },
                 }}
               >
-                Visa chattar
+                <Text>Visa chattar</Text>
               </Link>
               <Link
                 href="/admin-login"
                 sx={{
-                  color: "#fff",
+                  color: "#fffaeb",
                   textDecoration: "none",
                   fontSize: "0.9rem",
                   "&:hover": { textDecoration: "underline" },
                 }}
               >
-                Administration
+                <Text>Administration</Text>
               </Link>
             </Box>
           </Box>
 
           {/* Kolumn 3: Powered by Zeroett */}
           <Box>
-            <Typography
+            <Rubrik
               variant="h6"
               sx={{
                 fontWeight: "bold",
@@ -272,33 +262,37 @@ const RootLayout = () => {
               }}
             >
               Powered By
-            </Typography>
+            </Rubrik>
             <Link
               href="https://zeroett.se"
               target="_blank"
               rel="noopener noreferrer"
               sx={{
-                color: "#FFA500",
+                color: "#fffaeb",
                 fontWeight: "bold",
                 textDecoration: "none",
                 "&:hover": { textDecoration: "underline" },
               }}
             >
-              Zeroett AB
+              <Text>Zeroett AB</Text>
             </Link>
-            <Typography
+            <Text
               variant="body2"
-              sx={{ color: "#bbb", marginTop: "0.5rem", fontSize: "0.85rem" }}
+              sx={{
+                color: "#fffaeb",
+                marginTop: "0.5rem",
+                fontSize: "0.85rem",
+              }}
             >
               BeeZmart UF utvecklades med stöd från Zeroett AB.
-            </Typography>
+            </Text>
           </Box>
         </Box>
 
         {/* Upphovsrätt */}
         <Box
           sx={{
-            borderTop: "1px solid #444",
+            borderTop: "1px solid #fffaeb",
             marginTop: "2rem",
             paddingTop: "1rem",
             textAlign: "center",
@@ -306,7 +300,7 @@ const RootLayout = () => {
         >
           <Typography
             variant="body2"
-            sx={{ fontSize: "0.8rem", color: "#bbb" }}
+            sx={{ fontSize: "0.8rem", color: "#fffaeb" }}
           >
             © 2024 BeeZmart UF. Alla rättigheter förbehållna.
           </Typography>

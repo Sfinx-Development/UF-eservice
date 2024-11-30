@@ -3,8 +3,6 @@ import {
   Button,
   CircularProgress,
   Link,
-  Paper,
-  TextField,
   Typography,
   useMediaQuery,
   useTheme,
@@ -14,7 +12,8 @@ import { useParams } from "react-router-dom";
 import { addChatMessageAsync, getChatByIdAsync } from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { ChatMessage } from "../types";
-import { Rubrik } from "./Index";
+import { Rubrik, Text } from "./Index";
+import { RedBorderTextfield } from "./Register";
 
 export default function Chat() {
   const { chatId } = useParams<{ chatId: string }>();
@@ -64,7 +63,7 @@ export default function Chat() {
         alignItems: "center",
         minHeight: "100vh",
         width: "100%",
-        backgroundColor: "#f4f4f4",
+        backgroundColor: "#510102",
         padding: isMobile ? "1rem" : "2rem",
       }}
     >
@@ -80,7 +79,7 @@ export default function Chat() {
             justifyContent: "space-between",
             width: "100%",
             maxWidth: isMobile ? "100%" : "900px", // Anpassning för mobil och desktop
-            backgroundColor: "#fff",
+            backgroundColor: "#fffaeb",
             borderRadius: "8px",
             padding: "1rem",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
@@ -90,20 +89,21 @@ export default function Chat() {
           <Rubrik
             variant={isMobile ? "h5" : "h4"}
             gutterBottom
-            sx={{ fontWeight: "bold" }}
+            sx={{ fontWeight: "bold", color: "#510102" }}
           >
-            Chat för annons: {selectedChat.adTitle}
+            Chatt för annons: {selectedChat.adTitle}
           </Rubrik>
 
           {/* Lista över meddelanden */}
-          <Paper
+          <Box
             sx={{
               flex: 1,
               padding: "1rem",
               marginBottom: "1rem",
-              maxHeight: isMobile ? "300px" : "500px",
+              maxHeight: isMobile ? "300px" : "400px",
               overflowY: "auto",
-              backgroundColor: "#f9f9f9",
+              backgroundColor: "transparent",
+              border: "none",
             }}
           >
             {selectedChat.messages.length > 0 ? (
@@ -126,9 +126,9 @@ export default function Chat() {
                       variant="subtitle2"
                       sx={{
                         color:
-                          message.senderId === user?.id
-                            ? theme.palette.primary.main
-                            : theme.palette.secondary.main,
+                          // message.senderId === user?.id
+                          "#510102",
+                        // : theme.palette.secondary.main,
                       }}
                     >
                       {message.senderName}:
@@ -136,20 +136,21 @@ export default function Chat() {
                   </Link>
                   <Box
                     sx={{
-                      backgroundColor:
-                        message.senderId === user?.id ? "#E1FFC7" : "#FFF",
+                      backgroundColor: "rgba(81, 1, 2, 0.1)",
+                      // message.senderId === user?.id ? "#E1FFC7" : "#FFF",
                       padding: "0.75rem",
                       borderRadius: "10px",
                       maxWidth: "80%",
                       wordBreak: "break-word",
                     }}
                   >
-                    <Typography variant="body1">{message.message}</Typography>
+                    <Typography variant="body1" sx={{ color: "#510102" }}>
+                      {message.message}
+                    </Typography>
                   </Box>
                   <Typography
                     variant="caption"
-                    color="textSecondary"
-                    sx={{ marginTop: "0.25rem" }}
+                    sx={{ marginTop: "0.25rem", color: "#510102" }}
                   >
                     {new Date(message.timestamp).toLocaleString()}
                   </Typography>
@@ -158,10 +159,10 @@ export default function Chat() {
             ) : (
               <Typography>Inga meddelanden ännu.</Typography>
             )}
-          </Paper>
+          </Box>
 
           {/* Inputfält för att skriva ett nytt meddelande */}
-          <TextField
+          <RedBorderTextfield
             label="Skriv ett meddelande"
             variant="outlined"
             fullWidth
@@ -175,12 +176,18 @@ export default function Chat() {
           {/* Skicka meddelande-knapp */}
           <Button
             variant="contained"
-            color="primary"
             fullWidth
             onClick={handleSendMessage}
-            sx={{ padding: "0.75rem" }}
+            sx={{
+              padding: "0.75rem",
+              color: "#fffaeb",
+              backgroundColor: "#510102",
+              "&:hover": {
+                backgroundColor: "#6B2020",
+              },
+            }}
           >
-            Skicka
+            <Text>Skicka</Text>
           </Button>
         </Box>
       ) : (
