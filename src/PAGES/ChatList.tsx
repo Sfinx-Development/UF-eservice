@@ -5,7 +5,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Paper,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -49,7 +48,7 @@ export default function ChatList() {
         alignItems: "center",
         minHeight: "100vh",
         width: "100%",
-        backgroundColor: "#f4f4f4",
+        backgroundColor: "#fffaeb",
         padding: isMobile ? "1rem" : "2rem",
       }}
     >
@@ -62,10 +61,10 @@ export default function ChatList() {
             flexDirection: "column",
             width: "100%",
             maxWidth: isMobile ? "100%" : "900px", // Anpassning för mobil och desktop
-            backgroundColor: "#fff",
+            // backgroundColor: "#fff",
             borderRadius: "8px",
             padding: "1rem",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+            // boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
           }}
         >
           {/* Titel */}
@@ -78,13 +77,12 @@ export default function ChatList() {
           </Rubrik>
 
           {/* Lista över alla chatt-sessioner */}
-          <Paper
+          <Box
             sx={{
-              padding: "1rem",
               marginBottom: "1rem",
               maxHeight: isMobile ? "300px" : "500px",
               overflowY: "auto",
-              backgroundColor: "#f9f9f9",
+              // backgroundColor: "#f9f9f9",
             }}
           >
             <List>
@@ -94,26 +92,25 @@ export default function ChatList() {
                   onClick={() => handleNavigateToChat(chat.id)}
                   sx={{
                     marginBottom: "1rem",
-                    padding: "1rem",
-                    backgroundColor: "#fff",
+                    padding: "1.5rem",
+                    backgroundColor: "#510102",
                     borderRadius: "8px",
                     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
                     cursor: "pointer",
                     "&:hover": {
-                      backgroundColor: "#f0f0f0",
+                      backgroundColor: "#6B2020",
                     },
                   }}
                 >
                   <ListItemText
+                    sx={{ color: "#fffaeb" }}
                     primary={`Annons: ${chat.adTitle}`}
                     secondary={
                       chat.hasUnreadMessages &&
                       chat.latestSenderId != user?.id ? (
-                        <Text variant="body2" color="success">
-                          Finns olästa meddelanden
-                        </Text>
+                        <Text variant="body2">Finns olästa meddelanden</Text>
                       ) : (
-                        <Text variant="body2" color="textSecondary">
+                        <Text variant="body2" sx={{ color: "#fffaeb" }}>
                           Senaste meddelande:{" "}
                           {new Date(chat.lastUpdated).toDateString()}
                         </Text>
@@ -124,8 +121,8 @@ export default function ChatList() {
                   <Button
                     variant="outlined"
                     sx={{
-                      borderColor: "#FFA500", // Orange border
-                      color: "#FFA500", // Textfärg
+                      borderColor: "#fffaeb",
+                      color: "#fffaeb",
                       "&:hover": {
                         borderColor: "#cc8500",
                         color: "#cc8500",
@@ -137,7 +134,7 @@ export default function ChatList() {
                 </ListItem>
               ))}
             </List>
-          </Paper>
+          </Box>
         </Box>
       ) : (
         <Text>Du har inga pågående chattar.</Text>

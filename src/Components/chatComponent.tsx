@@ -13,10 +13,10 @@ import {
   Paper,
   Slide,
   TextField,
-  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { Rubrik, Text } from "../PAGES/Index";
 import {
   addMessageAsync,
   deleteMessageAsync,
@@ -137,7 +137,7 @@ const ChatComponent: React.FC = () => {
               color: "#fff",
             }}
           >
-            <Typography variant="h6">Chatt</Typography>
+            <Rubrik variant="h6">Chatt</Rubrik>
             <IconButton
               onClick={() => setIsOpen(false)}
               sx={{
@@ -168,16 +168,16 @@ const ChatComponent: React.FC = () => {
                 }}
               >
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                  <Rubrik variant="body2" sx={{ fontWeight: "bold" }}>
                     {message.username}
-                  </Typography>
+                  </Rubrik>
                   {message.isAdmin && (
                     <VerifiedIcon
                       sx={{ color: "lightblue", fontSize: 12, marginLeft: 0.3 }}
                     />
                   )}
                 </Box>
-                <Typography variant="body1" sx={{ wordBreak: "break-word" }}>
+                <Text variant="body1" sx={{ wordBreak: "break-word" }}>
                   {editingMessageId === message.id ? (
                     <TextField
                       fullWidth
@@ -189,7 +189,7 @@ const ChatComponent: React.FC = () => {
                   ) : (
                     message.text
                   )}
-                </Typography>
+                </Text>
                 <Box
                   sx={{
                     display: "flex",
@@ -197,9 +197,9 @@ const ChatComponent: React.FC = () => {
                     width: "100%",
                   }}
                 >
-                  <Typography variant="caption" color="text.secondary">
+                  <Text variant="caption" color="text.secondary">
                     {new Date(message.timestamp).toLocaleDateString()}
-                  </Typography>
+                  </Text>
                   {message.userId === user?.id && (
                     <Box>
                       {editingMessageId === message.id ? (

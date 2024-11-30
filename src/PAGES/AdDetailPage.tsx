@@ -94,7 +94,7 @@ const AdDetailPage: React.FC = () => {
         minHeight: "100vh",
         width: "100%",
         padding: "2rem",
-        backgroundColor: "#f7f7f7",
+        backgroundColor: "#510102",
       }}
     >
       {loading ? (
@@ -108,7 +108,7 @@ const AdDetailPage: React.FC = () => {
           sx={{
             width: "100%",
             maxWidth: "1400px",
-            backgroundColor: "#fff",
+            backgroundColor: "#fffaeb",
             borderRadius: "12px",
             padding: "2rem",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
@@ -116,17 +116,21 @@ const AdDetailPage: React.FC = () => {
         >
           {/* Titel och plats */}
           <Grid item xs={12}>
-            <Text variant="h3" gutterBottom sx={{ fontWeight: "bold" }}>
+            <Text
+              variant="h3"
+              gutterBottom
+              sx={{ fontWeight: "bold", color: "#510102" }}
+            >
               {selectedAd.title}
             </Text>
-            <Text variant="h6" sx={{ color: "#777" }}>
+            <Text variant="h6" sx={{ color: "#510102" }}>
               Plats: {selectedAd.location}
             </Text>
             <Link
               href={`profile/${selectedAd.profileId}`}
               sx={{ textDecoration: "none" }}
             >
-              <Text variant="h6" sx={{ color: "#777" }}>
+              <Text variant="h6" sx={{ color: "#510102" }}>
                 Om annonsören
               </Text>
             </Link>
@@ -134,34 +138,34 @@ const AdDetailPage: React.FC = () => {
 
           {/* Huvudinnehåll */}
           <Grid item xs={12} md={8}>
-            <Text variant="body1" paragraph>
+            <Text sx={{ color: "#510102" }} variant="body1" paragraph>
               {selectedAd.description}
             </Text>
 
             {selectedAd.numberOfHives ? (
               <>
-                <Text variant="h5" sx={{ marginTop: "2rem" }}>
+                <Text variant="h5" sx={{ marginTop: "2rem", color: "#510102" }}>
                   Information för biodlare
                 </Text>
-                <Text variant="body1">
+                <Text variant="body1" sx={{ color: "#510102" }}>
                   Antal bikupor: {selectedAd.numberOfHives}
                 </Text>
               </>
             ) : selectedAd.areaSize ? (
               <>
-                <Text variant="h5" sx={{ marginTop: "2rem" }}>
+                <Text variant="h5" sx={{ marginTop: "2rem", color: "#510102" }}>
                   Information för markägare
                 </Text>
-                <Text variant="body1">
+                <Text variant="body1" sx={{ color: "#510102" }}>
                   Markyta: {selectedAd.areaSize} hektar
                 </Text>
-                <Text variant="body1">
+                <Text variant="body1" sx={{ color: "#510102" }}>
                   Grödor: {selectedAd.crops || "Ej specificerat"}
                 </Text>
-                <Text variant="body1">
+                <Text variant="body1" sx={{ color: "#510102" }}>
                   Använder besprutning: {selectedAd.spraying ? "Ja" : "Nej"}
                 </Text>
-                <Text variant="body1">
+                <Text variant="body1" sx={{ color: "#510102" }}>
                   Använder gödsel:{" "}
                   {selectedAd.fertilization || "Ej specificerat"}
                 </Text>
@@ -173,29 +177,26 @@ const AdDetailPage: React.FC = () => {
             <Grid item xs={12} md={4}>
               <Card
                 sx={{
-                  backgroundColor: "#fff",
+                  backgroundColor: "#510102",
                   padding: "2rem",
                   borderRadius: "12px",
                   textAlign: "center",
                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
                 }}
               >
-                <Text variant="h5" gutterBottom>
+                <Text variant="h5" gutterBottom sx={{ color: "#fffaeb" }}>
                   Kontakta annonsören
                 </Text>
                 <Button
                   variant="contained"
                   sx={{
                     marginTop: "1.5rem",
-                    backgroundColor: "#FFA500",
+                    backgroundColor: "#fffaeb",
                     padding: "0.75rem 1.5rem",
-                    "&:hover": {
-                      backgroundColor: "#cc8500",
-                    },
                   }}
                   onClick={handleNavigateToChat} // Skapa eller navigera till chatt
                 >
-                  <Text> Starta chatt</Text>
+                  <Text sx={{ color: "#510102" }}> Starta chatt</Text>
                 </Button>
               </Card>
             </Grid>

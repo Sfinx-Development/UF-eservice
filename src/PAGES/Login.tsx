@@ -104,8 +104,7 @@ export default function Login() {
         minHeight: "100vh",
         width: "100%",
         margin: 0,
-        backgroundImage:
-          "linear-gradient(315deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.9) 74%)",
+        backgroundColor: "#510102",
         color: "#FFF",
       }}
     >
@@ -113,7 +112,7 @@ export default function Login() {
         variant="h4"
         sx={{
           fontWeight: "bold",
-          color: "#FFA500",
+          color: "#fffaeb",
           marginBottom: "1rem",
         }}
       >
@@ -125,6 +124,7 @@ export default function Login() {
           maxWidth: "600px",
           marginBottom: "2rem",
           lineHeight: "1.5",
+          color: "#fffaeb",
           textAlign: "center",
         }}
       >
@@ -136,7 +136,7 @@ export default function Login() {
         <Text
           variant="body2"
           sx={{
-            color: "red",
+            color: "#fffaeb",
             backgroundColor: "rgba(255, 0, 0, 0.1)",
             padding: "0.5rem",
             borderRadius: "5px",
@@ -152,7 +152,7 @@ export default function Login() {
         <Text
           variant="body2"
           sx={{
-            color: "#FFA500",
+            color: "#fffaeb",
             marginTop: "1rem",
             textAlign: "center",
             maxWidth: "300px",
@@ -221,7 +221,7 @@ export default function Login() {
         }}
         variant="standard"
       >
-        <InputLabel htmlFor="password" style={{ color: "#FFF" }}>
+        <InputLabel htmlFor="password" style={{ color: "#fffaeb" }}>
           Lösenord
         </InputLabel>
         <Input
@@ -245,14 +245,14 @@ export default function Login() {
       </FormControl>
       <Link
         sx={{
-          color: "#FFA500",
+          color: "#fffaeb",
           textDecoration: "none",
           marginBottom: "1rem",
           cursor: "pointer",
         }}
         onClick={handleForgotPassword}
       >
-        <Text sx={{ fontSize: 14 }}>Glömt lösenord</Text>
+        <Text sx={{ fontSize: 14, color: "#fffaeb" }}>Glömt lösenord</Text>
       </Link>
       <FormControlLabel
         control={
@@ -260,26 +260,26 @@ export default function Login() {
             checked={keepAlive}
             onChange={handleKeepAliveChange}
             sx={{
-              color: "#FFA500",
+              color: "#fffaeb",
               "&.Mui-checked": {
-                color: "#FFA500",
+                color: "#fffaeb",
               },
             }}
           />
         }
         label="Håll mig inloggad"
-        sx={{ color: "#FFF" }}
+        sx={{ color: "#fffaeb" }}
       />
 
       <Button
         variant="contained"
         sx={{
-          backgroundColor: "#FFA500",
-          color: "#FFF",
+          backgroundColor: "#fffaeb",
+          color: "#510102",
           padding: "0.75rem 1.5rem",
           fontSize: "1.2rem",
           "&:hover": {
-            backgroundColor: "#cc8500",
+            backgroundColor: "#FFFAEB ",
           },
         }}
         onClick={handleSignIn}

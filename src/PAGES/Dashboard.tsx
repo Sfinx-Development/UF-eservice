@@ -65,10 +65,14 @@ const DashboardPage: React.FC = () => {
         minHeight: "100vh",
         width: "100%",
         padding: isMobile ? "1rem" : "2rem",
-        backgroundColor: "#f7f7f7",
+        backgroundColor: "#fffaeb",
       }}
     >
-      <Rubrik variant={isMobile ? "h4" : "h3"} gutterBottom>
+      <Rubrik
+        variant={isMobile ? "h4" : "h3"}
+        sx={{ color: "#510102" }}
+        gutterBottom
+      >
         Välkommen tillbaka, {user?.username}!
       </Rubrik>
 
@@ -83,12 +87,13 @@ const DashboardPage: React.FC = () => {
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#FFA500",
+            backgroundColor: "#510102",
+            // color: "#510102"
             color: "#FFF",
             padding: "0.75rem 1.5rem",
             fontSize: isMobile ? "1rem" : "1.2rem",
             "&:hover": {
-              backgroundColor: "#cc8500",
+              backgroundColor: "#6B2020",
             },
           }}
           onClick={() => {
@@ -101,20 +106,16 @@ const DashboardPage: React.FC = () => {
         <Button
           variant="outlined"
           sx={{
-            borderColor: "#FFA500",
+            borderColor: "#510102",
             color: "#FFA500",
             padding: "0.75rem 1.5rem",
             fontSize: isMobile ? "1rem" : "1.2rem",
-            "&:hover": {
-              borderColor: "#cc8500",
-              color: "#cc8500",
-            },
           }}
           onClick={() => {
             navigate("/adlist");
           }}
         >
-          <Text> Visa alla annonser</Text>
+          <Text sx={{ color: "#510102" }}> Visa alla annonser</Text>
         </Button>
 
         <Badge
@@ -125,27 +126,23 @@ const DashboardPage: React.FC = () => {
           <Button
             variant="outlined"
             sx={{
-              borderColor: "#FFA500",
+              borderColor: "#510102",
               color: "#FFA500",
               padding: "0.75rem 1.5rem",
               fontSize: isMobile ? "1rem" : "1.2rem",
               gap: 1,
-              "&:hover": {
-                borderColor: "#cc8500",
-                color: "#cc8500",
-              },
             }}
             onClick={() => {
               navigate("/chatlist");
             }}
           >
-            <Text>Visa alla chattar</Text>
-            <ChatIcon />
+            <Text sx={{ color: "#510102" }}>Visa alla chattar</Text>
+            <ChatIcon sx={{ color: "#510102" }} />
           </Button>
         </Badge>
       </Box>
 
-      <Rubrik variant="h5" sx={{ marginBottom: "1rem" }}>
+      <Rubrik variant="h5" sx={{ marginBottom: "1rem", color: "#510102" }}>
         Annonser i ditt område
       </Rubrik>
 
@@ -183,7 +180,7 @@ const DashboardPage: React.FC = () => {
             baserad på stad på din profilsida.
           </Text>
         ) : (
-          <Text sx={{ color: "#777", marginTop: "1rem" }}>
+          <Text sx={{ color: "#510102", marginTop: "1rem" }}>
             Inga annonser tillgängliga i ditt område
           </Text>
         )}
