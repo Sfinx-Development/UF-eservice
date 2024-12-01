@@ -2,11 +2,13 @@ import {
   Box,
   Button,
   FormControlLabel,
+  IconButton,
   Radio,
   RadioGroup,
   Snackbar,
 } from "@mui/material";
 import React, { useState } from "react";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import { addAdAsync } from "../SLICES/adSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
@@ -112,26 +114,6 @@ const NewAdPage: React.FC = () => {
     }
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (user) {
-  //     const ad: Ad = {
-  //       ...formValues,
-  //       id: "undefined",
-  //       profileId: user.id,
-  //     };
-  //     dispatch(addAdAsync(ad));
-
-  //     // Visa meddelande att annonsen skapades
-  //     setSnackbarOpen(true);
-
-  //     // Navigera till dashboard efter en kort tidsfördröjning
-  //     setTimeout(() => {
-  //       navigate("/dashboard");
-  //     }, 1500); // Vänta 1,5 sekunder
-  //   }
-  // };
-
   return (
     <Box
       sx={{
@@ -145,11 +127,35 @@ const NewAdPage: React.FC = () => {
         backgroundColor: "#fffaeb",
       }}
     >
-      <Rubrik variant="h4" gutterBottom sx={{ color: "#510102" }}>
-        {user?.role === "biodlare"
-          ? "Skapa annons - Ställa ut bikupor"
-          : "Skapa annons - Söka efter bikupor"}
-      </Rubrik>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <IconButton
+          sx={{
+            display: { xs: "none", md: "flex" },
+            alignItems: "center",
+            textAlign: { xs: "start", md: "center" },
+            justifyContent: "center",
+            position: "absolute",
+            left: { xs: 10, md: 50 },
+          }}
+        >
+          <ArrowBackIcon sx={{ color: "#510102", marginBottom: 0.5 }} />
+        </IconButton>
+        <Rubrik
+          variant="h4"
+          gutterBottom
+          sx={{ color: "#510102", textAlign: "center" }}
+        >
+          {user?.role === "biodlare"
+            ? "Skapa annons - Ställa ut bikupor"
+            : "Skapa annons - Söka efter bikupor"}
+        </Rubrik>
+      </Box>
 
       <Box
         component="form"
@@ -332,7 +338,7 @@ const NewAdPage: React.FC = () => {
           }}
           fullWidth
         >
-       <Text>Skicka annons</Text>   
+          <Text>Skicka annons</Text>
         </Button>
       </Box>
 

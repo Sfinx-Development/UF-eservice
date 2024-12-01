@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/logo.png" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <!-- "image/svg+xml" passar för SVG-filer -->
     <link rel="stylesheet" href="/src/index.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
@@ -12,5 +13,26 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Kontrollera om användaren har accepterat cookies
+      const hasConsent = localStorage.getItem("cookieConsent");
+
+      if (hasConsent === "true") {
+        // Dynamiskt ladda Google Analytics script
+        const script = document.createElement("script");
+        script.src = "https://www.googletagmanager.com/gtag/js?id=G-Y9NMJKC76K";
+        script.async = true;
+        document.head.appendChild(script);
+
+        script.onload = () => {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag("js", new Date());
+          gtag("config", "G-Y9NMJKC76K");
+        };
+      }
+    </script>
   </body>
 </html>

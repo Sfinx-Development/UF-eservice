@@ -7,6 +7,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import CookieBanner from "../Components/CookieBanner";
 
 export const Rubrik = styled(Typography)`
   font-family: "QUICKSAND", sans-serif;
@@ -37,6 +38,7 @@ const IndexPage = () => {
         textAlign: "center",
       }}
     >
+      <CookieBanner />
       {/* Tjänstens rubrik */}
       <Rubrik
         variant={isMobile ? "h4" : "h2"}
