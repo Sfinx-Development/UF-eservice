@@ -129,26 +129,43 @@ export const updateProfileInDB = async (
 
 // Registrera ny användare
 export const registerUserWithAPI = async (newUser: UserCreate) => {
-  const userCredential = await createUserWithEmailAndPassword(
-    auth,
-    newUser.email,
-    newUser.password
-  );
+  try {
+    // Försök att skapa en användare med e-post och lösenord
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      newUser.email,
+      newUser.password
+    );
 
-  if (userCredential) {
-    const profileToAdd: Profile = {
-      id: "undefined",
-      email: newUser.email.toLocaleLowerCase(),
-      userId: userCredential.user.uid,
-      username: newUser.username,
-      profileDescription: newUser.profileDescription || "",
-      role: newUser.role,
-      city: newUser.city,
-      isAdmin: newUser.isAdmin,
-      shareLocation: newUser.shareLocation,
-    };
-    const profile = await addProfileToDB(profileToAdd);
-    return profile;
+    if (userCredential) {
+      // Skapa en profil om användaren skapades framgångsrikt
+      const profileToAdd: Profile = {
+        id: "undefined",
+        email: newUser.email.toLowerCase(),
+        userId: userCredential.user.uid,
+        username: newUser.username,
+        profileDescription: newUser.profileDescription || "",
+        role: newUser.role,
+        city: newUser.city,
+        isAdmin: newUser.isAdmin,
+        shareLocation: newUser.shareLocation,
+        profileImage: newUser.profileImage,
+      };
+
+      const profile = await addProfileToDB(profileToAdd);
+      return profile;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    if (error.code === "auth/email-already-in-use") {
+      throw new Error("E-postadressen används redan av en annan användare.");
+    } else if (error.code === "auth/invalid-email") {
+      throw new Error("E-postadressen är inte giltig.");
+    } else if (error.code === "auth/weak-password") {
+      throw new Error("Lösenordet är för svagt.");
+    } else {
+      throw new Error("Ett oväntat fel inträffade. Försök igen.");
+    }
   }
 };
 

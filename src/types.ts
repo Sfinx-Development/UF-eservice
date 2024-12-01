@@ -4,7 +4,8 @@ export interface UserCreate {
   password: string;
   password2: string;
   profileDescription?: string;
-  profileImages?: string[];
+  descriptionImages?: string[];
+  profileImage: string;
   role: string;
   termsAccepted: boolean;
   city: string;
@@ -29,7 +30,8 @@ export interface Profile {
   userId: string;
   username: string;
   profileDescription?: string;
-  profileImages?: string[];
+  profileImage?: string;
+  desciptionImages?: string[];
   role: string;
   city: string;
   isAdmin: boolean;
