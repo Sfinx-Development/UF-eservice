@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   Button,
   Checkbox,
@@ -15,7 +16,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../SLICES/store";
+import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { addUserAsync } from "../SLICES/userSlice";
 import { UserCreate } from "../types";
 import { Rubrik, Text } from "./Index";
@@ -46,11 +47,17 @@ export const RedBorderTextfield = styled(TextField)`
   }
 `;
 
-const RegisterPage: React.FC = () => {
+export default function RegisterPage() {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
+  const [avatar, setAvatar] = useState<string | null>("/default-avatar.png");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [imageFile, setImageFile] = useState<File | null>();
+  const createAccountError = useAppSelector(
+    (state) => state.userSlice.createAccountError
+  );
 
   const [formValues, setFormValues] = useState<UserCreate>({
     email: "",
@@ -63,6 +70,7 @@ const RegisterPage: React.FC = () => {
     shareLocation: false,
     city: "",
     isAdmin: false,
+    profileImage: "",
   });
 
   const [errors, setErrors] = useState({
@@ -72,6 +80,18 @@ const RegisterPage: React.FC = () => {
     city: false,
   });
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormValues((prevValues) => ({
@@ -80,7 +100,7 @@ const RegisterPage: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     let hasErrors = false;
@@ -96,7 +116,7 @@ const RegisterPage: React.FC = () => {
       newErrors.role = true;
       hasErrors = true;
     }
-    if (formValues.password != formValues.password2) {
+    if (formValues.password !== formValues.password2) {
       newErrors.password = true;
       hasErrors = true;
     }
@@ -112,8 +132,18 @@ const RegisterPage: React.FC = () => {
     setErrors(newErrors);
 
     if (!hasErrors) {
-      dispatch(addUserAsync(formValues));
-      navigate("/login");
+      if (avatar) {
+        const profileData = {
+          ...formValues,
+          profileImage: avatar,
+        };
+        const resultAction = await dispatch(addUserAsync(profileData));
+
+        if (addUserAsync.fulfilled.match(resultAction)) {
+          // Om lyckad registrering, navigera till inloggning
+          navigate("/login");
+        }
+      }
     }
   };
 
@@ -150,6 +180,11 @@ const RegisterPage: React.FC = () => {
           </a>
           .
         </Text>
+        {createAccountError && (
+          <Text sx={{ color: "#fffaeb", fontSize: 20, backgroundColor: "red" }}>
+            {createAccountError}
+          </Text>
+        )}
       </Box>
 
       <Box
@@ -221,68 +256,107 @@ const RegisterPage: React.FC = () => {
           fullWidth
         />
 
-        <FormControl component="fieldset" error={errors.role}>
-          <FormLabel
-            component="legend"
+        <Box
+          sx={{ display: "flex", flexDirection: { xs: "column", md: "row" } }}
+        >
+          <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
+            <FormControl component="fieldset" error={errors.role}>
+              <FormLabel
+                component="legend"
+                sx={{
+                  color: "#510102",
+                  "&.Mui-focused": {
+                    color: "#510102",
+                  },
+                }}
+              >
+                Roll
+              </FormLabel>
+              <RadioGroup
+                name="role"
+                value={formValues.role}
+                onChange={handleChange}
+              >
+                <FormControlLabel
+                  value="biodlare"
+                  control={
+                    <Radio
+                      sx={{
+                        color: "#510102",
+                        "&.Mui-checked": {
+                          color: "#510102",
+                        },
+                      }}
+                    />
+                  }
+                  label="Biodlare"
+                />
+                <FormControlLabel
+                  value="markägare"
+                  control={
+                    <Radio
+                      sx={{
+                        color: "#510102",
+                        "&.Mui-checked": {
+                          color: "#510102",
+                        },
+                      }}
+                    />
+                  }
+                  label="Markägare"
+                />
+                <FormControlLabel
+                  value="båda"
+                  control={
+                    <Radio
+                      sx={{
+                        color: "#510102",
+                        "&.Mui-checked": {
+                          color: "#510102",
+                        },
+                      }}
+                    />
+                  }
+                  label="Båda"
+                />
+              </RadioGroup>
+              {errors.role && <FormHelperText>Välj en roll</FormHelperText>}
+            </FormControl>
+          </Box>
+          <Box
             sx={{
-              color: "#510102",
-              "&.Mui-focused": {
-                color: "#510102",
-              },
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
-            Roll
-          </FormLabel>
-          <RadioGroup
-            name="role"
-            value={formValues.role}
-            onChange={handleChange}
-          >
-            <FormControlLabel
-              value="biodlare"
-              control={
-                <Radio
-                  sx={{
-                    color: "#510102",
-                    "&.Mui-checked": {
-                      color: "#510102",
-                    },
-                  }}
-                />
-              }
-              label="Biodlare"
-            />
-            <FormControlLabel
-              value="markägare"
-              control={
-                <Radio
-                  sx={{
-                    color: "#510102",
-                    "&.Mui-checked": {
-                      color: "#510102",
-                    },
-                  }}
-                />
-              }
-              label="Markägare"
-            />
-            <FormControlLabel
-              value="båda"
-              control={
-                <Radio
-                  sx={{
-                    color: "#510102",
-                    "&.Mui-checked": {
-                      color: "#510102",
-                    },
-                  }}
-                />
-              }
-              label="Båda"
-            />
-          </RadioGroup>
-          {errors.role && <FormHelperText>Välj en roll</FormHelperText>}
-        </FormControl>
+            {/* Avatar */}
+            <label htmlFor="profile-image-upload" style={{ cursor: "pointer" }}>
+              <Avatar
+                src={avatar || "/default-avatar.png"}
+                alt={"ProfileImage/avatar"}
+                sx={{
+                  width: "120px",
+                  height: "120px",
+                  border: "4px solid #510102",
+                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                  "&:hover": {
+                    opacity: 0.8,
+                  },
+                }}
+              />
+            </label>
+            <div>
+              <input
+                id="profile-image-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                style={{ padding: 2, color: "#510102" }}
+              />
+            </div>
+          </Box>
+        </Box>
 
         <FormControlLabel
           control={
@@ -338,7 +412,7 @@ const RegisterPage: React.FC = () => {
         {errors.termsAccepted && <FormHelperText error></FormHelperText>}
 
         <Button
-          type="submit"
+          onClick={handleSubmit}
           variant="contained"
           sx={{
             backgroundColor: "#510102",
@@ -353,6 +427,4 @@ const RegisterPage: React.FC = () => {
       </Box>
     </Box>
   );
-};
-
-export default RegisterPage;
+}

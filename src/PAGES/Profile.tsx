@@ -136,7 +136,7 @@ export default function ProfilePage() {
         }}
       >
         <Avatar
-          src={"/default-avatar.png"}
+          src={currentProfile?.profileImage || "/default-avatar.png"}
           alt={currentProfile?.username}
           sx={{
             width: "120px",
@@ -242,7 +242,7 @@ export default function ProfilePage() {
             }}
             onClick={() => (editMode ? handleSave() : setIsEditMode(true))}
           >
-           <Text>{editMode ? "Spara ändringar" : "Redigera profil"}</Text>
+            <Text>{editMode ? "Spara ändringar" : "Redigera profil"}</Text>
           </Button>
           <Button
             variant="outlined"

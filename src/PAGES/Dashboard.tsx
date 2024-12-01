@@ -155,15 +155,25 @@ const DashboardPage: React.FC = () => {
         {adsByLocation && adsByLocation.length > 0 ? (
           adsByLocation.map((ad, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
-              <Card sx={{ backgroundColor: "#fff", borderRadius: "8px" }}>
+              <Card
+                sx={{
+                  backgroundColor: "#510102",
+                  "&:hover": {
+                    backgroundColor: "#6B2020",
+                  },
+                  borderRadius: "8px",
+                }}
+              >
                 <CardContent>
-                  <Text variant="h6">{ad.title}</Text>
+                  <Text variant="h6" sx={{ color: "#fffaeb" }}>
+                    {ad.title}
+                  </Text>
                   {ad.numberOfHives && (
-                    <Text sx={{ marginBottom: "1rem", color: "#777" }}>
+                    <Text sx={{ marginBottom: "1rem", color: "#fffaeb" }}>
                       {`${ad.numberOfHives} kupor tillgängliga`}
                     </Text>
                   )}
-                  <Text variant="body2" color="text.secondary">
+                  <Text variant="body2" sx={{ color: "#fffaeb" }}>
                     Plats: {ad.location || "Ingen plats angiven"}
                   </Text>
                 </CardContent>
@@ -171,7 +181,7 @@ const DashboardPage: React.FC = () => {
                   <Button
                     onClick={() => handleNavigateToAd(ad)}
                     size="small"
-                    sx={{ color: "#FFA500" }}
+                    sx={{ color: "#fffaeb", fontWeight: 600 }}
                   >
                     Läs mer
                   </Button>
