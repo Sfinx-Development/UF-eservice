@@ -2,11 +2,13 @@ import {
   Box,
   Button,
   FormControlLabel,
+  IconButton,
   Radio,
   RadioGroup,
   Snackbar,
 } from "@mui/material";
 import React, { useState } from "react";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
 import { addAdAsync } from "../SLICES/adSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
@@ -132,16 +134,18 @@ const NewAdPage: React.FC = () => {
           justifyContent: "center",
         }}
       >
-        {/* <IconButton
+        <IconButton
           sx={{
-            display: "flex",
+            display: { xs: "none", md: "flex" },
             alignItems: "center",
-            textAlign: "center",
+            textAlign: { xs: "start", md: "center" },
             justifyContent: "center",
+            position: "absolute",
+            left: { xs: 10, md: 50 },
           }}
         >
           <ArrowBackIcon sx={{ color: "#510102", marginBottom: 0.5 }} />
-        </IconButton> */}
+        </IconButton>
         <Rubrik
           variant="h4"
           gutterBottom
