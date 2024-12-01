@@ -102,9 +102,11 @@ const ChatComponent: React.FC = () => {
         <IconButton
           onClick={() => setIsOpen(true)}
           sx={{
-            backgroundColor: "#FFA500",
+            backgroundColor: "#510102",
             color: "#FFF",
-            "&:hover": { backgroundColor: "#cc8500" },
+            "&:hover": {
+              backgroundColor: "#6B2020",
+            },
             position: "absolute",
             bottom: 0,
             right: 0,
@@ -133,7 +135,7 @@ const ChatComponent: React.FC = () => {
               alignItems: "center",
               justifyContent: "space-between",
               padding: "1rem",
-              backgroundColor: "#FFA500",
+              backgroundColor: "#510102",
               color: "#fff",
             }}
           >
@@ -142,7 +144,9 @@ const ChatComponent: React.FC = () => {
               onClick={() => setIsOpen(false)}
               sx={{
                 color: "#FFF",
-                "&:hover": { color: "#cc8500" },
+                "&:hover": {
+                  backgroundColor: "#6B2020",
+                },
               }}
             >
               <Close />
@@ -263,10 +267,12 @@ const ChatComponent: React.FC = () => {
               onClick={handleSendMessage}
               variant="contained"
               sx={{
-                backgroundColor: "#FFA500",
+                backgroundColor: "#510102",
                 color: "#FFF",
                 minWidth: "50px",
-                "&:hover": { backgroundColor: "#cc8500" },
+                "&:hover": {
+                  backgroundColor: "#6B2020",
+                },
               }}
             >
               <Send />

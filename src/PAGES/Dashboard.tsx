@@ -70,7 +70,12 @@ const DashboardPage: React.FC = () => {
     >
       <Rubrik
         variant={isMobile ? "h4" : "h3"}
-        sx={{ color: "#510102" }}
+        sx={{
+          color: "#510102",
+          marginTop: -20,
+          marginBottom: 4,
+          textAlign: "center",
+        }}
         gutterBottom
       >
         Välkommen tillbaka, {user?.username}!

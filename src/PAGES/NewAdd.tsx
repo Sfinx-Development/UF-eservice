@@ -112,26 +112,6 @@ const NewAdPage: React.FC = () => {
     }
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (user) {
-  //     const ad: Ad = {
-  //       ...formValues,
-  //       id: "undefined",
-  //       profileId: user.id,
-  //     };
-  //     dispatch(addAdAsync(ad));
-
-  //     // Visa meddelande att annonsen skapades
-  //     setSnackbarOpen(true);
-
-  //     // Navigera till dashboard efter en kort tidsfördröjning
-  //     setTimeout(() => {
-  //       navigate("/dashboard");
-  //     }, 1500); // Vänta 1,5 sekunder
-  //   }
-  // };
-
   return (
     <Box
       sx={{
@@ -145,11 +125,33 @@ const NewAdPage: React.FC = () => {
         backgroundColor: "#fffaeb",
       }}
     >
-      <Rubrik variant="h4" gutterBottom sx={{ color: "#510102" }}>
-        {user?.role === "biodlare"
-          ? "Skapa annons - Ställa ut bikupor"
-          : "Skapa annons - Söka efter bikupor"}
-      </Rubrik>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {/* <IconButton
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            textAlign: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ArrowBackIcon sx={{ color: "#510102", marginBottom: 0.5 }} />
+        </IconButton> */}
+        <Rubrik
+          variant="h4"
+          gutterBottom
+          sx={{ color: "#510102", textAlign: "center" }}
+        >
+          {user?.role === "biodlare"
+            ? "Skapa annons - Ställa ut bikupor"
+            : "Skapa annons - Söka efter bikupor"}
+        </Rubrik>
+      </Box>
 
       <Box
         component="form"
@@ -332,7 +334,7 @@ const NewAdPage: React.FC = () => {
           }}
           fullWidth
         >
-       <Text>Skicka annons</Text>   
+          <Text>Skicka annons</Text>
         </Button>
       </Box>
 

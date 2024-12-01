@@ -19,6 +19,7 @@ import Terms from "./PAGES/Terms";
 import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import ProtectedRoute from "./ProtectedRoute";
 import PrivacyPolicy from "./PAGES/PrivacyPolicy";
+import CookieInfo from "./PAGES/CookieInfo";
 
 const Navigation = () => {
   // const [userLoaded, setUserLoaded] = useState(false);
@@ -59,6 +60,7 @@ const Navigation = () => {
         <Route path="register" element={<RegisterPage />} />
         <Route path="terms" element={<Terms />} />
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="cookie-info" element={<CookieInfo />} />
         <Route
           path="dashboard"
           element={<ProtectedRoute element={DashboardPage} />}
