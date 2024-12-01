@@ -29,6 +29,14 @@ export default function ProfilePage() {
   ); // Aktiv profil (annans data)
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isOwnProfile = !id || id === user?.id;
+  const [avatar, setAvatar] = useState<string | null>(
+    isOwnProfile && user?.profileImage
+      ? user.profileImage
+      : "/default-avatar.png"
+  );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [imageFile, setImageFile] = useState<File | null>();
 
   const [editMode, setIsEditMode] = useState(false);
   const [name, setName] = useState("");
@@ -73,7 +81,17 @@ export default function ProfilePage() {
     );
   }
 
-  const isOwnProfile = !id || id === user?.id;
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleChange =
     (setter: React.Dispatch<React.SetStateAction<string>>) =>
@@ -90,6 +108,7 @@ export default function ProfilePage() {
         role: role,
         profileDescription: desc,
         shareLocation: shareLoc,
+        profileImage: avatar ?? user.profileImage,
       };
       dispatch(updateUserPresentationAsync(updatedProfile));
       setIsEditMode(false);
@@ -135,16 +154,53 @@ export default function ProfilePage() {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <Avatar
-          src={currentProfile?.profileImage || "/default-avatar.png"}
-          alt={currentProfile?.username}
-          sx={{
-            width: "120px",
-            height: "120px",
-            border: "4px solid #510102",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-          }}
-        />
+        {editMode ? (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            {/* Avatar */}
+            <label htmlFor="profile-image-upload" style={{ cursor: "pointer" }}>
+              <Avatar
+                src={avatar || "/default-avatar.png"}
+                alt={"ProfileImage/avatar"}
+                sx={{
+                  width: "120px",
+                  height: "120px",
+                  border: "4px solid #510102",
+                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                  "&:hover": {
+                    opacity: 0.8,
+                  },
+                }}
+              />
+            </label>
+            <div>
+              <input
+                id="profile-image-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                style={{ padding: 2, color: "#510102" }}
+              />
+            </div>
+          </Box>
+        ) : (
+          <Avatar
+            src={currentProfile?.profileImage || "/default-avatar.png"}
+            alt={currentProfile?.username}
+            sx={{
+              width: "120px",
+              height: "120px",
+              border: "4px solid #510102",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            }}
+          />
+        )}
+
         <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
           {editMode ? (
             <RedBorderTextfield
