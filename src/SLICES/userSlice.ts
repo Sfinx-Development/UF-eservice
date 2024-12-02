@@ -207,6 +207,7 @@ export const logInAdminAsync = createAsyncThunk<
     const userCredential = await signInAdminWithAPI(login);
     console.log("LOGGGA RIN", userCredential);
     localStorage.setItem("admin", JSON.stringify(userCredential));
+    localStorage.removeItem("user");
     return userCredential;
   } catch (error) {
     return thunkAPI.rejectWithValue(
@@ -253,6 +254,7 @@ const userSlice = createSlice({
       })
       .addCase(logInAdminAsync.fulfilled, (state, action) => {
         state.admin = action.payload;
+        state.user = null;
         state.logInError = null;
       })
       .addCase(logInAdminAsync.rejected, (state, action) => {

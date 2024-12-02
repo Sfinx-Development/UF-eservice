@@ -81,16 +81,15 @@ export default function LoginAdmin() {
         minHeight: "100vh",
         width: "100%",
         margin: 0,
-        backgroundImage:
-          "linear-gradient(315deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.9) 74%)",
-        color: "#FFF",
+        backgroundColor: "#510102",
+        color: "#fffaeb",
       }}
     >
       <Rubrik
         variant="h4"
         sx={{
           fontWeight: "bold",
-          color: "#FFA500",
+          color: "#fffaeb",
           marginBottom: "1rem",
         }}
       >
@@ -120,6 +119,7 @@ export default function LoginAdmin() {
         variant="standard"
         sx={{
           width: "250px",
+          color: "#fffaeb",
           marginBottom: "1rem",
           backgroundColor: "rgba(255, 255, 255, 0.1)",
           borderRadius: "5px",
@@ -173,7 +173,7 @@ export default function LoginAdmin() {
         }}
         variant="standard"
       >
-        <InputLabel htmlFor="password" style={{ color: "#FFF" }}>
+        <InputLabel htmlFor="password" style={{ color: "#fffaeb" }}>
           Lösenord
         </InputLabel>
         <Input
@@ -201,9 +201,9 @@ export default function LoginAdmin() {
             checked={keepAlive}
             onChange={handleKeepAliveChange}
             sx={{
-              color: "#FFA500",
+              color: "#fffaeb",
               "&.Mui-checked": {
-                color: "#FFA500",
+                color: "#fffaeb",
               },
             }}
           />
@@ -215,12 +215,12 @@ export default function LoginAdmin() {
       <Button
         variant="contained"
         sx={{
-          backgroundColor: "#FFA500",
-          color: "#FFF",
+          backgroundColor: "#fffaeb",
+          color: "#510102",
           padding: "0.75rem 1.5rem",
           fontSize: "1.2rem",
           "&:hover": {
-            backgroundColor: "#cc8500",
+            backgroundColor: "#FFFAEB ",
           },
         }}
         onClick={handleSignIn}

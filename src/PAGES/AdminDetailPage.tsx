@@ -49,7 +49,7 @@ const AdminAdDetailPage: React.FC = () => {
         minHeight: "100vh",
         width: "100%",
         padding: "2rem",
-        backgroundColor: "#f7f7f7",
+        backgroundColor: "#510102",
       }}
     >
       {loading ? (
@@ -63,7 +63,7 @@ const AdminAdDetailPage: React.FC = () => {
           sx={{
             width: "100%",
             maxWidth: "1400px",
-            backgroundColor: "#fff",
+            backgroundColor: "#fffaeb",
             borderRadius: "12px",
             padding: "2rem",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
@@ -71,17 +71,21 @@ const AdminAdDetailPage: React.FC = () => {
         >
           {/* Titel och plats */}
           <Grid item xs={12}>
-            <Text variant="h3" gutterBottom sx={{ fontWeight: "bold" }}>
+            <Text
+              variant="h3"
+              gutterBottom
+              sx={{ fontWeight: "bold", color: "#510102" }}
+            >
               {selectedAd.title}
             </Text>
-            <Text variant="h6" sx={{ color: "#777" }}>
+            <Text variant="h6" sx={{ color: "#510102" }}>
               Plats: {selectedAd.location}
             </Text>
             <Link
               href={`profile/${selectedAd.profileId}`}
               sx={{ textDecoration: "none" }}
             >
-              <Text variant="h6" sx={{ color: "#777" }}>
+              <Text variant="h6" sx={{ color: "#510102" }}>
                 Om annonsören
               </Text>
             </Link>
@@ -89,13 +93,13 @@ const AdminAdDetailPage: React.FC = () => {
 
           {/* Huvudinnehåll */}
           <Grid item xs={12} md={8}>
-            <Text variant="body1" paragraph>
+            <Text variant="body1" paragraph sx={{ color: "#510102" }}>
               {selectedAd.description}
             </Text>
 
             {selectedAd.numberOfHives ? (
               <>
-                <Text variant="h5" sx={{ marginTop: "2rem" }}>
+                <Text variant="h5" sx={{ marginTop: "2rem", color: "#510102" }}>
                   Information för biodlare
                 </Text>
                 <Text variant="body1">
@@ -104,19 +108,19 @@ const AdminAdDetailPage: React.FC = () => {
               </>
             ) : selectedAd.areaSize ? (
               <>
-                <Text variant="h5" sx={{ marginTop: "2rem" }}>
+                <Text variant="h5" sx={{ marginTop: "2rem", color: "#510102" }}>
                   Information för markägare
                 </Text>
-                <Text variant="body1">
+                <Text variant="body1" sx={{ color: "#510102" }}>
                   Markyta: {selectedAd.areaSize} hektar
                 </Text>
-                <Text variant="body1">
+                <Text variant="body1" sx={{ color: "#510102" }}>
                   Grödor: {selectedAd.crops || "Ej specificerat"}
                 </Text>
-                <Text variant="body1">
+                <Text variant="body1" sx={{ color: "#510102" }}>
                   Använder besprutning: {selectedAd.spraying ? "Ja" : "Nej"}
                 </Text>
-                <Text variant="body1">
+                <Text variant="body1" sx={{ color: "#510102" }}>
                   Använder gödsel:{" "}
                   {selectedAd.fertilization || "Ej specificerat"}
                 </Text>
@@ -127,7 +131,7 @@ const AdminAdDetailPage: React.FC = () => {
           <Grid item xs={12} md={4}>
             <Card
               sx={{
-                backgroundColor: "#fff",
+                backgroundColor: "#510102",
                 padding: "2rem",
                 borderRadius: "12px",
                 textAlign: "center",
@@ -138,29 +142,29 @@ const AdminAdDetailPage: React.FC = () => {
                 variant="contained"
                 sx={{
                   marginTop: "1.5rem",
-                  backgroundColor: "#FFA500",
+                  backgroundColor: "#fffaeb",
                   padding: "0.75rem 1.5rem",
-                  "&:hover": {
-                    backgroundColor: "#cc8500",
-                  },
+                  // "&:hover": {
+                  //   backgroundColor: "#cc8500",
+                  // },
                 }}
-                onClick={handleAcceptAd} // Skapa eller navigera till chatt
+                onClick={handleAcceptAd}
               >
-                <Text>Godkänn annons</Text>
+                <Text sx={{ color: "#510102" }}>Godkänn annons</Text>
               </Button>
               <Button
                 variant="contained"
                 sx={{
                   marginTop: "1.5rem",
-                  backgroundColor: "#FFA500",
+                  backgroundColor: "#fffaeb",
                   padding: "0.75rem 1.5rem",
-                  "&:hover": {
-                    backgroundColor: "#cc8500",
-                  },
+                  // "&:hover": {
+                  //   backgroundColor: "#cc8500",
+                  // },
                 }}
-                onClick={handleDeclineAd} // Skapa eller navigera till chatt
+                onClick={handleDeclineAd}
               >
-                <Text>Neka annons</Text>
+                <Text sx={{ color: "#510102" }}>Neka annons</Text>
               </Button>
             </Card>
           </Grid>

@@ -51,10 +51,14 @@ const AdminDashboardPage: React.FC = () => {
         minHeight: "100vh",
         width: "100%",
         padding: isMobile ? "1rem" : "2rem",
-        backgroundColor: "#f7f7f7",
+        backgroundColor: "#fffaeb",
       }}
     >
-      <Rubrik variant={isMobile ? "h4" : "h3"} gutterBottom>
+      <Rubrik
+        variant={isMobile ? "h4" : "h3"}
+        sx={{ color: "#510102" }}
+        gutterBottom
+      >
         Välkommen tillbaka, {admin?.username}! {admin?.isAdmin}
       </Rubrik>
 
@@ -69,13 +73,13 @@ const AdminDashboardPage: React.FC = () => {
         <Button
           variant="outlined"
           sx={{
-            borderColor: "#FFA500",
-            color: "#FFA500",
+            borderColor: "#510102",
+            color: "#510102",
             padding: "0.75rem 1.5rem",
             fontSize: isMobile ? "1rem" : "1.2rem",
             "&:hover": {
-              borderColor: "#cc8500",
-              color: "#cc8500",
+              borderColor: "#6B2020",
+              color: "#6B2020",
             },
           }}
           onClick={() => {
