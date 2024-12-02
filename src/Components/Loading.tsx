@@ -1,5 +1,6 @@
 import BeeIcon from "@mui/icons-material/EmojiNature"; // Exempel på bi-ikon från Material UI
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
+import { Rubrik } from "../PAGES/Index";
 
 export default function LoadingIndicator() {
   return (
@@ -27,7 +28,7 @@ export default function LoadingIndicator() {
       </Box>
 
       {/* Laddningstext */}
-      <Typography
+      <Rubrik
         sx={{
           fontSize: "1.2rem",
           fontWeight: "bold",
@@ -35,7 +36,7 @@ export default function LoadingIndicator() {
         }}
       >
         Laddar profil...
-      </Typography>
+      </Rubrik>
 
       {/* Spinner */}
       <CircularProgress

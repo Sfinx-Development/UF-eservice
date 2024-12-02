@@ -1,6 +1,6 @@
 import HomeIcon from "@mui/icons-material/Home";
 import Person2Icon from "@mui/icons-material/Person2";
-import { AppBar, Box, Button, Link, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, Link, Toolbar } from "@mui/material";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { logOutUserAsync } from "../SLICES/userSlice";
@@ -309,12 +309,9 @@ const RootLayout = () => {
             textAlign: "center",
           }}
         >
-          <Typography
-            variant="body2"
-            sx={{ fontSize: "0.8rem", color: "#fffaeb" }}
-          >
+          <Text variant="body2" sx={{ fontSize: "0.8rem", color: "#fffaeb" }}>
             © 2024 BeeZmart UF. Alla rättigheter förbehållna.
-          </Typography>
+          </Text>
         </Box>
       </footer>
     </div>

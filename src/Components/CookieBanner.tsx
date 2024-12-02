@@ -1,5 +1,6 @@
-import { Box, Button, Link, Typography } from "@mui/material";
+import { Box, Button, Link } from "@mui/material";
 import { useEffect, useState } from "react";
+import { Rubrik } from "../PAGES/Index";
 
 const CookieBanner = () => {
   const [showBanner, setShowBanner] = useState(false);
@@ -39,7 +40,7 @@ const CookieBanner = () => {
         boxShadow: "0px -2px 10px rgba(0,0,0,0.2)",
       }}
     >
-      <Typography variant="body2">
+      <Rubrik variant="body2">
         Vi använder cookies för att förbättra din upplevelse. Läs mer{" "}
         <Link
           href="/cookie-info"
@@ -48,7 +49,7 @@ const CookieBanner = () => {
           här
         </Link>
         .
-      </Typography>
+      </Rubrik>
       <Box sx={{ marginTop: "0.5rem" }}>
         <Button
           onClick={handleAccept}
@@ -62,7 +63,7 @@ const CookieBanner = () => {
             },
           }}
         >
-          Acceptera
+          <Rubrik>Acceptera</Rubrik>
         </Button>
         <Button
           onClick={handleDecline}
@@ -76,7 +77,7 @@ const CookieBanner = () => {
             },
           }}
         >
-          Avböj
+          <Rubrik>Avböj</Rubrik>
         </Button>
       </Box>
     </Box>

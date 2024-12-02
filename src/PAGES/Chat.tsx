@@ -3,7 +3,6 @@ import {
   Button,
   CircularProgress,
   Link,
-  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -70,7 +69,7 @@ export default function Chat() {
       {loading ? (
         <CircularProgress />
       ) : error ? (
-        <Typography color="error">{error}</Typography>
+        <Text color="error">{error}</Text>
       ) : selectedChat ? (
         <Box
           sx={{
@@ -122,7 +121,7 @@ export default function Chat() {
                     href={`/profile/${message.senderId}`}
                     sx={{ textDecoration: "none" }}
                   >
-                    <Typography
+                    <Text
                       variant="subtitle2"
                       sx={{
                         color:
@@ -132,7 +131,7 @@ export default function Chat() {
                       }}
                     >
                       {message.senderName}:
-                    </Typography>
+                    </Text>
                   </Link>
                   <Box
                     sx={{
@@ -144,20 +143,20 @@ export default function Chat() {
                       wordBreak: "break-word",
                     }}
                   >
-                    <Typography variant="body1" sx={{ color: "#510102" }}>
+                    <Text variant="body1" sx={{ color: "#510102" }}>
                       {message.message}
-                    </Typography>
+                    </Text>
                   </Box>
-                  <Typography
+                  <Text
                     variant="caption"
                     sx={{ marginTop: "0.25rem", color: "#510102" }}
                   >
                     {new Date(message.timestamp).toLocaleString()}
-                  </Typography>
+                  </Text>
                 </Box>
               ))
             ) : (
-              <Typography>Inga meddelanden ännu.</Typography>
+              <Text>Inga meddelanden ännu.</Text>
             )}
           </Box>
 
@@ -191,7 +190,7 @@ export default function Chat() {
           </Button>
         </Box>
       ) : (
-        <Typography>Ingen chatt hittades.</Typography>
+        <Text>Ingen chatt hittades.</Text>
       )}
     </Box>
   );
