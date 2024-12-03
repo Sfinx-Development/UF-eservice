@@ -20,6 +20,7 @@ import { getAllChatsByProfileAsync } from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { Ad } from "../types";
 import { Rubrik, Text } from "./Index";
+import { getAdminChatSessionByProfileAsync } from "../SLICES/adminChatSlice";
 const DashboardPage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -54,6 +55,29 @@ const DashboardPage: React.FC = () => {
   const handleNavigateToAd = (ad: Ad) => {
     dispatch(setSelectedAd(ad));
     navigate("/addetail");
+  };
+
+  const handleNavigateToSupportChat = async () => {
+    if (user) {
+      try {
+        // Dispatchar och hämtar resultatet från thunk
+        const resultAction = await dispatch(
+          getAdminChatSessionByProfileAsync(user.id)
+        );
+        const chatSession = unwrapResult(resultAction); // Extrar värdet från thunken
+
+        if (chatSession) {
+          // Om det redan finns en chatt, navigera till den
+          navigate(`/support-chat/${chatSession.id}`);
+        } else {
+          // Om ingen chatt finns, skapa en ny session
+          const newChatSession = await createNewChatSession(user.id);
+          navigate(`/support-chat/${newChatSession.id}`);
+        }
+      } catch (error) {
+        console.error("Failed to handle chat navigation:", error);
+      }
+    }
   };
 
   return (
