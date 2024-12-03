@@ -112,7 +112,7 @@ export default function ChatList() {
                       ) : (
                         <Text variant="body2" sx={{ color: "#fffaeb" }}>
                           Senaste meddelande:{" "}
-                          {new Date(chat.lastUpdated).toDateString()}
+                          {new Date(chat.lastUpdated).toLocaleDateString()}
                         </Text>
                       )
                     }

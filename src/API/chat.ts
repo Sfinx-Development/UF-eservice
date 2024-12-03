@@ -7,7 +7,6 @@ import {
   getDoc,
   getDocs,
   query,
-  Timestamp,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -37,7 +36,7 @@ export const addChatToDb = async (
       receiverName,
       messages: [],
       lastMessage: firstMessage,
-      lastUpdated: Timestamp.now().toString(),
+      lastUpdated: new Date().toISOString(),
     };
 
     const docRef = await addDoc(chatCollectionRef, newChat);
@@ -168,7 +167,7 @@ export const addMessageToChat = async (
     await updateDoc(sessionRef, {
       messages: arrayUnion(message),
       lastMessage: message.message,
-      lastUpdated: Date.now().toString(),
+      lastUpdated: new Date().toISOString(),
     });
 
     const session = await getAdSessionById(sessionId);
