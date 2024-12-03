@@ -273,6 +273,7 @@ const userSlice = createSlice({
       })
       .addCase(logOutUserAsync.fulfilled, (state) => {
         state.user = null;
+        state.admin = null;
         state.error = null;
       })
       .addCase(logOutUserAsync.rejected, (state, action) => {

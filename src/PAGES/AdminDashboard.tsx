@@ -1,5 +1,6 @@
-import { Box, Button, useMediaQuery, useTheme } from "@mui/material";
-import React from "react";
+import ChatIcon from "@mui/icons-material/Chat";
+import { Badge, Box, Button, useMediaQuery, useTheme } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ChatComponent from "../Components/chatComponent";
 import { useAppSelector } from "../SLICES/store";
@@ -10,36 +11,19 @@ const AdminDashboardPage: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
   const admin = useAppSelector((state) => state.userSlice.admin);
-  //   const adsByLocation = useAppSelector((state) => state.adSlice.adsByLocation);
-  //   const chatSessions = useAppSelector((state) => state.chatSlice.chatSessions);
-  //   const dispatch = useAppDispatch();
-  //   const [unreadMessages, setUnreadMessages] = useState(0);
+  const chatSessions = useAppSelector(
+    (state) => state.adminChatSlice.adminChatSessions
+  );
+  const [unreadMessages, setUnreadMessages] = useState(0);
 
-  //   useEffect(() => {
-  //     if (admin) {
-  //       dispatch(getAdsByLocationAsync(user.city));
-  //     }
-  //   }, [user]);
-
-  //   useEffect(() => {
-  //     if (user) {
-  //       dispatch(getAllChatsByProfileAsync(user?.id));
-  //     }
-  //   }, [user]);
-
-  //   useEffect(() => {
-  //     if (chatSessions) {
-  //       const unreadSessions = chatSessions.filter(
-  //         (c) => c.hasUnreadMessages == true && c.latestSenderId != user?.id
-  //       ).length;
-  //       setUnreadMessages(unreadSessions);
-  //     }
-  //   }, [chatSessions]);
-
-  //   const handleNavigateToAd = (ad: Ad) => {
-  //     dispatch(setSelectedAd(ad));
-  //     navigate("/addetail");
-  //   };
+  useEffect(() => {
+    if (chatSessions) {
+      const unreadSessions = chatSessions.filter(
+        (c) => c.hasUnreadMessages == true && c.latestSenderId != admin?.id
+      ).length;
+      setUnreadMessages(unreadSessions);
+    }
+  }, [chatSessions]);
 
   return (
     <Box
@@ -89,32 +73,32 @@ const AdminDashboardPage: React.FC = () => {
           <Text> Visa ogranskade annonser</Text>
         </Button>
 
-        {/* <Badge
+        <Badge
           badgeContent={unreadMessages}
           color="success"
           invisible={unreadMessages === 0}
-        > */}
-        {/* <Button
+        >
+          <Button
             variant="outlined"
             sx={{
-              borderColor: "#FFA500",
-              color: "#FFA500",
+              borderColor: "#510102",
+              color: "#510102",
               padding: "0.75rem 1.5rem",
               fontSize: isMobile ? "1rem" : "1.2rem",
               gap: 1,
               "&:hover": {
-                borderColor: "#cc8500",
-                color: "#cc8500",
+                borderColor: "#6B2020",
+                color: "#6B2020",
               },
             }}
             onClick={() => {
               navigate("/admin-chatlist");
             }}
           >
-            <Text>Visa alla chattar</Text>
+            <Text>Alla adminchattar</Text>
             <ChatIcon />
-          </Button> */}
-        {/* </Badge> */}
+          </Button>
+        </Badge>
       </Box>
 
       <ChatComponent />

@@ -5,7 +5,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Paper,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -17,7 +16,9 @@ import { Rubrik, Text } from "./Index";
 
 export default function AdminChatList() {
   const dispatch = useAppDispatch();
-  const { chatSessions, loading } = useAppSelector((state) => state.chatSlice);
+  const { adminChatSessions, loading } = useAppSelector(
+    (state) => state.adminChatSlice
+  );
   const admin = useAppSelector((state) => state.userSlice.admin);
 
   const theme = useTheme();
@@ -31,11 +32,10 @@ export default function AdminChatList() {
   }, [admin, dispatch]);
 
   const handleNavigateToChat = (chatId: string) => {
-    navigate(`/chat/${chatId}`);
+    navigate(`/adminChat/${chatId}`);
   };
 
-  // Sortera chatSessions baserat på det senaste "lastUpdated", nyaste först
-  const sortedChatSessions = [...chatSessions].sort((a, b) => {
+  const sortedChatSessions = [...adminChatSessions].sort((a, b) => {
     return (
       new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
     );
@@ -49,7 +49,7 @@ export default function AdminChatList() {
         alignItems: "center",
         minHeight: "100vh",
         width: "100%",
-        backgroundColor: "#f4f4f4",
+        backgroundColor: "#fffaeb",
         padding: isMobile ? "1rem" : "2rem",
       }}
     >
@@ -61,30 +61,24 @@ export default function AdminChatList() {
             display: "flex",
             flexDirection: "column",
             width: "100%",
-            maxWidth: isMobile ? "100%" : "900px", // Anpassning för mobil och desktop
-            backgroundColor: "#fff",
+            maxWidth: isMobile ? "100%" : "900px",
             borderRadius: "8px",
             padding: "1rem",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
           }}
         >
-          {/* Titel */}
           <Rubrik
             variant={isMobile ? "h5" : "h4"}
             gutterBottom
             sx={{ fontWeight: "bold" }}
           >
-            Chattar mellan alla admins och användare
+            Dina chattar
           </Rubrik>
 
-          {/* Lista över alla chatt-sessioner */}
-          <Paper
+          <Box
             sx={{
-              padding: "1rem",
               marginBottom: "1rem",
               maxHeight: isMobile ? "300px" : "500px",
               overflowY: "auto",
-              backgroundColor: "#f9f9f9",
             }}
           >
             <List>
@@ -94,28 +88,27 @@ export default function AdminChatList() {
                   onClick={() => handleNavigateToChat(chat.id)}
                   sx={{
                     marginBottom: "1rem",
-                    padding: "1rem",
-                    backgroundColor: "#fff",
+                    padding: "1.5rem",
+                    backgroundColor: "#510102",
                     borderRadius: "8px",
                     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
                     cursor: "pointer",
                     "&:hover": {
-                      backgroundColor: "#f0f0f0",
+                      backgroundColor: "#6B2020",
                     },
                   }}
                 >
                   <ListItemText
-                    primary={`Annons: ${chat.adTitle}`}
+                    sx={{ color: "#fffaeb" }}
+                    primary={`Användare: ${chat.userName}`}
                     secondary={
                       chat.hasUnreadMessages &&
                       chat.latestSenderId != admin?.id ? (
-                        <Text variant="body2" color="success">
-                          Finns olästa meddelanden
-                        </Text>
+                        <Text variant="body2">Finns olästa meddelanden</Text>
                       ) : (
-                        <Text variant="body2" color="textSecondary">
+                        <Text variant="body2" sx={{ color: "#fffaeb" }}>
                           Senaste meddelande:{" "}
-                          {new Date(chat.lastUpdated).toDateString()}
+                          {new Date(chat.lastUpdated).toLocaleDateString()}
                         </Text>
                       )
                     }
@@ -124,8 +117,8 @@ export default function AdminChatList() {
                   <Button
                     variant="outlined"
                     sx={{
-                      borderColor: "#FFA500", // Orange border
-                      color: "#FFA500", // Textfärg
+                      borderColor: "#fffaeb",
+                      color: "#fffaeb",
                       "&:hover": {
                         borderColor: "#cc8500",
                         color: "#cc8500",
@@ -137,7 +130,7 @@ export default function AdminChatList() {
                 </ListItem>
               ))}
             </List>
-          </Paper>
+          </Box>
         </Box>
       ) : (
         <Text>Du har inga pågående chattar.</Text>

@@ -96,10 +96,12 @@ export interface Message {
 export interface AdminUserSession {
   id: string;
   userId: string;
+  userName: string;
   messages: AdminUserMessage[];
   lastMessage: string;
   lastUpdated: string;
   hasUnreadMessages?: boolean;
+  latestSenderId?: string;
 }
 
 export interface AdminUserMessage {

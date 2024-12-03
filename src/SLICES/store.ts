@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { adminChatReducer } from "./adminChatSlice";
 import { adReducer } from "./adSlice";
 import { chatReducer } from "./chatSlice";
-import { userReducer } from "./userSlice";
 import { messageReducer } from "./messageSlice";
+import { userReducer } from "./userSlice";
 // import localStorageMiddleware from "../middleware/localstorageMiddleware";
 
 const store = configureStore({
@@ -12,6 +13,7 @@ const store = configureStore({
     adSlice: adReducer,
     chatSlice: chatReducer,
     messageSlice: messageReducer,
+    adminChatSlice: adminChatReducer,
   },
   //   middleware: (getDefaultMiddleware) =>
   //     getDefaultMiddleware().concat(localStorageMiddleware),

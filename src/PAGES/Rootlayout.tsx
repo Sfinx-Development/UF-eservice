@@ -7,6 +7,7 @@ import { logOutUserAsync } from "../SLICES/userSlice";
 import { Rubrik, Text } from "./Index";
 const RootLayout = () => {
   const user = useAppSelector((state) => state.userSlice.user);
+  const admin = useAppSelector((state) => state.userSlice.admin);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -104,6 +105,34 @@ const RootLayout = () => {
               >
                 <Person2Icon />
               </Button>
+              <Button
+                variant="outlined"
+                onClick={handleSignOut}
+                sx={{
+                  borderColor: "#510102",
+                  color: "#510102",
+                  paddingX: { xs: 1, md: 2 },
+                  fontSize: { xs: "0.8rem", md: "1rem" },
+                  "&:hover": {
+                    borderColor: "#510102",
+                    color: "#510102",
+                  },
+                }}
+              >
+                Logga ut
+              </Button>
+            </Box>
+          )}
+          {admin && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: { xs: 1, md: 2 },
+                flexDirection: { xs: "row", md: "row" },
+              }}
+            >
+              {" "}
               <Button
                 variant="outlined"
                 onClick={handleSignOut}

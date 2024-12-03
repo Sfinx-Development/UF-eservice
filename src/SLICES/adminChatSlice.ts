@@ -231,4 +231,4 @@ const adminChatSlice = createSlice({
 });
 
 export const { setSelectedChat } = adminChatSlice.actions;
-export const chatReducer = adminChatSlice.reducer;
+export const adminChatReducer = adminChatSlice.reducer;

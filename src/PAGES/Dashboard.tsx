@@ -1,4 +1,5 @@
 import ChatIcon from "@mui/icons-material/Chat";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import {
   Badge,
   Box,
@@ -7,6 +8,7 @@ import {
   CardActions,
   CardContent,
   Grid,
+  Tooltip,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -18,7 +20,6 @@ import { getAllChatsByProfileAsync } from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { Ad } from "../types";
 import { Rubrik, Text } from "./Index";
-
 const DashboardPage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -145,6 +146,24 @@ const DashboardPage: React.FC = () => {
             <ChatIcon sx={{ color: "#510102" }} />
           </Button>
         </Badge>
+
+        <Tooltip title="Chatta med admin här">
+          <Button
+            variant="outlined"
+            sx={{
+              borderColor: "#510102",
+              color: "#FFA500",
+              padding: "0.75rem 1.5rem",
+              fontSize: isMobile ? "1rem" : "1.2rem",
+              gap: 1,
+            }}
+            onClick={() => {
+              navigate("/support-chat");
+            }}
+          >
+            <HelpOutlineIcon sx={{ color: "#510102" }} />
+          </Button>
+        </Tooltip>
       </Box>
 
       <Rubrik variant="h5" sx={{ marginBottom: "1rem", color: "#510102" }}>
@@ -165,9 +184,9 @@ const DashboardPage: React.FC = () => {
                 }}
               >
                 <CardContent>
-                  <Text variant="h6" sx={{ color: "#fffaeb" }}>
+                  <Rubrik variant="h6" sx={{ color: "#fffaeb" }}>
                     {ad.title}
-                  </Text>
+                  </Rubrik>
                   {ad.numberOfHives && (
                     <Text sx={{ marginBottom: "1rem", color: "#fffaeb" }}>
                       {`${ad.numberOfHives} kupor tillgängliga`}

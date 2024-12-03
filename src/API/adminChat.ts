@@ -12,7 +12,6 @@ import {
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { AdminUserMessage, AdminUserSession } from "../types";
-import { updateAdSession } from "./chat";
 import { db } from "./config";
 
 export const addAdminChatSessionToDb = async (
@@ -47,13 +46,33 @@ export const getAdminChatSessionById = async (
         hasUnreadMessages: false,
       };
 
-      await updateAdSession(chat.id, updatedSession);
+      await updateAdminChatSession(chat.id, updatedSession);
       return chat;
     } else {
       return null;
     }
   } catch (error) {
     console.error("Error fetching chat:", error);
+    throw error;
+  }
+};
+
+export const updateAdminChatSession = async (
+  sessionId: string,
+  chatSessionUpdates: Partial<AdminUserSession>,
+  senderId?: string
+): Promise<void> => {
+  try {
+    const sessionRef = doc(db, `adminChat`, sessionId);
+
+    const updates = {
+      ...chatSessionUpdates,
+      latestSenderId: senderId ?? chatSessionUpdates.latestSenderId ?? "",
+    };
+
+    await updateDoc(sessionRef, updates);
+  } catch (error) {
+    console.error("Error updating chat session:", error);
     throw error;
   }
 };
@@ -106,7 +125,7 @@ export const addMessageToAdminChat = async (
       hasUnreadMessages: true,
     };
 
-    await updateAdSession(sessionId, updates, message.senderId);
+    await updateAdminChatSession(sessionId, updates, message.senderId);
   } catch (error) {
     console.error("Error adding message to chat:", error);
     throw error;
