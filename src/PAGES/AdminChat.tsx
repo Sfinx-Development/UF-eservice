@@ -13,7 +13,7 @@ import {
   getAdminChatByIdAsync,
 } from "../SLICES/adminChatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
-import { ChatMessage } from "../types";
+import { AdminUserMessage, Profile } from "../types";
 import { Rubrik, Text } from "./Index";
 import { RedBorderTextfield } from "./Register";
 
@@ -25,11 +25,20 @@ export default function AdminChat() {
   );
   const [newMessage, setNewMessage] = useState("");
   const user = useAppSelector((state) => state.userSlice.user);
+  const admin = useAppSelector((state) => state.userSlice.admin);
+  const [currentUser, setCurrentUser] = useState<Profile | null>(null);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  // Hämta den aktuella chatten vid sidladdning
+  useEffect(() => {
+    if (user) {
+      setCurrentUser(user);
+    } else if (admin) {
+      setCurrentUser(admin);
+    }
+  }, [user, admin]);
+
   useEffect(() => {
     if (chatId) {
       dispatch(getAdminChatByIdAsync(chatId));
@@ -38,18 +47,20 @@ export default function AdminChat() {
 
   // Hantera inskickning av nytt meddelande
   const handleSendMessage = async () => {
-    if (newMessage.trim() && chatId && user) {
+    if (newMessage.trim() && chatId && currentUser) {
+      const message: AdminUserMessage = {
+        id: "",
+        senderId: currentUser.id,
+        senderName: currentUser.username,
+        message: newMessage,
+        timestamp: new Date().toISOString(),
+        read: false,
+        isAdmin: currentUser.isAdmin ?? false,
+      };
       await dispatch(
         addAdminChatMessageAsync({
           sessionId: chatId,
-          message: {
-            id: "",
-            senderId: user.id,
-            senderName: user.username,
-            message: newMessage,
-            timestamp: new Date().toISOString(),
-            read: false,
-          },
+          message,
         })
       );
       setNewMessage("");
@@ -92,7 +103,7 @@ export default function AdminChat() {
             gutterBottom
             sx={{ fontWeight: "bold", color: "#510102" }}
           >
-            Support-chatt för {user?.username}
+            Support-chatt för {selectedAdminChat.userName}
           </Rubrik>
 
           <Box
@@ -107,7 +118,7 @@ export default function AdminChat() {
             }}
           >
             {selectedAdminChat.messages.length > 0 ? (
-              selectedAdminChat.messages.map((message: ChatMessage) => (
+              selectedAdminChat.messages.map((message: AdminUserMessage) => (
                 <Box
                   key={message.id}
                   sx={{
@@ -125,12 +136,27 @@ export default function AdminChat() {
                     <Text
                       variant="subtitle2"
                       sx={{
-                        color:
-                          // message.senderId === user?.id
-                          "#510102",
-                        // : theme.palette.secondary.main,
+                        color: message.isAdmin
+                          ? "rgba(81, 1, 2, 0.8)"
+                          : "#510102",
+                        fontWeight: message.isAdmin ? "bold" : "normal",
+                        display: "inline",
                       }}
                     >
+                      {message.isAdmin && (
+                        <span
+                          style={{
+                            backgroundColor: "rgba(81, 1, 2, 0.8)",
+                            color: "#fff",
+                            borderRadius: "4px",
+                            padding: "0.2rem 0.5rem",
+                            marginRight: "0.5rem",
+                            fontSize: "0.8rem",
+                          }}
+                        >
+                          Administratör
+                        </span>
+                      )}
                       {message.senderName}:
                     </Text>
                   </Link>

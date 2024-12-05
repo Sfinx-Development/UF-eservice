@@ -44,7 +44,6 @@ export const addChatToDb = async (
 
     await updateDoc(docRef, { id: docRef.id });
 
-    console.log("Chat created successfully");
     return newChat;
   } catch (error) {
     console.error("Error adding chat:", error);
@@ -234,8 +233,6 @@ export const updateAdSession = async (
     };
 
     await updateDoc(sessionRef, updates);
-
-    console.log("Chattsessionen uppdaterades framgångsrikt.");
   } catch (error) {
     console.error("Error updating chat session:", error);
     throw error;
@@ -270,8 +267,6 @@ export const deleteChatMessage = async (
     const messageRef = doc(db, `chat/${sessionId}/messages`, id);
 
     await deleteDoc(messageRef);
-
-    console.log("Meddelandet raderades framgångsrikt.");
   } catch (error) {
     console.error("Error deleting chat message:", error);
     throw error;

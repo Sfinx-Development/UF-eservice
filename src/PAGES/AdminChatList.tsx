@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllChatsByProfileAsync } from "../SLICES/chatSlice";
+import { getAllAdminChatSessionsAsync } from "../SLICES/adminChatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { Rubrik, Text } from "./Index";
 
@@ -27,12 +27,12 @@ export default function AdminChatList() {
 
   useEffect(() => {
     if (admin) {
-      dispatch(getAllChatsByProfileAsync(admin.id));
+      dispatch(getAllAdminChatSessionsAsync());
     }
   }, [admin, dispatch]);
 
   const handleNavigateToChat = (chatId: string) => {
-    navigate(`/adminChat/${chatId}`);
+    navigate(`/support-chat/${chatId}`);
   };
 
   const sortedChatSessions = [...adminChatSessions].sort((a, b) => {

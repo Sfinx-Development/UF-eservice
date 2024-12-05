@@ -102,6 +102,30 @@ export const getAdminChatSessionByProfile = async (
   }
 };
 
+export const getAllAdminChatSession = async (): Promise<
+  AdminUserSession[] | []
+> => {
+  try {
+    const chatCollectionRef = collection(db, "adminChat");
+
+    const chatQuery = query(chatCollectionRef);
+
+    const chatSnapshot = await getDocs(chatQuery);
+
+    if (!chatSnapshot.empty) {
+      const chatSessions: AdminUserSession[] = chatSnapshot.docs.map(
+        (doc) => doc.data() as AdminUserSession
+      );
+      return chatSessions;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching chat session for profile:", error);
+    throw error;
+  }
+};
+
 export const addMessageToAdminChat = async (
   sessionId: string,
   message: AdminUserMessage

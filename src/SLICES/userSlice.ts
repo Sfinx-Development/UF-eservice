@@ -199,13 +199,12 @@ export const resetPasswordAsync = createAsyncThunk<
 });
 
 export const logInAdminAsync = createAsyncThunk<
-  Profile, // Returnerar en användare vid lyckad inloggning
-  LogIn, // Input-typ för inloggningsuppgifter (LogIn)
-  { rejectValue: string } // Typ för felhantering (rejectValue)
+  Profile,
+  LogIn,
+  { rejectValue: string }
 >("user/logInAdmin", async (login, thunkAPI) => {
   try {
     const userCredential = await signInAdminWithAPI(login);
-    console.log("LOGGGA RIN", userCredential);
     localStorage.setItem("admin", JSON.stringify(userCredential));
     localStorage.removeItem("user");
     return userCredential;

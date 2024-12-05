@@ -7,6 +7,7 @@ import {
   deleteAdminChatMessage,
   getAdminChatSessionById,
   getAdminChatSessionByProfile,
+  getAllAdminChatSession,
   updateAdminChatMessage,
 } from "../API/adminChat";
 import { AdminUserMessage, AdminUserSession } from "../types";
@@ -64,6 +65,22 @@ export const getAdminChatSessionByProfileAsync = createAsyncThunk<
       );
     }
     return chatSession;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const getAllAdminChatSessionsAsync = createAsyncThunk<
+  AdminUserSession[],
+  void,
+  { rejectValue: string }
+>("adminChat/getAllAdminChatSessionsAsync", async (_, thunkAPI) => {
+  try {
+    const chatSessions = await getAllAdminChatSession();
+    if (!chatSessions) {
+      return thunkAPI.rejectWithValue("No chat sessions found.");
+    }
+    return chatSessions;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
   }
@@ -149,6 +166,20 @@ const adminChatSlice = createSlice({
         state.error = null;
       })
       .addCase(getAdminChatSessionByProfileAsync.rejected, (state, _) => {
+        state.loading = false;
+        state.error = "Något gick fel vid hämtning av chatt-sessioner.";
+      });
+
+    builder
+      .addCase(getAllAdminChatSessionsAsync.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllAdminChatSessionsAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.adminChatSessions = action.payload;
+        state.error = null;
+      })
+      .addCase(getAllAdminChatSessionsAsync.rejected, (state, _) => {
         state.loading = false;
         state.error = "Något gick fel vid hämtning av chatt-sessioner.";
       });

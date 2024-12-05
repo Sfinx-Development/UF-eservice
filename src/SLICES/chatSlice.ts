@@ -66,7 +66,6 @@ export const getAllChatsByProfileAsync = createAsyncThunk<
   { rejectValue: string }
 >("chat/getAllChatsByProfile", async (profileId, thunkAPI) => {
   try {
-    console.log("PROFILEID: ", profileId);
     const chatSessions = await getAllChatSessionsByProfile(profileId);
     localStorage.setItem("chatSessions", JSON.stringify(chatSessions));
     return chatSessions;

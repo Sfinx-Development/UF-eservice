@@ -140,7 +140,6 @@ export const deleteAdInDB = async (adId: string): Promise<void> => {
   try {
     const adDocRef = doc(db, "ads", adId);
     await deleteDoc(adDocRef);
-    console.log("Ad deleted with ID:", adId);
   } catch (error) {
     console.error("Error deleting ad:", error);
     throw error;

@@ -111,4 +111,5 @@ export interface AdminUserMessage {
   message: string;
   timestamp: string;
   read: boolean;
+  isAdmin?: boolean;
 }

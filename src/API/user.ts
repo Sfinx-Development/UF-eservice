@@ -184,7 +184,6 @@ export const updateUserWithAPI = async (updates: Partial<Profile>) => {
     });
   }
 
-  console.log("User updated:", user);
   return {
     ...updates,
     uid: user.uid,
