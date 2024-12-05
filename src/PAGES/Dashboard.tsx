@@ -12,15 +12,19 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { unwrapResult } from "@reduxjs/toolkit";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ChatComponent from "../Components/chatComponent";
+import {
+  addAdminChatAsync,
+  getAdminChatSessionByProfileAsync,
+} from "../SLICES/adminChatSlice";
 import { getAdsByLocationAsync, setSelectedAd } from "../SLICES/adSlice";
 import { getAllChatsByProfileAsync } from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
-import { Ad } from "../types";
+import { Ad, AdminUserSession } from "../types";
 import { Rubrik, Text } from "./Index";
-import { getAdminChatSessionByProfileAsync } from "../SLICES/adminChatSlice";
 const DashboardPage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -58,25 +62,46 @@ const DashboardPage: React.FC = () => {
   };
 
   const handleNavigateToSupportChat = async () => {
-    if (user) {
-      try {
-        // Dispatchar och hämtar resultatet från thunk
-        const resultAction = await dispatch(
-          getAdminChatSessionByProfileAsync(user.id)
-        );
-        const chatSession = unwrapResult(resultAction); // Extrar värdet från thunken
+    if (!user) {
+      console.error("User is not logged in.");
+      return;
+    }
 
-        if (chatSession) {
-          // Om det redan finns en chatt, navigera till den
-          navigate(`/support-chat/${chatSession.id}`);
+    try {
+      // Försök att hämta en befintlig chatt
+      const resultAction = await dispatch(
+        getAdminChatSessionByProfileAsync(user.id)
+      );
+
+      if (resultAction.meta.requestStatus === "fulfilled") {
+        const chatSession = unwrapResult(resultAction) as AdminUserSession;
+        navigate(`/support-chat/${chatSession.id}`);
+      } else {
+        // Om ingen chatt hittades, skapa en ny
+        const newChatSession: AdminUserSession = {
+          id: "undefined", // Skapas senare av backend/databas
+          userId: user.id,
+          userName: user.username,
+          messages: [],
+          lastMessage: "",
+          lastUpdated: new Date().toISOString(),
+        };
+
+        const result = await dispatch(addAdminChatAsync(newChatSession));
+
+        if (result.meta.requestStatus === "fulfilled") {
+          const payload = result.payload as AdminUserSession;
+          if (payload?.id) {
+            navigate(`/support-chat/${payload.id}`);
+          } else {
+            console.error("Failed to get chat session ID from payload.");
+          }
         } else {
-          // Om ingen chatt finns, skapa en ny session
-          const newChatSession = await createNewChatSession(user.id);
-          navigate(`/support-chat/${newChatSession.id}`);
+          console.error("Failed to create a new chat session.");
         }
-      } catch (error) {
-        console.error("Failed to handle chat navigation:", error);
       }
+    } catch (error) {
+      console.error("Failed to handle chat navigation:", error);
     }
   };
 
@@ -97,7 +122,7 @@ const DashboardPage: React.FC = () => {
         variant={isMobile ? "h4" : "h3"}
         sx={{
           color: "#510102",
-          marginTop: -20,
+          marginTop: { xl: -20 },
           marginBottom: 4,
           textAlign: "center",
         }}
@@ -182,7 +207,7 @@ const DashboardPage: React.FC = () => {
               gap: 1,
             }}
             onClick={() => {
-              navigate("/support-chat");
+              handleNavigateToSupportChat();
             }}
           >
             <HelpOutlineIcon sx={{ color: "#510102" }} />
