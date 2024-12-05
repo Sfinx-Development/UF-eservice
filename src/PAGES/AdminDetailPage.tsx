@@ -79,6 +79,9 @@ const AdminAdDetailPage: React.FC = () => {
               {selectedAd.title}
             </Text>
             <Text variant="h6" sx={{ color: "#510102" }}>
+              Swishnummer: {selectedAd.swishNumber}
+            </Text>
+            <Text variant="h6" sx={{ color: "#510102" }}>
               Plats: {selectedAd.location}
             </Text>
             <Link

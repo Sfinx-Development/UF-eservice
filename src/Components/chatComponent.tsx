@@ -14,7 +14,7 @@ import {
   Slide,
   TextField,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Rubrik, Text } from "../PAGES/Index";
 import {
@@ -35,6 +35,11 @@ const ChatComponent: React.FC = () => {
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false); // För att kontrollera om chatten är öppen eller stängd
   const [filteredMessages, setFilteredMessages] = useState<Message[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     dispatch(getAllMessagesAsync());
@@ -50,6 +55,10 @@ const ChatComponent: React.FC = () => {
     setFilteredMessages(filteredMessages);
   }, [messages]);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
+
   const handleSendMessage = () => {
     if (messageText.trim()) {
       const newMessage = {
@@ -63,6 +72,7 @@ const ChatComponent: React.FC = () => {
       if (newMessage.userId) {
         dispatch(addMessageAsync(newMessage));
         setMessageText("");
+        scrollToBottom();
       }
     }
   };
@@ -244,6 +254,7 @@ const ChatComponent: React.FC = () => {
                     </Box>
                   )}
                 </Box>
+                <div ref={messagesEndRef} />
               </Box>
             ))}
           </Box>
