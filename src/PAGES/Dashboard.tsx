@@ -115,16 +115,25 @@ const DashboardPage: React.FC = () => {
         minHeight: "100vh",
         width: "100%",
         padding: isMobile ? "1rem" : "2rem",
-        backgroundColor: "#fffaeb",
+        // backgroundColor: "#fffaeb",
+        background: "url(https://i.imgur.com/o6I6C94.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center bottom",
+        backgroundRepeat: "no-repeat",
       }}
     >
       <Rubrik
         variant={isMobile ? "h4" : "h3"}
         sx={{
-          color: "#510102",
+          color: "#fffaeb",
           marginTop: { xl: -20 },
           marginBottom: 4,
           textAlign: "center",
+          // backgroundColor: "rgba(81, 1, 2, 0.5)",
+          // // message.senderId === user?.id ? "#E1FFC7" : "#FFF",
+          // padding: "0.75rem",
+          // borderRadius: "10px",
+          fontWeight: 600,
         }}
         gutterBottom
       >
@@ -142,13 +151,14 @@ const DashboardPage: React.FC = () => {
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#510102",
-            // color: "#510102"
-            color: "#FFF",
+            backgroundColor: "#fffaeb",
+            color: "#510102",
+            // color: "#FFF",
             padding: "0.75rem 1.5rem",
             fontSize: isMobile ? "1rem" : "1.2rem",
             "&:hover": {
-              backgroundColor: "#6B2020",
+              borderColor: "#510102",
+              color: "#510102",
             },
           }}
           onClick={() => {
@@ -161,8 +171,9 @@ const DashboardPage: React.FC = () => {
         <Button
           variant="outlined"
           sx={{
-            borderColor: "#510102",
-            color: "#FFA500",
+            borderColor: "#fffaeb",
+            backgroundColor: "rgba(81, 1, 2, 0.2)",
+            color: "#510102",
             padding: "0.75rem 1.5rem",
             fontSize: isMobile ? "1rem" : "1.2rem",
           }}
@@ -170,7 +181,7 @@ const DashboardPage: React.FC = () => {
             navigate("/adlist");
           }}
         >
-          <Text sx={{ color: "#510102" }}> Visa alla annonser</Text>
+          <Text sx={{ color: "#fffaeb" }}> Visa alla annonser</Text>
         </Button>
 
         <Badge
@@ -181,7 +192,8 @@ const DashboardPage: React.FC = () => {
           <Button
             variant="outlined"
             sx={{
-              borderColor: "#510102",
+              borderColor: "#fffaeb",
+              backgroundColor: "rgba(81, 1, 2, 0.2)",
               color: "#FFA500",
               padding: "0.75rem 1.5rem",
               fontSize: isMobile ? "1rem" : "1.2rem",
@@ -191,8 +203,8 @@ const DashboardPage: React.FC = () => {
               navigate("/chatlist");
             }}
           >
-            <Text sx={{ color: "#510102" }}>Visa alla chattar</Text>
-            <ChatIcon sx={{ color: "#510102" }} />
+            <Text sx={{ color: "#fffaeb" }}>Visa alla chattar</Text>
+            <ChatIcon sx={{ color: "#fffaeb" }} />
           </Button>
         </Badge>
 
@@ -200,7 +212,8 @@ const DashboardPage: React.FC = () => {
           <Button
             variant="outlined"
             sx={{
-              borderColor: "#510102",
+              borderColor: "#fffaeb",
+              backgroundColor: "rgba(81, 1, 2, 0.2)",
               color: "#FFA500",
               padding: "0.75rem 1.5rem",
               fontSize: isMobile ? "1rem" : "1.2rem",
@@ -210,12 +223,12 @@ const DashboardPage: React.FC = () => {
               handleNavigateToSupportChat();
             }}
           >
-            <HelpOutlineIcon sx={{ color: "#510102" }} />
+            <HelpOutlineIcon sx={{ color: "#fffaeb" }} />
           </Button>
         </Tooltip>
       </Box>
 
-      <Rubrik variant="h5" sx={{ marginBottom: "1rem", color: "#510102" }}>
+      <Rubrik variant="h5" sx={{ marginBottom: "1rem", color: "#fffaeb" }}>
         Annonser i ditt område
       </Rubrik>
 
@@ -225,23 +238,24 @@ const DashboardPage: React.FC = () => {
             <Grid item xs={12} sm={6} md={4} key={index}>
               <Card
                 sx={{
-                  backgroundColor: "#510102",
+                  backgroundColor: "#fffaeb",
                   "&:hover": {
-                    backgroundColor: "#6B2020",
+                    borderColor: "#510102",
+                    color: "#510102",
                   },
                   borderRadius: "8px",
                 }}
               >
                 <CardContent>
-                  <Rubrik variant="h6" sx={{ color: "#fffaeb" }}>
+                  <Rubrik variant="h6" sx={{ color: "#510102" }}>
                     {ad.title}
                   </Rubrik>
                   {ad.numberOfHives && (
-                    <Text sx={{ marginBottom: "1rem", color: "#fffaeb" }}>
+                    <Text sx={{ marginBottom: "1rem", color: "#510102" }}>
                       {`${ad.numberOfHives} kupor tillgängliga`}
                     </Text>
                   )}
-                  <Text variant="body2" sx={{ color: "#fffaeb" }}>
+                  <Text variant="body2" sx={{ color: "#510102" }}>
                     Plats: {ad.location || "Ingen plats angiven"}
                   </Text>
                 </CardContent>
@@ -249,7 +263,7 @@ const DashboardPage: React.FC = () => {
                   <Button
                     onClick={() => handleNavigateToAd(ad)}
                     size="small"
-                    sx={{ color: "#fffaeb", fontWeight: 600 }}
+                    sx={{ color: "#510102", fontWeight: 600 }}
                   >
                     Läs mer
                   </Button>
@@ -263,7 +277,7 @@ const DashboardPage: React.FC = () => {
             baserad på stad på din profilsida.
           </Text>
         ) : (
-          <Text sx={{ color: "#510102", marginTop: "1rem" }}>
+          <Text sx={{ color: "#fffaeb", marginTop: "1rem" }}>
             Inga annonser tillgängliga i ditt område
           </Text>
         )}

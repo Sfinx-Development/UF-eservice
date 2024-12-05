@@ -1,3 +1,4 @@
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   Box,
   Button,
@@ -8,8 +9,8 @@ import {
   Snackbar,
 } from "@mui/material";
 import React, { useState } from "react";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router-dom";
+import SwishPaymentPopup from "../Components/SwishPaymentPopup";
 import { addAdAsync } from "../SLICES/adSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { Ad } from "../types";
@@ -20,6 +21,8 @@ const NewAdPage: React.FC = () => {
   const user = useAppSelector((state) => state.userSlice.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [swishNumber, setSwishNumber] = useState("");
 
   const [formValues, setFormValues] = useState({
     title: "",
@@ -40,7 +43,8 @@ const NewAdPage: React.FC = () => {
     crops: false,
   });
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false); // För att hantera Snackbar
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -50,10 +54,7 @@ const NewAdPage: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Reset errors
+  const handleOpenModal = () => {
     const newErrors = {
       title: false,
       location: false,
@@ -64,7 +65,6 @@ const NewAdPage: React.FC = () => {
 
     let hasErrors = false;
 
-    // Check required fields
     if (!formValues.title) {
       newErrors.title = true;
       hasErrors = true;
@@ -74,13 +74,11 @@ const NewAdPage: React.FC = () => {
       hasErrors = true;
     }
 
-    // Error handling for biodlare
     if (user?.role === "biodlare" && !formValues.numberOfHives) {
       newErrors.numberOfHives = true;
       hasErrors = true;
     }
 
-    // Error handling for markägare
     if (user?.role === "markägare") {
       if (!formValues.areaSize) {
         newErrors.areaSize = true;
@@ -95,12 +93,21 @@ const NewAdPage: React.FC = () => {
     setErrors(newErrors);
 
     if (!hasErrors && user) {
+      setOpenModal(true);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent, swishNumber: string) => {
+    e.preventDefault();
+
+    if (user && swishNumber != "") {
       const ad: Ad = {
         ...formValues,
         id: "undefined",
         profileId: user.id,
         isReviewed: false,
         isPublic: false,
+        swishNumber: swishNumber,
       };
       dispatch(addAdAsync(ad));
 
@@ -124,7 +131,11 @@ const NewAdPage: React.FC = () => {
         minHeight: "100vh",
         width: "100%",
         padding: "2rem",
-        backgroundColor: "#fffaeb",
+        // backgroundColor: "#fffaeb",
+        background: "url(https://i.imgur.com/o6I6C94.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center bottom",
+        backgroundRepeat: "no-repeat",
       }}
     >
       <Box
@@ -135,6 +146,7 @@ const NewAdPage: React.FC = () => {
         }}
       >
         <IconButton
+          onClick={() => navigate("/dashboard")}
           sx={{
             display: { xs: "none", md: "flex" },
             alignItems: "center",
@@ -170,7 +182,6 @@ const NewAdPage: React.FC = () => {
           borderRadius: "8px",
           // boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
         }}
-        onSubmit={handleSubmit}
       >
         <RedBorderTextfield
           label="Titel"
@@ -326,9 +337,16 @@ const NewAdPage: React.FC = () => {
             </RadioGroup>
           </>
         )}
-
+        {openModal && (
+          <SwishPaymentPopup
+            isOpen={openModal}
+            onClose={() => setOpenModal(false)}
+            onConfirmPayment={handleSubmit}
+            handleAbort={() => setOpenModal(false)}
+          />
+        )}
         <Button
-          type="submit"
+          onClick={handleOpenModal}
           variant="contained"
           sx={{
             backgroundColor: "#510102",

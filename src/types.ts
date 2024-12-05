@@ -51,6 +51,7 @@ export interface Ad {
   profileId: string;
   isReviewed?: boolean;
   isPublic?: boolean;
+  swishNumber?: string;
 }
 
 //AD CHAT
