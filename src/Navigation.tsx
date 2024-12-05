@@ -20,6 +20,8 @@ import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import ProtectedRoute from "./ProtectedRoute";
 import PrivacyPolicy from "./PAGES/PrivacyPolicy";
 import CookieInfo from "./PAGES/CookieInfo";
+import AdminChat from "./PAGES/AdminChat";
+import RoleBasedProtectedRoute from "./RoleBasedRoute";
 
 const Navigation = () => {
   // const [userLoaded, setUserLoaded] = useState(false);
@@ -99,6 +101,12 @@ const Navigation = () => {
         <Route
           path="admin-chatlist"
           element={<ProtectedAdminRoute element={AdminChatList} />}
+        ></Route>
+        <Route
+          path="support-chat/:chatId"
+          element={
+            <RoleBasedProtectedRoute allowAdmin={true} element={AdminChat} />
+          }
         ></Route>
         <Route
           path="admin-addetail"

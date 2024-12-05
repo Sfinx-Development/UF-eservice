@@ -53,6 +53,8 @@ export interface Ad {
   isPublic?: boolean;
 }
 
+//AD CHAT
+
 export interface ChatMessage {
   id: string;
   senderId: string;
@@ -76,6 +78,9 @@ export interface AdChatSession {
   hasUnreadMessages?: boolean;
   latestSenderId?: string;
 }
+
+//COMMON CHAT
+
 export interface Message {
   id: string;
   text: string;
@@ -83,5 +88,28 @@ export interface Message {
   userId?: string;
   username: string;
   isRead?: boolean;
+  isAdmin?: boolean;
+}
+
+//ADMIN CHAT - mellan en user och alla som är admin
+
+export interface AdminUserSession {
+  id: string;
+  userId: string;
+  userName: string;
+  messages: AdminUserMessage[];
+  lastMessage: string;
+  lastUpdated: string;
+  hasUnreadMessages?: boolean;
+  latestSenderId?: string;
+}
+
+export interface AdminUserMessage {
+  id: string;
+  senderId: string;
+  senderName: string;
+  message: string;
+  timestamp: string;
+  read: boolean;
   isAdmin?: boolean;
 }

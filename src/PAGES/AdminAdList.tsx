@@ -18,7 +18,6 @@ const AdminAdListPage: React.FC = () => {
   }, []);
 
   const handleNavigateToAd = (ad: Ad) => {
-    console.log("AD: ", ad);
     dispatch(setSelectedAd(ad));
     navigate("/admin-addetail");
   };
