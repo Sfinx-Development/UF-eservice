@@ -21,8 +21,6 @@ const NewAdPage: React.FC = () => {
   const user = useAppSelector((state) => state.userSlice.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [swishNumber, setSwishNumber] = useState("");
 
   const [formValues, setFormValues] = useState({
     title: "",

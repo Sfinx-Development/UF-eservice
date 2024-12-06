@@ -35,8 +35,7 @@ export default function ProfilePage() {
       ? user.profileImage
       : "/default-avatar.png"
   );
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [imageFile, setImageFile] = useState<File | null>();
+  const setImageFile = useState<File | null>()[1];
 
   const [editMode, setIsEditMode] = useState(false);
   const [name, setName] = useState("");
@@ -50,7 +49,6 @@ export default function ProfilePage() {
   // Hämta profildata baserat på ID
   useEffect(() => {
     if (id) {
-      // Om ID finns, hämta annans profil
       dispatch(getProfileByIdAsync(id));
     } else {
       // Annars använd den inloggade användarens data
@@ -61,11 +59,9 @@ export default function ProfilePage() {
     }
   }, [id, user, dispatch]);
 
-  // Kontrollera aktuell profil som visas
   const currentProfile = id ? activeProfile : user;
 
   if (id && !currentProfile) {
-    // Visa laddningsindikator tills `activeProfile` är laddad
     return (
       <Box
         sx={{

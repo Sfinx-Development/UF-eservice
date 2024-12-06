@@ -53,8 +53,7 @@ export default function RegisterPage() {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState<string | null>("/default-avatar.png");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [imageFile, setImageFile] = useState<File | null>();
+  const setImageFile = useState<File | null>()[1];
   const createAccountError = useAppSelector(
     (state) => state.userSlice.createAccountError
   );
