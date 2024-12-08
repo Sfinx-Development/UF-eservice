@@ -255,7 +255,7 @@ const RootLayout = () => {
                 <Text>Dashboard</Text>
               </Link>
               <Link
-                href="/newad"
+                href="/privacy-policy"
                 sx={{
                   color: "#fffaeb",
                   textDecoration: "none",
@@ -263,10 +263,10 @@ const RootLayout = () => {
                   "&:hover": { textDecoration: "underline" },
                 }}
               >
-                <Text>Lägg till annons</Text>
+                <Text>Integritetspolicy</Text>
               </Link>
               <Link
-                href="/chatlist"
+                href="/terms"
                 sx={{
                   color: "#fffaeb",
                   textDecoration: "none",
@@ -274,7 +274,7 @@ const RootLayout = () => {
                   "&:hover": { textDecoration: "underline" },
                 }}
               >
-                <Text>Visa chattar</Text>
+                <Text>Användarvillkor</Text>
               </Link>
               <Link
                 href="/admin-login"

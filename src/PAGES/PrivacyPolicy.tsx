@@ -57,6 +57,10 @@ export default function PrivacyPolicy() {
           </Text>
         </li>
       </ul>
+      <Text sx={{ marginBottom: 2 }}>
+        När du lägger upp en annons och betalar med swish lagras det telefonnummer du angivit att du
+        swishat med. Telefonnumret är till för att admin ska kunna verifiera betalningen och godkänna din annons.
+      </Text>
       <Divider sx={{ width: "100%", marginBottom: "1rem" }} />
 
       {/** Section 2: Data Usage */}
