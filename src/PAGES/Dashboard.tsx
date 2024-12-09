@@ -20,7 +20,11 @@ import {
   addAdminChatAsync,
   getAdminChatSessionByProfileAsync,
 } from "../SLICES/adminChatSlice";
-import { getAdsByLocationAsync, setSelectedAd } from "../SLICES/adSlice";
+import {
+  getAdsByLocationAsync,
+  getAllAdsAsync,
+  setSelectedAd,
+} from "../SLICES/adSlice";
 import { getAllChatsByProfileAsync } from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { Ad, AdminUserSession } from "../types";
@@ -38,7 +42,7 @@ const DashboardPage: React.FC = () => {
   useEffect(() => {
     dispatch(getAllAdsAsync());
   }, []);
-  
+
   useEffect(() => {
     if (user && user.shareLocation == true) {
       dispatch(getAdsByLocationAsync(user.city));
