@@ -36,6 +36,10 @@ const DashboardPage: React.FC = () => {
   const [unreadMessages, setUnreadMessages] = useState(0);
 
   useEffect(() => {
+    dispatch(getAllAdsAsync());
+  }, []);
+  
+  useEffect(() => {
     if (user && user.shareLocation == true) {
       dispatch(getAdsByLocationAsync(user.city));
     }
