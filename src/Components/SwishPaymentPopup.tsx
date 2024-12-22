@@ -86,6 +86,9 @@ const SwishPaymentPopup: React.FC<SwishPaymentProps> = ({
             justifyContent: "center",
           }}
         >
+          <Typography variant="body1" sx={{ mb: 2, fontSize: "2rem" }}>
+            99 kr
+          </Typography>
           <Typography variant="body1" sx={{ mb: 2, fontSize: "1rem" }}>
             Skanna QR-koden med Swish-appen för att betala. Fyll i det nummer du
             använder för att swisha här nedan.

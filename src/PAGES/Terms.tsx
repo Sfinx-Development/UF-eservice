@@ -75,11 +75,11 @@ export default function Terms() {
       </Rubrik>
       <Text sx={{ marginBottom: 2 }}>
         4.1 Tjänsten är kostnadsfri att använda för registrering och allmän
-        sökning, men en avgift på 29 kr tillkommer för varje enskild annons som
+        sökning men en avgift på 99 kr tillkommer för varje enskild annons som
         användaren skapar.
         <br />
-        4.2 Alla betalningar hanteras säkert via våra betalningslösningar, som
-        inkluderar Swish och kortbetalning.
+        4.2 Alla betalningar hanteras via Swish där användaren ansvarar för att
+        swisha enligt instruktioner.
       </Text>
       <Divider sx={{ width: "100%", marginBottom: "1rem" }} />
 
