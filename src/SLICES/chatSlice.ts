@@ -101,7 +101,7 @@ export const getChatByAdAndUserAsync = createAsyncThunk<
 });
 
 export const updateChatMessageAsync = createAsyncThunk<
-  void,
+  ChatMessage,
   {
     sessionId: string;
     messageId: string;
@@ -112,7 +112,12 @@ export const updateChatMessageAsync = createAsyncThunk<
   "chat/updateChatMessage",
   async ({ sessionId, messageId, updatedMessage }, thunkAPI) => {
     try {
-      await updateChatMessage(sessionId, messageId, updatedMessage);
+      const message = await updateChatMessage(
+        sessionId,
+        messageId,
+        updatedMessage
+      );
+      return message;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -120,12 +125,13 @@ export const updateChatMessageAsync = createAsyncThunk<
 );
 
 export const deleteChatMessageAsync = createAsyncThunk<
-  void,
+  string,
   { sessionId: string; messageId: string },
   { rejectValue: string }
 >("chat/deleteChatMessage", async ({ sessionId, messageId }, thunkAPI) => {
   try {
-    await deleteChatMessage(sessionId, messageId);
+    const deletedMessageId = await deleteChatMessage(sessionId, messageId);
+    return deletedMessageId;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
   }
@@ -208,7 +214,13 @@ const chatSlice = createSlice({
       .addCase(updateChatMessageAsync.pending, (state) => {
         state.loading = true;
       })
-      .addCase(updateChatMessageAsync.fulfilled, (state) => {
+      .addCase(updateChatMessageAsync.fulfilled, (state, action) => {
+        const index = state.selectedChat?.messages.findIndex(
+          (m) => m.id === action.payload.id
+        );
+        if (index !== undefined && index !== -1 && state.selectedChat) {
+          state.selectedChat.messages[index] = action.payload;
+        }
         state.loading = false;
         state.error = null;
       })
@@ -236,7 +248,12 @@ const chatSlice = createSlice({
       .addCase(deleteChatMessageAsync.pending, (state) => {
         state.loading = true;
       })
-      .addCase(deleteChatMessageAsync.fulfilled, (state) => {
+      .addCase(deleteChatMessageAsync.fulfilled, (state, action) => {
+        if (state.selectedChat) {
+          state.selectedChat.messages = state.selectedChat.messages.filter(
+            (m) => m.id !== action.payload
+          );
+        }
         state.loading = false;
         state.error = null;
       })
