@@ -1,14 +1,22 @@
+import { Delete, Edit, Send } from "@mui/icons-material";
 import {
   Box,
   Button,
   CircularProgress,
+  IconButton,
   Link,
+  TextField,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { addChatMessageAsync, getChatByIdAsync } from "../SLICES/chatSlice";
+import {
+  addChatMessageAsync,
+  deleteChatMessageAsync,
+  getChatByIdAsync,
+  updateChatMessageAsync,
+} from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { ChatMessage } from "../types";
 import { Rubrik, Text } from "./Index";
@@ -23,18 +31,27 @@ export default function Chat() {
   const [newMessage, setNewMessage] = useState("");
   const user = useAppSelector((state) => state.userSlice.user);
 
+  const [messageText, setMessageText] = useState("");
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  // Hämta den aktuella chatten vid sidladdning
   useEffect(() => {
     if (chatId) {
       dispatch(getChatByIdAsync(chatId));
     }
-  }, [chatId, dispatch]);
+  }, [chatId]);
 
-  // Hantera inskickning av nytt meddelande
   const handleSendMessage = async () => {
+    console.log(
+      "CHAT ID: ",
+      chatId,
+      "User id: ",
+      user?.id,
+      "messagE: ",
+      newMessage
+    );
     if (newMessage.trim() && chatId && user) {
       await dispatch(
         addChatMessageAsync({
@@ -50,6 +67,51 @@ export default function Chat() {
         })
       );
       setNewMessage("");
+    }
+  };
+
+  const handleUpdateMessage = () => {
+    if (editingMessageId && messageText.trim()) {
+      const message = selectedChat?.messages.find(
+        (m) => m.id == editingMessageId
+      );
+      if (message) {
+        const updatedMessage: ChatMessage = {
+          ...message,
+          message: messageText,
+          timestamp: new Date().toISOString(),
+        };
+        if (updatedMessage && selectedChat && editingMessageId) {
+          dispatch(
+            updateChatMessageAsync({
+              sessionId: selectedChat.id,
+              messageId: editingMessageId,
+              updatedMessage: updatedMessage,
+            })
+          );
+          setMessageText("");
+          setEditingMessageId(null);
+        }
+      }
+    }
+  };
+
+  const handleEditMessage = (message: ChatMessage) => {
+    const foundMessage = selectedChat?.messages.find((m) => m.id == message.id);
+    if (foundMessage) {
+      setEditingMessageId(foundMessage.id);
+      setMessageText(foundMessage.message);
+    }
+  };
+
+  const handleDeleteMessage = (messageId: string) => {
+    if (selectedChat && messageId) {
+      dispatch(
+        deleteChatMessageAsync({
+          sessionId: selectedChat.id,
+          messageId: messageId,
+        })
+      );
     }
   };
 
@@ -143,9 +205,19 @@ export default function Chat() {
                       wordBreak: "break-word",
                     }}
                   >
-                    <Text variant="body1" sx={{ color: "#510102" }}>
-                      {message.message}
-                    </Text>
+                    {editingMessageId === message.id ? (
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        value={messageText}
+                        onChange={(e) => setMessageText(e.target.value)}
+                        size="small"
+                      />
+                    ) : (
+                      <Text variant="body1" sx={{ color: "#510102" }}>
+                        {message.message}
+                      </Text>
+                    )}
                   </Box>
                   <Text
                     variant="caption"
@@ -153,6 +225,45 @@ export default function Chat() {
                   >
                     {new Date(message.timestamp).toLocaleString()}
                   </Text>
+                  {message.senderId === user?.id && (
+                    <Box>
+                      {editingMessageId === message.id ? (
+                        <>
+                          <IconButton
+                            onClick={() => handleUpdateMessage()}
+                            size="small"
+                            color="primary"
+                          >
+                            <Send fontSize="small" />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => setEditingMessageId(null)}
+                            size="small"
+                            color="secondary"
+                          >
+                            <Delete fontSize="small" />
+                          </IconButton>
+                        </>
+                      ) : (
+                        <>
+                          <IconButton
+                            onClick={() => handleEditMessage(message)}
+                            size="small"
+                            color="primary"
+                          >
+                            <Edit fontSize="small" />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => handleDeleteMessage(message.id)}
+                            size="small"
+                            color="secondary"
+                          >
+                            <Delete fontSize="small" />
+                          </IconButton>
+                        </>
+                      )}
+                    </Box>
+                  )}
                 </Box>
               ))
             ) : (

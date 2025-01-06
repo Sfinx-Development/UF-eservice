@@ -33,7 +33,7 @@ const ChatComponent: React.FC = () => {
   const admin = useAppSelector((state) => state.userSlice.admin);
   const [messageText, setMessageText] = useState("");
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(false); // För att kontrollera om chatten är öppen eller stängd
+  const [isOpen, setIsOpen] = useState(false);
   const [filteredMessages, setFilteredMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 

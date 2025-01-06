@@ -229,7 +229,9 @@ export const deleteUserWithAPI = async (): Promise<boolean> => {
               senderId: "undefined",
             };
             operations.push(() =>
-              updateChatMessage(session.id, message.id, updatedMessage)
+              updateChatMessage(session.id, message.id, updatedMessage).then(
+                () => {}
+              )
             );
           }
         });
