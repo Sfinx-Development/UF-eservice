@@ -1,3 +1,5 @@
+import { GeoPoint } from "firebase/firestore";
+
 export interface UserCreate {
   email: string;
   username: string;
@@ -8,9 +10,9 @@ export interface UserCreate {
   profileImage: string;
   role: string;
   termsAccepted: boolean;
-  city: string;
   isAdmin: boolean;
   shareLocation: boolean;
+  cityName: string;
 }
 
 export interface LogIn {
@@ -33,16 +35,23 @@ export interface Profile {
   profileImage?: string;
   desciptionImages?: string[];
   role: string;
-  city: string;
+  location?: SerializedLocation;
   isAdmin: boolean;
   shareLocation: boolean;
+  cityName: string;
+}
+
+export interface SerializedLocation {
+  latitude: number;
+  longitude: number;
 }
 
 export interface Ad {
   id: string;
   title: string;
   description: string;
-  location: string;
+  location?: SerializedLocation;
+  cityName: string;
   numberOfHives?: string;
   crops?: string;
   areaSize?: string;
@@ -52,6 +61,38 @@ export interface Ad {
   isReviewed?: boolean;
   isPublic?: boolean;
   swishNumber?: string;
+}
+
+export interface AdWithGeoPoint {
+  id: string;
+  title: string;
+  description: string;
+  location?: GeoPoint;
+  cityName: string;
+  numberOfHives?: string;
+  crops?: string;
+  areaSize?: string;
+  spraying?: string;
+  fertilization?: string;
+  profileId: string;
+  isReviewed?: boolean;
+  isPublic?: boolean;
+  swishNumber?: string;
+}
+
+export interface ProfileWithGeoPoint {
+  id: string;
+  email: string;
+  userId: string;
+  username: string;
+  profileDescription?: string;
+  profileImage?: string;
+  desciptionImages?: string[];
+  role: string;
+  location?: GeoPoint;
+  isAdmin: boolean;
+  shareLocation: boolean;
+  cityName: string;
 }
 
 //AD CHAT

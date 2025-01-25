@@ -35,11 +35,12 @@ export default function AdminChatList() {
     navigate(`/support-chat/${chatId}`);
   };
 
-  const sortedChatSessions = [...adminChatSessions].sort((a, b) => {
-    return (
-      new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
-    );
-  });
+  const sortedChatSessions = [...adminChatSessions]
+    .filter((session) => session.messages && session.messages.length > 0) // ✅ Filtrerar bort sessioner utan meddelanden
+    .sort(
+      (a, b) =>
+        new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
+    ); // ✅ Sorterar efter senaste aktivitet
 
   return (
     <Box

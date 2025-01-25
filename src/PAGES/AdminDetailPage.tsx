@@ -82,7 +82,7 @@ const AdminAdDetailPage: React.FC = () => {
               Swishnummer: {selectedAd.swishNumber}
             </Text>
             <Text variant="h6" sx={{ color: "#510102" }}>
-              Plats: {selectedAd.location}
+              Plats: {selectedAd.cityName}
             </Text>
             <Link
               href={`profile/${selectedAd.profileId}`}

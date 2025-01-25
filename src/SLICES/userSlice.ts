@@ -143,7 +143,6 @@ export const updateUserPresentationAsync = createAsyncThunk<
   }
 });
 
-// // Delete user
 export const deleteUserAsync = createAsyncThunk<
   boolean,
   void,
@@ -162,11 +161,10 @@ export const deleteUserAsync = createAsyncThunk<
   }
 });
 
-// Log in user
 export const logInUserAsync = createAsyncThunk<
-  Profile, // Returnerar en användare vid lyckad inloggning
-  LogIn, // Input-typ för inloggningsuppgifter (LogIn)
-  { rejectValue: string } // Typ för felhantering (rejectValue)
+  Profile,
+  LogIn,
+  { rejectValue: string }
 >("user/logInUser", async (login, thunkAPI) => {
   try {
     const userCredential = await signInWithAPI(login);

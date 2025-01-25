@@ -5,6 +5,7 @@ import { adReducer } from "./adSlice";
 import { chatReducer } from "./chatSlice";
 import { messageReducer } from "./messageSlice";
 import { userReducer } from "./userSlice";
+import { geocodingReducer } from "./geocodeSlice";
 // import localStorageMiddleware from "../middleware/localstorageMiddleware";
 
 const store = configureStore({
@@ -14,6 +15,7 @@ const store = configureStore({
     chatSlice: chatReducer,
     messageSlice: messageReducer,
     adminChatSlice: adminChatReducer,
+    geocodingSlice: geocodingReducer,
   },
   //   middleware: (getDefaultMiddleware) =>
   //     getDefaultMiddleware().concat(localStorageMiddleware),

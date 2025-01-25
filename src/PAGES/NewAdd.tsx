@@ -21,11 +21,10 @@ const NewAdPage: React.FC = () => {
   const user = useAppSelector((state) => state.userSlice.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
   const [formValues, setFormValues] = useState({
     title: "",
     description: "",
-    location: "",
+    cityName: "",
     numberOfHives: "",
     crops: "",
     areaSize: "",
@@ -35,7 +34,7 @@ const NewAdPage: React.FC = () => {
 
   const [errors, setErrors] = useState({
     title: false,
-    location: false,
+    cityName: false,
     numberOfHives: false,
     areaSize: false,
     crops: false,
@@ -55,7 +54,7 @@ const NewAdPage: React.FC = () => {
   const handleOpenModal = () => {
     const newErrors = {
       title: false,
-      location: false,
+      cityName: false,
       numberOfHives: false,
       areaSize: false,
       crops: false,
@@ -67,8 +66,8 @@ const NewAdPage: React.FC = () => {
       newErrors.title = true;
       hasErrors = true;
     }
-    if (!formValues.location) {
-      newErrors.location = true;
+    if (!formValues.cityName) {
+      newErrors.cityName = true;
       hasErrors = true;
     }
 
@@ -95,6 +94,10 @@ const NewAdPage: React.FC = () => {
     }
   };
 
+  // useEffect(() => {
+  //  dispatch(getCoordinatesAsync(formValues.location));
+  // },[formValues.location])
+
   const handleSubmit = (e: React.FormEvent, swishNumber: string) => {
     e.preventDefault();
 
@@ -107,6 +110,7 @@ const NewAdPage: React.FC = () => {
         isPublic: false,
         swishNumber: swishNumber,
       };
+
       dispatch(addAdAsync(ad));
 
       // Show success message
@@ -201,13 +205,13 @@ const NewAdPage: React.FC = () => {
           fullWidth
         />
         <RedBorderTextfield
-          label="Plats"
-          name="location"
-          value={formValues.location}
+          label="Stad"
+          name="cityName"
+          value={formValues.cityName}
           onChange={handleChange}
           required
-          error={errors.location}
-          helperText={errors.location ? "Plats är obligatorisk" : ""}
+          error={errors.cityName}
+          helperText={errors.cityName ? "Plats är obligatorisk" : ""}
           fullWidth
         />
 

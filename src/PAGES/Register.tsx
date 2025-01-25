@@ -67,7 +67,7 @@ export default function RegisterPage() {
     role: "",
     termsAccepted: false,
     shareLocation: false,
-    city: "",
+    cityName: "",
     isAdmin: false,
     profileImage: "",
   });
@@ -123,7 +123,7 @@ export default function RegisterPage() {
       newErrors.termsAccepted = true;
       hasErrors = true;
     }
-    if (!formValues.city.trim()) {
+    if (!formValues.cityName.trim()) {
       newErrors.city = true;
       hasErrors = true;
     }
@@ -237,8 +237,8 @@ export default function RegisterPage() {
         />
         <RedBorderTextfield
           label="Stad"
-          name="city"
-          value={formValues.city}
+          name="cityName"
+          value={formValues.cityName}
           onChange={handleChange}
           required
           fullWidth
