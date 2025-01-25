@@ -11,10 +11,10 @@ import {
   getUnReviewedAds,
   updateAdInDB,
 } from "../API/adds";
-import { Ad } from "../types";
+import { Ad, SerializedLocation } from "../types";
 
 export interface AdState {
-  ads: Ad[];
+  ads: Ad[] | [];
   selectedAd: Ad | null;
   adsByLocation: Ad[] | null;
   unreviewedAds: Ad[] | null;
@@ -35,27 +35,63 @@ const loadSelectedAdFromLocalStorage = (): Ad | null => {
   }
 };
 
+const loadAdsFromLocalstorage = (): Ad[] | null => {
+  try {
+    const ads = localStorage.getItem("ads");
+    if (ads === null) {
+      return null;
+    }
+    return JSON.parse(ads);
+  } catch (error) {
+    console.error("Fel vid laddning av ads från localStorage:", error);
+    return null;
+  }
+};
+
+const loadAdsByLocationFromLocalstorage = (): Ad[] | null => {
+  try {
+    const serializedAds = localStorage.getItem("adsByLocation");
+    if (serializedAds === null) {
+      return null;
+    }
+    return JSON.parse(serializedAds);
+  } catch (error) {
+    console.error("Fel vid laddning av ads från localStorage:", error);
+    return null;
+  }
+};
+
 const initialState: AdState = {
-  ads: [],
+  ads: loadAdsFromLocalstorage() || [],
   selectedAd: loadSelectedAdFromLocalStorage(),
-  adsByLocation: null,
+  adsByLocation: loadAdsByLocationFromLocalstorage(),
   unreviewedAds: null,
   error: null,
   loading: false,
 };
+
+export interface AddAdPayload {
+  ad: Ad;
+  city: string;
+}
 
 export const addAdAsync = createAsyncThunk<Ad, Ad, { rejectValue: string }>(
   "ads/addAd",
   async (ad, thunkAPI) => {
     try {
       const addedAd = await addAdToDB(ad);
-      return addedAd;
+      if (addedAd) {
+        return addedAd;
+      } else {
+        throw new Error("Något gick fel vid tillägg av annons.");
+      }
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue(
+        error.message || "Ett okänt fel uppstod."
+      );
     }
   }
 );
-
 export const getAdAsync = createAsyncThunk<
   Ad | null,
   string,
@@ -76,6 +112,7 @@ export const getAllAdsAsync = createAsyncThunk<
 >("ads/getAllAds", async (_, thunkAPI) => {
   try {
     const ads = await getAllAds();
+    localStorage.setItem("ads", JSON.stringify(ads));
     return ads;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
@@ -84,11 +121,26 @@ export const getAllAdsAsync = createAsyncThunk<
 
 export const getAdsByLocationAsync = createAsyncThunk<
   Ad[] | null,
-  string,
+  SerializedLocation,
   { rejectValue: string }
->("ads/getAdsByLocation", async (city, thunkAPI) => {
+>("ads/getAdsByLocation", async (location, thunkAPI) => {
   try {
-    const ads = await getAdsByPlace(city);
+    const ads = await getAdsByPlace(location);
+    localStorage.setItem("adsByLocation", JSON.stringify(ads));
+    return ads;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const getAdsByRadiusAsync = createAsyncThunk<
+  Ad[] | null,
+  SerializedLocation,
+  { rejectValue: string }
+>("ads/getAdsByLocation", async (location, thunkAPI) => {
+  try {
+    const ads = await getAdsByPlace(location);
+    localStorage.setItem("adsByLocation", JSON.stringify(ads));
     return ads;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
@@ -115,7 +167,8 @@ export const updateAdAsync = createAsyncThunk<
 >("ads/updateAd", async ({ adId, updates }, thunkAPI) => {
   try {
     const updatedAd = await updateAdInDB(adId, updates);
-    return updatedAd;
+    if (updatedAd) return updatedAd;
+    else throw new Error("Something went wrong");
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
   }
@@ -164,7 +217,11 @@ const adSlice = createSlice({
       })
       .addCase(addAdAsync.fulfilled, (state, action) => {
         state.loading = false;
-        state.ads.push(action.payload);
+        if (action.payload) {
+          state.ads = [...state.ads, action.payload as Ad];
+        } else {
+          console.error("🚨 `action.payload` är null eller undefined!");
+        }
         state.error = null;
       })
       .addCase(addAdAsync.rejected, (state, action) => {

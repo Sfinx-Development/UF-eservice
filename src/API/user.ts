@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 import {
   createUserWithEmailAndPassword,
   deleteUser,
@@ -11,20 +12,26 @@ import {
   collection,
   deleteDoc,
   doc,
+  GeoPoint,
   getDoc,
   getDocs,
   query,
   updateDoc,
   where,
 } from "firebase/firestore";
-import { ChatMessage, Profile, UserCreate } from "../types";
+import {
+  ChatMessage,
+  Profile,
+  ProfileWithGeoPoint,
+  UserCreate,
+} from "../types";
 import { deleteAdInDB, getAdsByUserId } from "./adds";
 import { getAllChatSessionsByProfile, updateChatMessage } from "./chat";
 import { auth, db } from "./config";
+import { getCoordinates } from "./geocodes";
 import { deleteMessageInDB, getMessagesByUserId } from "./messages";
 
 export const getUserByUserId = async (userId: string) => {
-  // eslint-disable-next-line no-useless-catch
   try {
     const userCollectionRef = collection(db, "profiles");
     const userQuery = query(userCollectionRef, where("userId", "==", userId));
@@ -36,6 +43,15 @@ export const getUserByUserId = async (userId: string) => {
     }
 
     const userData = querySnapshot.docs[0].data() as Profile;
+
+    // 🔄 Konvertera GeoPoint till serialiserbar format
+    if (userData.location) {
+      userData.location = {
+        latitude: userData.location.latitude,
+        longitude: userData.location.longitude,
+      };
+    }
+
     return userData;
   } catch (error) {
     throw error;
@@ -43,7 +59,6 @@ export const getUserByUserId = async (userId: string) => {
 };
 
 export const getProfileByProfileId = async (profileId: string) => {
-  // eslint-disable-next-line no-useless-catch
   try {
     const userCollectionRef = collection(db, "profiles");
     const userQuery = query(userCollectionRef, where("id", "==", profileId));
@@ -54,6 +69,15 @@ export const getProfileByProfileId = async (profileId: string) => {
     }
 
     const userData = querySnapshot.docs[0].data() as Profile;
+
+    // 🔄 Konvertera GeoPoint till serialiserbar format
+    if (userData.location) {
+      userData.location = {
+        latitude: userData.location.latitude,
+        longitude: userData.location.longitude,
+      };
+    }
+
     return userData;
   } catch (error) {
     throw error;
@@ -76,31 +100,53 @@ export const getAdminByUserId = async (profileId: string) => {
     }
 
     const userData = querySnapshot.docs[0].data() as Profile;
+
+    // 🔄 Konvertera GeoPoint till serialiserbar format
+    if (userData.location) {
+      userData.location = {
+        latitude: userData.location.latitude,
+        longitude: userData.location.longitude,
+      };
+    }
     return userData;
   } catch (error) {
     throw error;
   }
 };
 
-export const addProfileToDB = async (profile: Profile) => {
-  const profileCollectionRef = collection(db, "profiles");
-
-  // eslint-disable-next-line no-useless-catch
+export const addProfileToDB = async (
+  profile: Profile
+): Promise<Profile | void> => {
   try {
-    const docRef = await addDoc(profileCollectionRef, {});
+    const coordinates = await getCoordinates(profile.cityName);
+    if (!coordinates) {
+      throw new Error("Kunde inte hämta koordinater för staden.");
+    }
+    const profileCollectionRef = collection(db, "profiles");
 
+    const profileWithGeoPoint: ProfileWithGeoPoint = {
+      ...profile,
+      location: new GeoPoint(coordinates.latitude, coordinates.longitude),
+    };
+    const docRef = await addDoc(profileCollectionRef, profileWithGeoPoint);
     profile.id = docRef.id;
 
-    await updateDoc(docRef, profile as Partial<Profile>);
+    await updateDoc(docRef, { id: docRef.id });
 
-    const profileDoc = await getDoc(docRef);
-    if (profileDoc.exists()) {
-      const profileData = profileDoc.data();
-      return profileData as Profile;
-    } else {
-      return null;
-    }
+    const newProfile = await getDoc(docRef);
+    return {
+      ...newProfile.data(),
+      id: docRef.id,
+      location:
+        newProfile.data()?.location instanceof GeoPoint
+          ? {
+              latitude: newProfile.data()?.location.latitude,
+              longitude: newProfile.data()?.location.longitude,
+            }
+          : null,
+    } as Profile;
   } catch (error) {
+    console.error("Error adding ad:", error);
     throw error;
   }
 };
@@ -112,12 +158,28 @@ export const updateProfileInDB = async (
   const profileDocRef = doc(db, "profiles", id);
 
   try {
+    if (updates.location) {
+      updates.location = new GeoPoint(
+        updates.location.latitude,
+        updates.location.longitude
+      );
+    }
+
     await updateDoc(profileDocRef, updates);
 
     const profileDoc = await getDoc(profileDocRef);
     if (profileDoc.exists()) {
       const profileData = profileDoc.data();
-      return profileData as Profile; // Returnera uppdaterad profil
+
+      return {
+        ...profileData,
+        location: profileData.location
+          ? {
+              latitude: profileData.location._lat,
+              longitude: profileData.location._long,
+            }
+          : undefined,
+      } as Profile;
     } else {
       throw new Error("Profile not found.");
     }
@@ -128,9 +190,21 @@ export const updateProfileInDB = async (
 };
 
 // Registrera ny användare
+const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB
+
 export const registerUserWithAPI = async (newUser: UserCreate) => {
   try {
-    // Försök att skapa en användare med e-post och lösenord
+    const coordinates = await getCoordinates(newUser.cityName);
+    if (!coordinates) {
+      throw new Error("Kunde inte hämta koordinater för staden.");
+    }
+
+    // 🚨 Kolla bildstorleken (om profilbild finns)
+    if (newUser.profileImage && newUser.profileImage.length > MAX_IMAGE_SIZE) {
+      throw new Error("Profilbilden är för stor. Maxgräns är 2MB.");
+    }
+
+    // ✅ Skapa användaren i Firebase Authentication
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       newUser.email,
@@ -138,31 +212,44 @@ export const registerUserWithAPI = async (newUser: UserCreate) => {
     );
 
     if (userCredential) {
-      // Skapa en profil om användaren skapades framgångsrikt
-      const profileToAdd: Profile = {
+      const profileToAdd: ProfileWithGeoPoint = {
         id: "undefined",
         email: newUser.email.toLowerCase(),
         userId: userCredential.user.uid,
         username: newUser.username,
         profileDescription: newUser.profileDescription || "",
         role: newUser.role,
-        city: newUser.city,
         isAdmin: newUser.isAdmin,
         shareLocation: newUser.shareLocation,
         profileImage: newUser.profileImage,
+        cityName: newUser.cityName,
+        location: new GeoPoint(coordinates.latitude, coordinates.longitude),
       };
 
+      // ✅ Lägg till profilen i Firestore
       const profile = await addProfileToDB(profileToAdd);
       return profile;
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
+    console.error("🔥 Fel vid registrering:", error);
+
+    // 🚨 Om användaren redan har skapats men profilskapandet misslyckas → Radera användaren från Firebase Authentication
+    if (auth.currentUser) {
+      await auth.currentUser.delete();
+      console.error(
+        "🚨 Användaren togs bort eftersom registreringen misslyckades."
+      );
+    }
+
     if (error.code === "auth/email-already-in-use") {
       throw new Error("E-postadressen används redan av en annan användare.");
     } else if (error.code === "auth/invalid-email") {
       throw new Error("E-postadressen är inte giltig.");
     } else if (error.code === "auth/weak-password") {
       throw new Error("Lösenordet är för svagt.");
+    } else if (error.message.includes("Profilbilden är för stor")) {
+      throw new Error(error.message);
     } else {
       throw new Error("Ett oväntat fel inträffade. Försök igen.");
     }

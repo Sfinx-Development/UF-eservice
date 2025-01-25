@@ -49,7 +49,7 @@ const AdminAdListPage: React.FC = () => {
                     {ad.title}
                   </Text>
                   <Text sx={{ marginBottom: "1rem", color: "#fffaeb" }}>
-                    {ad.location}
+                    {ad.cityName}
                   </Text>
                   <Text variant="body2" sx={{ color: "#fffaeb" }}>
                     {ad.description}

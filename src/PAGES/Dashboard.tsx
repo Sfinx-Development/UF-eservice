@@ -44,8 +44,8 @@ const DashboardPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (user && user.shareLocation == true) {
-      dispatch(getAdsByLocationAsync(user.city));
+    if (user && user.shareLocation == true && user.location) {
+      dispatch(getAdsByLocationAsync(user.location));
     }
   }, [user]);
 
@@ -264,7 +264,7 @@ const DashboardPage: React.FC = () => {
                     </Text>
                   )}
                   <Text variant="body2" sx={{ color: "#510102" }}>
-                    Plats: {ad.location || "Ingen plats angiven"}
+                    Plats: {ad.cityName || "Ingen plats angiven"}
                   </Text>
                 </CardContent>
                 <CardActions>

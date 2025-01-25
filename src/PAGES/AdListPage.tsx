@@ -9,12 +9,15 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Slider,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllAdsAsync, setSelectedAd } from "../SLICES/adSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import { Ad } from "../types";
+import { getDistanceFromLatLonInKm } from "../utils";
 import { Rubrik, Text } from "./Index";
 import { RedBorderTextfield } from "./Register";
 
@@ -24,17 +27,21 @@ const AdListPage: React.FC = () => {
   const ads = useAppSelector((state) => state.adSlice.ads);
   const error = useAppSelector((state) => state.adSlice.error);
   const loading = useAppSelector((state) => state.adSlice.loading);
-
+  const user = useAppSelector((state) => state.userSlice.user);
   const [filteredAds, setFilteredAds] = useState<Ad[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
+  // const [locationFilter, setLocationFilter] = useState("");
   const [adTypeFilter, setAdTypeFilter] = useState("");
+  const [radiusFilter, setRadiusFilter] = useState<number>(3);
 
   useEffect(() => {
     dispatch(getAllAdsAsync());
   }, []);
 
   useEffect(() => {
+    if (!user || !user.location) return;
+    console.log("Användarens position:", user.location);
+    console.log("Antal annonser:", ads.length);
     let filtered: Ad[] = ads;
 
     if (searchTerm) {
@@ -45,20 +52,27 @@ const AdListPage: React.FC = () => {
       );
     }
 
-    if (locationFilter) {
-      filtered = filtered.filter((ad) =>
-        ad.location.toLowerCase().includes(locationFilter.toLowerCase())
-      );
-    }
-
     if (adTypeFilter) {
       filtered = filtered.filter((ad) =>
         adTypeFilter === "bikupor" ? ad.numberOfHives : ad.areaSize
       );
     }
 
+    filtered = filtered.filter((ad) => {
+      if (ad.location?.latitude && ad.location?.longitude && user.location) {
+        const distance = getDistanceFromLatLonInKm(
+          user.location.latitude,
+          user.location.longitude,
+          ad.location.latitude,
+          ad.location.longitude
+        );
+        return distance <= radiusFilter;
+      }
+      return false;
+    });
+    console.log("✅ Antal annonser efter filtrering:", filtered.length);
     setFilteredAds(filtered);
-  }, [searchTerm, locationFilter, adTypeFilter, ads]);
+  }, [searchTerm, adTypeFilter, radiusFilter, ads, user]);
 
   const handleNavigateToAd = (ad: Ad) => {
     dispatch(setSelectedAd(ad));
@@ -69,15 +83,16 @@ const AdListPage: React.FC = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handleLocationFilterChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setLocationFilter(e.target.value);
-  };
+  // const handleLocationFilterChange = (
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setLocationFilter(e.target.value);
+  // };
 
   const handleAdTypeFilterChange = (event: SelectChangeEvent<string>) => {
     setAdTypeFilter(event.target.value as string);
   };
+  const valuetext = (value: number) => `${value} km`;
 
   return (
     <Box
@@ -114,13 +129,45 @@ const AdListPage: React.FC = () => {
           fullWidth
         />
 
-        <RedBorderTextfield
+        {/* <RedBorderTextfield
           label="Filtrera på plats"
           variant="outlined"
           value={locationFilter}
           onChange={handleLocationFilterChange}
           fullWidth
-        />
+        /> */}
+
+        <FormControl
+          sx={{
+            width: "100%",
+            padding: "1rem",
+          }}
+        >
+          <Typography gutterBottom>
+            Filtrera efter avstånd: {radiusFilter} km
+          </Typography>
+          <Slider
+            value={radiusFilter}
+            onChange={(e, newValue) => setRadiusFilter(newValue as number)}
+            min={1}
+            max={100} // Upp till 100 km
+            step={1} // Ökar i steg om 1 km
+            valueLabelDisplay="auto"
+            getAriaValueText={valuetext}
+            sx={{
+              color: "#510102",
+              "& .MuiSlider-thumb": {
+                backgroundColor: "#510102",
+              },
+              "& .MuiSlider-track": {
+                backgroundColor: "#510102",
+              },
+              "& .MuiSlider-rail": {
+                backgroundColor: "#ccc",
+              },
+            }}
+          />
+        </FormControl>
 
         <FormControl
           sx={{
@@ -171,7 +218,7 @@ const AdListPage: React.FC = () => {
                     {ad.title}
                   </Text>
                   <Text sx={{ marginBottom: "1rem", color: "#fffaeb" }}>
-                    {ad.location}
+                    {ad.cityName}
                   </Text>
                   <Text variant="body2" sx={{ color: "#fffaeb" }}>
                     {ad.description}

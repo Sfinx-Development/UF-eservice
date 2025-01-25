@@ -53,7 +53,7 @@ export default function ProfilePage() {
     } else {
       // Annars använd den inloggade användarens data
       setName(user?.username || "");
-      setCity(user?.city || "");
+      setCity(user?.cityName || "");
       setRole(user?.role || "");
       setDesc(user?.profileDescription || "");
     }
@@ -100,7 +100,7 @@ export default function ProfilePage() {
       const updatedProfile: Profile = {
         ...user,
         username: name,
-        city: city,
+        cityName: city,
         role: role,
         profileDescription: desc,
         shareLocation: shareLoc,
@@ -216,7 +216,7 @@ export default function ProfilePage() {
             {currentProfile?.role}
           </Text>
           <Text sx={{ fontSize: 18, color: "#510102" }}>
-            {currentProfile?.city}
+            {currentProfile?.cityName}
           </Text>
         </Box>
       </Box>
