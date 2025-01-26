@@ -148,7 +148,7 @@ const AdListPage: React.FC = () => {
           </Typography>
           <Slider
             value={radiusFilter}
-            onChange={(e, newValue) => setRadiusFilter(newValue as number)}
+            onChange={(_e, newValue) => setRadiusFilter(newValue as number)}
             min={1}
             max={100} // Upp till 100 km
             step={1} // Ökar i steg om 1 km
