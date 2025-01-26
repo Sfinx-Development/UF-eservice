@@ -74,7 +74,7 @@ const geocodingSlice = createSlice({
         state.coordinates = action.payload;
         state.error = null;
       })
-      .addCase(getCoordinatesAsync.rejected, (state, action) => {
+      .addCase(getCoordinatesAsync.rejected, (state, _action) => {
         state.loading = false;
         state.error = "Ett fel inträffade vid hämtandet av koordinater.";
       })
@@ -86,7 +86,7 @@ const geocodingSlice = createSlice({
         state.city = action.payload;
         state.error = null;
       })
-      .addCase(getCityFromCoordinatesAsync.rejected, (state, action) => {
+      .addCase(getCityFromCoordinatesAsync.rejected, (state, _action) => {
         state.loading = false;
         state.error = "Ett fel inträffade vid hämtandet av staden.";
       });
