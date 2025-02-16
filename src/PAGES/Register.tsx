@@ -269,7 +269,7 @@ export default function RegisterPage() {
                   },
                 }}
               >
-                Roll
+                Jag är
               </FormLabel>
               <RadioGroup
                 name="role"

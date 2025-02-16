@@ -60,7 +60,13 @@ const RootLayout = () => {
               maxHeight: "100%",
               cursor: "pointer",
             }}
-            onClick={() => navigate("/")}
+            onClick={() =>
+              user
+                ? navigate("/dashboard")
+                : admin
+                ? navigate("admin-dashboard")
+                : navigate("/")
+            }
           />
 
           {/* Användarens navigeringsalternativ */}
@@ -203,7 +209,7 @@ const RootLayout = () => {
                 marginBottom: "0.5rem",
               }}
             >
-              BeeZmart UF
+              BEEZMART UF
             </Rubrik>
             <Text
               variant="body2"
@@ -252,7 +258,9 @@ const RootLayout = () => {
                   "&:hover": { textDecoration: "underline" },
                 }}
               >
-                <Text>Dashboard</Text>
+                <Text variant="body2" sx={{ color: "#fffaeb" }}>
+                  Dashboard
+                </Text>
               </Link>
               <Link
                 href="/privacy-policy"
@@ -263,7 +271,9 @@ const RootLayout = () => {
                   "&:hover": { textDecoration: "underline" },
                 }}
               >
-                <Text>Integritetspolicy</Text>
+                <Text variant="body2" sx={{ color: "#fffaeb" }}>
+                  Integritetspolicy
+                </Text>
               </Link>
               <Link
                 href="/terms"
@@ -274,7 +284,9 @@ const RootLayout = () => {
                   "&:hover": { textDecoration: "underline" },
                 }}
               >
-                <Text>Användarvillkor</Text>
+                <Text variant="body2" sx={{ color: "#fffaeb" }}>
+                  Användarvillkor
+                </Text>
               </Link>
               <Link
                 href="/admin-login"
@@ -285,7 +297,9 @@ const RootLayout = () => {
                   "&:hover": { textDecoration: "underline" },
                 }}
               >
-                <Text>Administration</Text>
+                <Text variant="body2" sx={{ color: "#fffaeb" }}>
+                  Administration
+                </Text>
               </Link>
             </Box>
           </Box>
@@ -314,7 +328,9 @@ const RootLayout = () => {
                 "&:hover": { textDecoration: "underline" },
               }}
             >
-              <Text>Zeroett AB</Text>
+              <Text variant="body2" sx={{ color: "#fffaeb" }}>
+                Zeroett AB
+              </Text>
             </Link>
             <Text
               variant="body2"
@@ -324,7 +340,7 @@ const RootLayout = () => {
                 fontSize: "0.85rem",
               }}
             >
-              BeeZmart UF utvecklades med stöd från Zeroett AB.
+              BEEZMART UF utvecklades med stöd från Zeroett AB.
             </Text>
           </Box>
         </Box>
@@ -339,7 +355,7 @@ const RootLayout = () => {
           }}
         >
           <Text variant="body2" sx={{ fontSize: "0.8rem", color: "#fffaeb" }}>
-            © 2024 BeeZmart UF. Alla rättigheter förbehållna.
+            © 2024 BEEZMART UF. Alla rättigheter förbehållna.
           </Text>
         </Box>
       </footer>

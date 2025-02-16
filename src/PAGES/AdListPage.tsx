@@ -199,7 +199,7 @@ const AdListPage: React.FC = () => {
           >
             <MenuItem value="">Alla</MenuItem>
             <MenuItem value="bikupor">Bikupor</MenuItem>
-            <MenuItem value="mark">Markägare</MenuItem>
+            <MenuItem value="mark">Mark</MenuItem>
           </Select>
         </FormControl>
       </Box>
