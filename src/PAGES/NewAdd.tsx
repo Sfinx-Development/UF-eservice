@@ -163,7 +163,7 @@ const NewAdPage: React.FC = () => {
         <Rubrik
           variant="h4"
           gutterBottom
-          sx={{ color: "#510102", textAlign: "center" }}
+          sx={{ color: "#fffaeb", textAlign: "center" }}
         >
           {user?.role === "biodlare"
             ? "Skapa annons - Ställa ut bikupor"
