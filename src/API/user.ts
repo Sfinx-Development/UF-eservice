@@ -27,14 +27,10 @@ import {
 } from "../types";
 import { deleteAdInDB, getAdsByUserId } from "./adds";
 import {
-  deleteAdminChatMessage,
   getAdminChatSessionByProfile,
+  updateAdminChatMessage,
 } from "./adminChat";
-import {
-  deleteChatMessage,
-  getAllChatSessionsByProfile,
-  updateChatMessage,
-} from "./chat";
+import { getAllChatSessionsByProfile, updateChatMessage } from "./chat";
 import { auth, db } from "./config";
 import { getCoordinates } from "./geocodes";
 import { deleteMessageInDB, getMessagesByUserId } from "./messages";
@@ -303,19 +299,31 @@ export const deleteUserWithAPI = async (): Promise<boolean> => {
       });
     }
     const adminChats = await getAdminChatSessionByProfile(profile.id);
-    if (adminChats) {
+    if (adminChats && adminChats?.messages.length > 0) {
       adminChats.messages.forEach((m) => {
-        operations.push(() => deleteAdminChatMessage(adminChats.id, m.id));
+        if (m.senderId === profile.id) {
+          const updatedMessage: ChatMessage = {
+            ...m,
+            senderName: "Borttagen användare",
+            senderId: "undefined",
+          };
+          operations.push(() =>
+            updateAdminChatMessage(adminChats.id, m.id, updatedMessage).then(
+              () => {}
+            )
+          );
+        }
       });
     }
-    const chats = await getAllChatSessionsByProfile(profile.id);
-    if (chats) {
-      for (const m of chats) {
-        for (const c of m.messages) {
-          await deleteChatMessage(m.id, c.id);
-        }
-      }
-    }
+
+    // const chats = await getAllChatSessionsByProfile(profile.id);
+    // if (chats) {
+    //   for (const m of chats) {
+    //     for (const c of m.messages) {
+    //       await deleteChatMessage(m.id, c.id);
+    //     }
+    //   }
+    // }
     const commonMessages = await getMessagesByUserId(profile.id);
     if (commonMessages) {
       commonMessages.forEach((message) => {
