@@ -26,7 +26,15 @@ import {
   UserCreate,
 } from "../types";
 import { deleteAdInDB, getAdsByUserId } from "./adds";
-import { getAllChatSessionsByProfile, updateChatMessage } from "./chat";
+import {
+  deleteAdminChatMessage,
+  getAdminChatSessionByProfile,
+} from "./adminChat";
+import {
+  deleteChatMessage,
+  getAllChatSessionsByProfile,
+  updateChatMessage,
+} from "./chat";
 import { auth, db } from "./config";
 import { getCoordinates } from "./geocodes";
 import { deleteMessageInDB, getMessagesByUserId } from "./messages";
@@ -294,6 +302,20 @@ export const deleteUserWithAPI = async (): Promise<boolean> => {
         operations.push(() => deleteAdInDB(ad.id));
       });
     }
+    const adminChats = await getAdminChatSessionByProfile(profile.id);
+    if (adminChats) {
+      adminChats.messages.forEach((m) => {
+        operations.push(() => deleteAdminChatMessage(adminChats.id, m.id));
+      });
+    }
+    const chats = await getAllChatSessionsByProfile(profile.id);
+    if (chats) {
+      for (const m of chats) {
+        for (const c of m.messages) {
+          await deleteChatMessage(m.id, c.id);
+        }
+      }
+    }
     const commonMessages = await getMessagesByUserId(profile.id);
     if (commonMessages) {
       commonMessages.forEach((message) => {
@@ -305,7 +327,6 @@ export const deleteUserWithAPI = async (): Promise<boolean> => {
       (session) =>
         session.senderId === profile.id || session.receiverId === profile.id
     );
-
     if (sessionsByProfile.length > 0) {
       sessionsByProfile.forEach((session) => {
         session.messages.forEach((message) => {
