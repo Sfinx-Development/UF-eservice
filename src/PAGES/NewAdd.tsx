@@ -42,6 +42,13 @@ const NewAdPage: React.FC = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [adType, setAdType] = useState(
+    user?.role === "båda" ? "markägare" : user?.role
+  );
+
+  const toggleAdType = () => {
+    setAdType(adType === "biodlare" ? "markägare" : "biodlare");
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -143,29 +150,66 @@ const NewAdPage: React.FC = () => {
       <Box
         sx={{
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          width: "100%",
+          position: "relative",
+          paddingX: { xs: 2, md: 5 },
         }}
       >
+        {/* 🔁 Ändra-knapp (endast för 'båda') */}
+        {user?.role === "båda" && (
+          <Button
+            variant="contained"
+            onClick={toggleAdType}
+            sx={{
+              position: "absolute",
+              top: 10,
+              backgroundColor: "#fffaeb",
+              color: "#000",
+              fontWeight: 600,
+              paddingX: 2,
+              paddingY: 1,
+              borderRadius: 3,
+              boxShadow: 2,
+              "&:hover": { backgroundColor: "#f5e5c0" },
+            }}
+          >
+            <Text sx={{ color: "#510102" }}>
+              {" "}
+              Ändra till:{" "}
+              {adType === "biodlare"
+                ? "Söka efter bikupor"
+                : "Ställa ut bikupor"}
+            </Text>
+          </Button>
+        )}
+
+        {/* 🔙 Tillbaka-knapp */}
         <IconButton
           onClick={() => navigate("/dashboard")}
           sx={{
-            display: { xs: "none", md: "flex" },
-            alignItems: "center",
-            textAlign: { xs: "start", md: "center" },
-            justifyContent: "center",
             position: "absolute",
-            left: { xs: 10, md: 50 },
+            left: { xs: 10, md: 20 },
+            backgroundColor: "transparent",
+            "&:hover": { backgroundColor: "rgba(255,255,255,0.1)" },
           }}
         >
-          <ArrowBackIcon sx={{ color: "#510102", marginBottom: 0.5 }} />
+          <ArrowBackIcon sx={{ color: "#fffaeb", fontSize: 28 }} />
         </IconButton>
+
+        {/* 🏷️ Rubrik */}
         <Rubrik
           variant="h4"
           gutterBottom
-          sx={{ color: "#fffaeb", textAlign: "center" }}
+          sx={{
+            color: "#fffaeb",
+            textAlign: "center",
+            fontWeight: 600,
+            marginTop: user?.role === "båda" ? 6 : 0, // Anpassa placeringen om knappen finns
+          }}
         >
-          {user?.role === "biodlare"
+          {adType === "biodlare"
             ? "Skapa annons - Ställa ut bikupor"
             : "Skapa annons - Söka efter bikupor"}
         </Rubrik>
@@ -216,7 +260,7 @@ const NewAdPage: React.FC = () => {
         />
 
         {/* Biodlare-formulär */}
-        {user?.role === "biodlare" && (
+        {adType === "biodlare" && (
           <RedBorderTextfield
             label="Hur många bikupor vill du ställa ut?"
             name="numberOfHives"
@@ -230,7 +274,7 @@ const NewAdPage: React.FC = () => {
         )}
 
         {/* Markägare-formulär */}
-        {user?.role === "markägare" && (
+        {adType === "markägare" && (
           <>
             <RedBorderTextfield
               label="Hur mycket mark har du som ska pollineras?"

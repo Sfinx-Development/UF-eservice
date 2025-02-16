@@ -4,6 +4,8 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
+  Radio,
+  RadioGroup,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -96,16 +98,17 @@ export default function ProfilePage() {
     };
 
   const handleSave = () => {
-    if (user && name && city && role) {
+    console.log("UPPDATERAD: ", user, name, city, role);
+    if (user && name && role) {
       const updatedProfile: Profile = {
         ...user,
         username: name,
-        cityName: city,
         role: role,
         profileDescription: desc,
         shareLocation: shareLoc,
         profileImage: avatar ?? user.profileImage,
       };
+      console.log("UPPDATERAD: ", updatedProfile);
       dispatch(updateUserPresentationAsync(updatedProfile));
       setIsEditMode(false);
     }
@@ -212,9 +215,60 @@ export default function ProfilePage() {
               {currentProfile?.username}
             </Rubrik>
           )}
-          <Text sx={{ fontSize: 18, color: "#510102" }}>
-            {currentProfile?.role}
-          </Text>
+          {editMode ? (
+            <RadioGroup
+              name="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <FormControlLabel
+                value="biodlare"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#510102",
+                      "&.Mui-checked": {
+                        color: "#510102",
+                      },
+                    }}
+                  />
+                }
+                label="Biodlare"
+              />
+              <FormControlLabel
+                value="markägare"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#510102",
+                      "&.Mui-checked": {
+                        color: "#510102",
+                      },
+                    }}
+                  />
+                }
+                label="Markägare"
+              />
+              <FormControlLabel
+                value="båda"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#510102",
+                      "&.Mui-checked": {
+                        color: "#510102",
+                      },
+                    }}
+                  />
+                }
+                label="Båda"
+              />
+            </RadioGroup>
+          ) : (
+            <Text sx={{ fontSize: 18, color: "#510102" }}>
+              {currentProfile?.role}
+            </Text>
+          )}
           <Text sx={{ fontSize: 18, color: "#510102" }}>
             {currentProfile?.cityName}
           </Text>
