@@ -2,7 +2,9 @@
 import {
   createUserWithEmailAndPassword,
   deleteUser,
+  EmailAuthProvider,
   getAuth,
+  reauthenticateWithCredential,
   sendPasswordResetEmail,
   updateEmail,
   updateProfile,
@@ -288,16 +290,29 @@ export const deleteUserWithAPI = async (): Promise<boolean> => {
   if (!user) throw new Error("User not authenticated");
 
   try {
+    const password = prompt("Ange ditt lösenord för att bekräfta radering:");
+    if (!password) throw new Error("Lösenord krävs för att radera kontot.");
+
+    // 🔹 Skapa en credential baserat på e-post och lösenord
+    const credential = EmailAuthProvider.credential(user.email!, password);
+
+    // 🔹 Reautentisera användaren innan radering
+    await reauthenticateWithCredential(user, credential);
+
+    // 🔹 Försök radera auth först
+    await deleteUser(user);
+
+    // ✅ Endast om auth är borta → radera resten av datan
     const profile = await getUserByUserId(user.uid);
     if (!profile) return false;
 
     const operations: (() => Promise<void>)[] = [];
+
+    // 🔹 Radera annonser
     const ads = await getAdsByUserId(profile.id);
-    if (ads) {
-      ads.forEach((ad) => {
-        operations.push(() => deleteAdInDB(ad.id));
-      });
-    }
+    ads.forEach((ad) => operations.push(() => deleteAdInDB(ad.id)));
+
+    // 🔹 Uppdatera meddelanden i admin-chatt
     const adminChats = await getAdminChatSessionByProfile(profile.id);
     if (adminChats && adminChats?.messages.length > 0) {
       adminChats.messages.forEach((m) => {
@@ -308,60 +323,53 @@ export const deleteUserWithAPI = async (): Promise<boolean> => {
             senderId: "undefined",
           };
           operations.push(() =>
-            updateAdminChatMessage(adminChats.id, m.id, updatedMessage).then(
-              () => {}
-            )
+            updateAdminChatMessage(adminChats.id, m.id, updatedMessage)
           );
         }
       });
     }
 
-    // const chats = await getAllChatSessionsByProfile(profile.id);
-    // if (chats) {
-    //   for (const m of chats) {
-    //     for (const c of m.messages) {
-    //       await deleteChatMessage(m.id, c.id);
-    //     }
-    //   }
-    // }
+    // 🔹 Radera vanliga meddelanden
     const commonMessages = await getMessagesByUserId(profile.id);
-    if (commonMessages) {
-      commonMessages.forEach((message) => {
-        operations.push(() => deleteMessageInDB(message.id));
-      });
-    }
+    commonMessages.forEach((message) =>
+      operations.push(() => deleteMessageInDB(message.id))
+    );
+
+    // 🔹 Uppdatera chattsessioner där användaren var med
     const adSessions = await getAllChatSessionsByProfile(profile.id);
     const sessionsByProfile = adSessions.filter(
       (session) =>
         session.senderId === profile.id || session.receiverId === profile.id
     );
-    if (sessionsByProfile.length > 0) {
-      sessionsByProfile.forEach((session) => {
-        session.messages.forEach((message) => {
-          if (message.senderId === profile.id) {
-            const updatedMessage: ChatMessage = {
-              ...message,
-              senderName: "Borttagen användare",
-              senderId: "undefined",
-            };
-            operations.push(() =>
-              updateChatMessage(session.id, message.id, updatedMessage).then(
-                () => {}
-              )
-            );
-          }
-        });
+    sessionsByProfile.forEach((session) => {
+      session.messages.forEach((message) => {
+        if (message.senderId === profile.id) {
+          const updatedMessage: ChatMessage = {
+            ...message,
+            senderName: "Borttagen användare",
+            senderId: "undefined",
+          };
+          operations.push(() =>
+            updateChatMessage(session.id, message.id, updatedMessage).then(
+              () => {}
+            )
+          );
+        }
       });
-    }
+    });
+
+    // 🔹 Radera användarprofil i Firestore
     operations.push(() => deleteProfileWithAPI(profile.id));
 
+    // ✅ Kör alla operationer parallellt
     await Promise.all(operations.map((operation) => operation()));
 
-    await deleteUser(user);
+    console.log("Användarens data har raderats framgångsrikt.");
     return true;
   } catch (error) {
-    console.error("Error during deletion:", error);
-    return false;
+    console.error("Fel vid radering av konto", error);
+    alert("Något gick fel. Kontrollera om du har skrivit rätt lösenord.");
+    throw error;
   }
 };
 

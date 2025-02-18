@@ -10,6 +10,7 @@ import {
   deleteUserWithAPI,
   getAdminByUserId,
   getProfileByProfileId,
+  getUserByUserId,
   registerUserWithAPI,
   resetPassword,
   updateProfileInDB,
@@ -105,6 +106,23 @@ export const getAdminByIdAsync = createAsyncThunk<
       return profile;
     } else {
       return thunkAPI.rejectWithValue("failed to get admin");
+    }
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const getUserAsync = createAsyncThunk<
+  Profile,
+  string,
+  { rejectValue: string }
+>("user/getUserAsync", async (userId, thunkAPI) => {
+  try {
+    const profile = await getUserByUserId(userId);
+    if (profile) {
+      return profile;
+    } else {
+      return thunkAPI.rejectWithValue("failed to get user");
     }
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
@@ -267,6 +285,17 @@ const userSlice = createSlice({
         state.activeProfile = null;
         state.logInError =
           action.payload || "Användarnamn eller lösenord är felaktigt.";
+      })
+      .addCase(getUserAsync.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.activeProfile = action.payload;
+        state.logInError = null;
+      })
+      .addCase(getUserAsync.rejected, (state, action) => {
+        state.user = null;
+        state.activeProfile = null;
+        state.logInError =
+          action.payload || "Användarnamn eller lösenord hittas ej.";
       })
       .addCase(logOutUserAsync.fulfilled, (state) => {
         state.user = null;
