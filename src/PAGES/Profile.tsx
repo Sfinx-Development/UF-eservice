@@ -12,13 +12,14 @@ import {
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import LoadingIndicator from "../Components/Loading";
+import { deleteAdAsync, getAllAdsAsync } from "../SLICES/adSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
 import {
   deleteUserAsync,
   getProfileByIdAsync,
   updateUserPresentationAsync,
 } from "../SLICES/userSlice";
-import { Profile } from "../types";
+import { Ad, Profile } from "../types";
 import { Rubrik, Text } from "./Index";
 import { RedBorderTextfield } from "./Register";
 
@@ -26,6 +27,9 @@ export default function ProfilePage() {
   const { id } = useParams(); // Få ID från URL:en
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.userSlice.user); // Inloggad användare
+  const myAds = useAppSelector((state) => state.adSlice.ads).filter(
+    (ad) => ad.profileId == user?.id
+  );
   const activeProfile = useAppSelector(
     (state) => state.userSlice.activeProfile
   ); // Aktiv profil (annans data)
@@ -52,6 +56,7 @@ export default function ProfilePage() {
   useEffect(() => {
     if (id) {
       dispatch(getProfileByIdAsync(id));
+      dispatch(getAllAdsAsync());
     } else {
       // Annars använd den inloggade användarens data
       setName(user?.username || "");
@@ -120,6 +125,16 @@ export default function ProfilePage() {
       )
     ) {
       dispatch(deleteUserAsync());
+    }
+  };
+
+  const handleDeleteAd = async (ad: Ad) => {
+    if (
+      window.confirm(
+        `Är du säker på att du vill radera din annons ${ad.title}? Denna åtgärd kan inte ångras.`
+      )
+    ) {
+      await dispatch(deleteAdAsync(ad.id));
     }
   };
 
@@ -328,11 +343,76 @@ export default function ProfilePage() {
           />
         ) : (
           isOwnProfile && (
-            <Text>
-              {currentProfile?.shareLocation
-                ? "Du har valt att andra kan söka på din plats."
-                : "Du har valt att andra inte kan söka på din plats."}{" "}
-            </Text>
+            // <Text>
+            //   {currentProfile?.shareLocation
+            //     ? "Du har valt att andra kan söka på din plats."
+            //     : "Du har valt att andra inte kan söka på din plats."}{" "}
+            // </Text>
+            <Box
+              sx={{
+                width: "100%",
+                maxWidth: "800px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                marginTop: 3,
+              }}
+            >
+              <Rubrik sx={{ color: "#510102", textAlign: "center" }}>
+                Mina annonser
+              </Rubrik>
+
+              {myAds.length === 0 ? (
+                <Text sx={{ textAlign: "center", color: "#510102" }}>
+                  Du har inga aktiva annonser.
+                </Text>
+              ) : (
+                myAds.map((ad) => (
+                  <Box
+                    key={ad.id}
+                    sx={{
+                      backgroundColor: "#fffaeb",
+                      borderRadius: "8px",
+                      padding: "1.5rem",
+                      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 1,
+                      position: "relative",
+                    }}
+                  >
+                    <Text
+                      sx={{
+                        fontSize: "1.2rem",
+                        fontWeight: 600,
+                        color: "#510102",
+                      }}
+                    >
+                      {ad.title}
+                    </Text>
+                    <Text sx={{ color: "#510102", whiteSpace: "pre-line" }}>
+                      {ad.description}
+                    </Text>
+
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      onClick={() => handleDeleteAd(ad)}
+                      sx={{
+                        alignSelf: "flex-end",
+                        borderColor: "#510102",
+                        color: "#510102",
+                        "&:hover": {
+                          backgroundColor: "rgba(255, 87, 51, 0.1)",
+                        },
+                      }}
+                    >
+                      Radera annons
+                    </Button>
+                  </Box>
+                ))
+              )}
+            </Box>
           )
         )}
       </Box>

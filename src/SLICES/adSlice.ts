@@ -307,6 +307,16 @@ const adSlice = createSlice({
       .addCase(deleteAdAsync.fulfilled, (state, action) => {
         state.loading = false;
         state.ads = state.ads.filter((ad) => ad.id !== action.payload);
+        localStorage.setItem("ads", JSON.stringify(state.ads));
+        if (state.adsByLocation) {
+          state.adsByLocation = state.adsByLocation.filter(
+            (ad) => ad.id !== action.payload
+          );
+          localStorage.setItem(
+            "adsByLocation",
+            JSON.stringify(state.adsByLocation)
+          );
+        }
         state.error = null;
       })
       .addCase(deleteAdAsync.rejected, (state, action) => {

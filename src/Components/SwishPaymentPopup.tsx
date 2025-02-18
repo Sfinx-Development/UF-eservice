@@ -66,7 +66,7 @@ const SwishPaymentPopup: React.FC<SwishPaymentProps> = ({
             <img
               src="https://i.imgur.com/QTQYKHI.png"
               alt="Swish QR-kod"
-              style={{ width: "100%", maxWidth: "280px", height: "auto" }}
+              style={{ width: "100%", maxWidth: "260px", height: "auto" }}
             />
           </Box>
           <Typography
@@ -92,7 +92,10 @@ const SwishPaymentPopup: React.FC<SwishPaymentProps> = ({
             justifyContent: "center",
           }}
         >
-          <Typography variant="body1" sx={{ mb: 2, fontSize: "2rem" }}>
+          <Typography
+            variant="body1"
+            sx={{ mb: 2, fontSize: { xs: 18, md: 20, xl: 22 } }}
+          >
             99 kr
           </Typography>
           <Typography variant="body1" sx={{ mb: 2, fontSize: "1rem" }}>

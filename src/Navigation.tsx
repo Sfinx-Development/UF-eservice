@@ -1,59 +1,57 @@
-import { Route, Routes } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import AdDetailPage from "./PAGES/AdDetailPage";
 import AdListPage from "./PAGES/AdListPage";
 import AdminAdListPage from "./PAGES/AdminAdList";
+import AdminChat from "./PAGES/AdminChat";
 import AdminChatList from "./PAGES/AdminChatList";
 import AdminDashboard from "./PAGES/AdminDashboard";
 import AdminAdDetailPage from "./PAGES/AdminDetailPage";
 import Chat from "./PAGES/Chat";
 import ChatList from "./PAGES/ChatList";
+import CookieInfo from "./PAGES/CookieInfo";
 import DashboardPage from "./PAGES/Dashboard";
 import IndexPage from "./PAGES/Index";
 import Login from "./PAGES/Login";
 import LoginAdmin from "./PAGES/LogInAdmin";
 import NewAdPage from "./PAGES/NewAdd";
+import PrivacyPolicy from "./PAGES/PrivacyPolicy";
 import ProfilePage from "./PAGES/Profile";
 import RegisterPage from "./PAGES/Register";
 import RootLayout from "./PAGES/Rootlayout";
 import Terms from "./PAGES/Terms";
 import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import ProtectedRoute from "./ProtectedRoute";
-import PrivacyPolicy from "./PAGES/PrivacyPolicy";
-import CookieInfo from "./PAGES/CookieInfo";
-import AdminChat from "./PAGES/AdminChat";
 import RoleBasedProtectedRoute from "./RoleBasedRoute";
+import { useAppDispatch, useAppSelector } from "./SLICES/store";
+import { getAdminByIdAsync, getUserAsync } from "./SLICES/userSlice";
 
 const Navigation = () => {
-  // const [userLoaded, setUserLoaded] = useState(false);
-  // const user = useAppSelector((state) => state.userSlice.user);
+  const [userLoaded, setUserLoaded] = useState(false);
+  const user = useAppSelector((state) => state.userSlice.user);
+  const admin = useAppSelector((state) => state.userSlice.admin);
 
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-  // useEffect(() => {
-  //   dispatch(getUserAsync()).then(() => {
-  //     setUserLoaded(true);
-  //   });
-  // }, []);
+  useEffect(() => {
+    if (user) {
+      dispatch(getUserAsync(user.userId)).then(() => {
+        setUserLoaded(true);
+      });
+    } else if (admin) {
+      dispatch(getAdminByIdAsync(admin.id)).then(() => {
+        setUserLoaded(true);
+      });
+    }
+  }, []);
 
-  // const location = useLocation();
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (
-  //     location.pathname === "/chooseteam" ||
-  //     location.pathname === "/signin"
-  //   ) {
-  //     console.log("choose team");
-  //     dispatch(resetActiveProile());
-  //     dispatch(resetActiveTeam());
-  //   }
-  // }, [dispatch, location]);
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (userLoaded && !user) {
-  //     navigate("/signin", { replace: true });
-  //   }
-  // }, [userLoaded, user]);
+  useEffect(() => {
+    if (userLoaded && !user && !admin) {
+      navigate("/", { replace: true });
+    }
+  }, [userLoaded, user]);
 
   return (
     <Routes>
