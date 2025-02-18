@@ -190,7 +190,9 @@ const NewAdPage: React.FC = () => {
           onClick={() => navigate("/dashboard")}
           sx={{
             position: "absolute",
-            left: { xs: 10, md: 20 },
+            left: { xs: -20, sm: 100, md: 250, lg: 400, xl: 1300 }, // Justerar positionen för olika skärmar
+            // left: { xs: -20, md: 20 },
+            height: "60px",
             backgroundColor: "transparent",
             "&:hover": { backgroundColor: "rgba(255,255,255,0.1)" },
           }}

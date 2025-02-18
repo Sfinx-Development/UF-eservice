@@ -75,6 +75,12 @@ const SwishPaymentPopup: React.FC<SwishPaymentProps> = ({
           >
             Skanna koden för att betala via Swish.
           </Typography>
+          <Typography
+            variant="body2"
+            sx={{ fontSize: "0.9rem", color: "gray" }}
+          >
+            Eller swisha manuellt till <strong>123-200 27 49</strong>.
+          </Typography>
         </Box>
 
         {/* Formulär Sektion */}
