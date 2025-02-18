@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
 import AdDetailPage from "./PAGES/AdDetailPage";
 import AdListPage from "./PAGES/AdListPage";
 import AdminAdListPage from "./PAGES/AdminAdList";
@@ -27,7 +27,7 @@ import { useAppDispatch, useAppSelector } from "./SLICES/store";
 import { getAdminByIdAsync, getUserAsync } from "./SLICES/userSlice";
 
 const Navigation = () => {
-  const [userLoaded, setUserLoaded] = useState(false);
+  // const [userLoaded, setUserLoaded] = useState(false);
   const user = useAppSelector((state) => state.userSlice.user);
   const admin = useAppSelector((state) => state.userSlice.admin);
 
@@ -36,22 +36,14 @@ const Navigation = () => {
   useEffect(() => {
     if (user) {
       dispatch(getUserAsync(user.userId)).then(() => {
-        setUserLoaded(true);
+        // setUserLoaded(true);
       });
     } else if (admin) {
       dispatch(getAdminByIdAsync(admin.id)).then(() => {
-        setUserLoaded(true);
+        // setUserLoaded(true);
       });
     }
   }, []);
-
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (userLoaded && !user && !admin) {
-      navigate("/", { replace: true });
-    }
-  }, [userLoaded, user]);
 
   return (
     <Routes>
