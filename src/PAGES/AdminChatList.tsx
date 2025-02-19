@@ -20,6 +20,7 @@ export default function AdminChatList() {
     (state) => state.adminChatSlice
   );
   const admin = useAppSelector((state) => state.userSlice.admin);
+  
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -61,10 +62,12 @@ export default function AdminChatList() {
           sx={{
             display: "flex",
             flexDirection: "column",
+            flexGrow: 1, // 🔥 Gör att boxen expanderar och fyller ut
             width: "100%",
             maxWidth: isMobile ? "100%" : "900px",
             borderRadius: "8px",
             padding: "1rem",
+            overflow: "hidden", // 🚨 Viktigt för att scrollen ska funka korrekt
           }}
         >
           <Rubrik
@@ -77,9 +80,14 @@ export default function AdminChatList() {
 
           <Box
             sx={{
-              marginBottom: "1rem",
-              maxHeight: isMobile ? "300px" : "500px",
-              overflowY: "auto",
+              // marginBottom: "1rem",
+              // maxHeight: isMobile ? "300px" : "500px",
+              // overflowY: "auto",
+
+              flexGrow: 1, // 🔥 Gör att listan tar upp all tillgänglig plats
+              overflowY: "auto", // 🚀 Scrollar endast listan, inte hela sidan
+              maxHeight: "calc(100vh - 200px)", // ✅ Anpassar höjden efter skärmen
+              minHeight: isMobile ? "300px" : "500px", // Ger tillräckligt med utrymme
             }}
           >
             <List>
