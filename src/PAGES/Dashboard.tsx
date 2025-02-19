@@ -4,6 +4,10 @@ import {
   Badge,
   Box,
   Button,
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
   Tooltip,
   useMediaQuery,
   useTheme,
@@ -16,17 +20,21 @@ import {
   addAdminChatAsync,
   getAdminChatSessionByProfileAsync,
 } from "../SLICES/adminChatSlice";
-import { getAdsByLocationAsync, getAllAdsAsync } from "../SLICES/adSlice";
+import {
+  getAdsByLocationAsync,
+  getAllAdsAsync,
+  setSelectedAd,
+} from "../SLICES/adSlice";
 import { getAllChatsByProfileAsync } from "../SLICES/chatSlice";
 import { useAppDispatch, useAppSelector } from "../SLICES/store";
-import { AdminUserSession } from "../types";
+import { Ad, AdminUserSession } from "../types";
 import { Rubrik, Text } from "./Index";
 const DashboardPage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.userSlice.user);
-  // const adsByLocation = useAppSelector((state) => state.adSlice.adsByLocation);
+  const adsByLocation = useAppSelector((state) => state.adSlice.adsByLocation);
   const chatSessions = useAppSelector((state) => state.chatSlice.chatSessions);
   const dispatch = useAppDispatch();
   const [unreadMessages, setUnreadMessages] = useState(0);
@@ -56,10 +64,10 @@ const DashboardPage: React.FC = () => {
     }
   }, [chatSessions]);
 
-  // const handleNavigateToAd = (ad: Ad) => {
-  //   dispatch(setSelectedAd(ad));
-  //   navigate("/addetail");
-  // };
+  const handleNavigateToAd = (ad: Ad) => {
+    dispatch(setSelectedAd(ad));
+    navigate("/addetail");
+  };
 
   const handleNavigateToSupportChat = async () => {
     if (!user) {
@@ -228,11 +236,11 @@ const DashboardPage: React.FC = () => {
         </Tooltip>
       </Box>
 
-      {/* <Rubrik variant="h5" sx={{ marginBottom: "1rem", color: "#fffaeb" }}>
+      <Rubrik variant="h5" sx={{ marginBottom: "1rem", color: "#fffaeb" }}>
         Annonser i ditt område
-      </Rubrik> */}
+      </Rubrik>
 
-      {/* <Grid container spacing={2} justifyContent="center">
+      <Grid container spacing={2} justifyContent="center">
         {adsByLocation && adsByLocation.length > 0 ? (
           adsByLocation.map((ad, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
@@ -281,7 +289,7 @@ const DashboardPage: React.FC = () => {
             Inga annonser tillgängliga i ditt område
           </Text>
         )}
-      </Grid> */}
+      </Grid>
 
       <ChatComponent />
     </Box>
